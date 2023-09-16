@@ -13,7 +13,7 @@ class _MainAppState extends State<MainApp> {
   final MainController _mainController = Get.put(MainController());
 
   PageController? _pageController;
-  int selectedIndex = 1;
+  int selectedIndex = 0;
 
   @override
   void initState() {

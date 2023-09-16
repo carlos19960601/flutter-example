@@ -1,10 +1,22 @@
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:pilipala/http/init.dart';
+import 'package:pilipala/models/common/color_type.dart';
 import 'package:pilipala/pages/main/view.dart';
+import 'package:pilipala/router/app_pages.dart';
+import 'package:pilipala/utils/storage.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations(
+          [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown])
+      .then((value) async {
+    await GStorage.init();
+    runApp(const MyApp());
+    await Request.setCookie();
+  });
 }
 
 class MyApp extends StatelessWidget {
@@ -13,13 +25,32 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    Color defaultColor = colorThemeTypes[0]['color'];
+    Color brandColor = defaultColor;
+
     return DynamicColorBuilder(
       builder: (lightDynamic, darkDynamic) {
         ColorScheme? lightColorScheme;
         ColorScheme? darkColorScheme;
+        if (lightDynamic != null && darkDynamic != null) {
+        } else {
+          lightColorScheme = ColorScheme.fromSeed(
+            seedColor: brandColor,
+            brightness: Brightness.light,
+          );
+          darkColorScheme = ColorScheme.fromSeed(
+            seedColor: brandColor,
+            brightness: Brightness.dark,
+          );
+        }
 
         return GetMaterialApp(
           title: "PiLiPaLa",
+          theme: ThemeData(
+            colorScheme: lightColorScheme,
+            useMaterial3: true,
+          ),
+          getPages: Routes.getPages,
           home: const MainApp(),
         );
       },

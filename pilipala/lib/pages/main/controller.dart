@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:pilipala/pages/dynamics/view.dart';
 import 'package:pilipala/pages/home/view.dart';
 import 'package:pilipala/pages/media/view.dart';
+import 'package:pilipala/utils/utils.dart';
 
 class MainController extends GetxController {
   List<Widget> pages = <Widget>[
@@ -51,6 +52,12 @@ class MainController extends GetxController {
 
   final StreamController<bool> bottomBarStream = StreamController.broadcast();
   DateTime? _lastPressedAt;
+
+  @override
+  void onInit() {
+    super.onInit();
+    Utils.checkUpdate();
+  }
 
   bool onBackPressed() {
     if (_lastPressedAt == null ||
