@@ -32,8 +32,6 @@ class _MainAppState extends State<MainApp> {
 
   @override
   Widget build(BuildContext context) {
-    double statusBarHeight = MediaQuery.of(context).padding.top;
-
     return WillPopScope(
       child: Scaffold(
         extendBody: true,

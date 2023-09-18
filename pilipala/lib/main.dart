@@ -1,7 +1,9 @@
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
+import 'package:pilipala/common/widgets/custom_toast.dart';
 import 'package:pilipala/http/init.dart';
 import 'package:pilipala/models/common/color_type.dart';
 import 'package:pilipala/pages/main/view.dart';
@@ -52,6 +54,12 @@ class MyApp extends StatelessWidget {
           ),
           getPages: Routes.getPages,
           home: const MainApp(),
+          builder: (BuildContext context, Widget? child) {
+            return FlutterSmartDialog(
+              toastBuilder: (msg) => CustomToast(msg: msg),
+              child: child!,
+            );
+          },
         );
       },
     );

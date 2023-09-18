@@ -1,6 +1,7 @@
 import 'package:pilipala/http/api.dart';
 import 'package:pilipala/http/init.dart';
 import 'package:pilipala/models/user/info.dart';
+import 'package:pilipala/models/user/stat.dart';
 
 class UserHttp {
   static Future<dynamic> userInfo() async {
@@ -11,6 +12,17 @@ class UserHttp {
       return {"status": true, "data": data};
     } else {
       return {"status": false, "msg": res.data["message"]};
+    }
+  }
+
+  static Future<dynamic> userStatOwner() async {
+    var res = await Request().get(Api.userStatOwner);
+
+    if (res.data['code'] == 0) {
+      UserStat data = UserStat.fromJson(res.data['data']);
+      return {'status': true, 'data': data};
+    } else {
+      return {'status': false, 'data': [], 'msg': res.data['message']};
     }
   }
 }

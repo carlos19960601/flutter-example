@@ -3,7 +3,9 @@ import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:pilipala/http/user.dart';
+import 'package:pilipala/pages/home/controller.dart';
 import 'package:pilipala/utils/cookie.dart';
+import 'package:pilipala/utils/login.dart';
 import 'package:pilipala/utils/storage.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -61,15 +63,28 @@ class WebviewController extends GetxController {
         try {
           Box userInfoCache = GStorage.userInfo;
           await userInfoCache.put("userInfoCache", result["data"]);
+
+          HomeController homeCtr = Get.find<HomeController>();
+          homeCtr.updateLoginStatus(true);
+          homeCtr.userFace.value = result['data'].face;
+          await LoginUtils.refreshLoginStatus(true);
         } catch (err) {
           SmartDialog.show(
             builder: (context) {
               return AlertDialog(
                 title: const Text("登录遇到问题"),
+                content: Text(err.toString()),
+                actions: [
+                  TextButton(
+                    onPressed: () => controller.reload(),
+                    child: const Text('确认'),
+                  )
+                ],
               );
             },
           );
         }
+        Get.back();
       } else {
         SmartDialog.showToast(result.msg);
       }

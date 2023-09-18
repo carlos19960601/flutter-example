@@ -18,5 +18,6 @@ class GStorage {
 
   static regAdapter() {
     Hive.registerAdapter(UserInfoDataAdapter());
+    Hive.registerAdapter(LevelInfoAdapter());
   }
 }

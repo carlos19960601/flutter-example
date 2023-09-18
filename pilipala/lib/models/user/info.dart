@@ -108,11 +108,25 @@ class UserInfoData {
     hasShop = json['has_shop'];
     shopUrl = json['shop_url'];
   }
+
+  Map<String, dynamic> toJson() => {
+        "isLogin": isLogin,
+        "face": face,
+        "mid": mid,
+        "uname": uname,
+        "money": money,
+        "levelInfo": levelInfo?.toJson(),
+      };
 }
 
 @HiveType(typeId: 5)
 class LevelInfo {
-  LevelInfo({this.currentLevel});
+  LevelInfo({
+    this.currentLevel,
+    this.currentMin,
+    this.currentExp,
+    this.nextExp,
+  });
 
   @HiveField(0)
   int? currentLevel;
@@ -130,4 +144,9 @@ class LevelInfo {
     nextExp =
         json['current_level'] == 6 ? json['current_exp'] : json['next_exp'];
   }
+
+  Map<String, dynamic> toJson() => {
+        "currentLevel": currentLevel,
+        "currentExp": currentExp,
+      };
 }
