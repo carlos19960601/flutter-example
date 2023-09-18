@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:path_provider/path_provider.dart';
-import 'package:pilipala/http/api.dart';
 import 'package:pilipala/http/init.dart';
 
 class Utils {
@@ -20,6 +19,7 @@ class Utils {
 
   static Future<bool> checkUpdate() async {
     // var result = await Request().get(Api.latestApp);
+    Request();
 
     return false;
   }

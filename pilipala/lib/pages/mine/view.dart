@@ -16,11 +16,20 @@ class MinePage extends StatefulWidget {
 
 class _MinePageState extends State<MinePage> {
   final MineController mineController = Get.put(MineController());
+  late Future _futureBuilderFuture;
 
   @override
   void initState() {
     super.initState();
-    mineController.queryUserInfo();
+    _futureBuilderFuture = mineController.queryUserInfo();
+
+    mineController.userLogin.listen((status) {
+      if (mounted) {
+        setState(() {
+          _futureBuilderFuture = mineController.queryUserInfo();
+        });
+      }
+    });
   }
 
   @override
@@ -54,21 +63,33 @@ class _MinePageState extends State<MinePage> {
           const SizedBox(width: 10),
         ],
       ),
-      body: SingleChildScrollView(
-        child: SizedBox(
-          child: Column(
-            children: [
-              const SizedBox(height: 10),
-              userInfoBuild(mineController, context),
-            ],
+      body: LayoutBuilder(builder: (context, constraint) {
+        return SingleChildScrollView(
+          physics: const NeverScrollableScrollPhysics(),
+          child: SizedBox(
+            height: constraint.maxHeight,
+            child: Column(
+              children: [
+                const SizedBox(height: 10),
+                FutureBuilder(
+                    future: _futureBuilderFuture,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.done) {
+                        if (snapshot.data == null) {
+                          return const SizedBox();
+                        }
+                      }
+                      return userInfoBuild(mineController, context);
+                    }),
+              ],
+            ),
           ),
-        ),
-      ),
+        );
+      }),
     );
   }
 
   Widget userInfoBuild(_mineController, context) {
-    LevelInfo levelInfo = _mineController.userInfo.value.levelInfo;
     return Column(
       children: [
         const SizedBox(
@@ -131,29 +152,48 @@ class _MinePageState extends State<MinePage> {
         const SizedBox(height: 25),
         // 等级
         if (_mineController.userInfo.value.levelInfo != null) ...[
-          SizedBox(
-            height: 24,
-            child: Stack(
-              children: [
-                Positioned(
-                  top: 0,
-                  right: 0,
-                  bottom: 0,
-                  child: Container(
-                    color: Theme.of(context).colorScheme.primary,
-                    height: 24,
-                    child: Text(
-                      '${levelInfo.currentExp}/${levelInfo.nextExp}',
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.onPrimary,
-                        fontSize: 12,
+          LayoutBuilder(builder: (context, BoxConstraints constraints) {
+            LevelInfo levelInfo = _mineController.userInfo.value.levelInfo;
+            return SizedBox(
+              width: constraints.maxWidth,
+              height: 24,
+              child: Stack(
+                children: [
+                  Positioned(
+                    top: 0,
+                    right: 0,
+                    bottom: 0,
+                    child: Container(
+                      color: Theme.of(context).colorScheme.primary,
+                      height: 24,
+                      constraints: const BoxConstraints(minWidth: 100),
+                      width: constraints.maxWidth *
+                          (1 - (levelInfo.currentExp! / levelInfo.nextExp!)),
+                      child: Center(
+                        child: Text(
+                          '${levelInfo.currentExp}/${levelInfo.nextExp}',
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.onPrimary,
+                            fontSize: 12,
+                          ),
+                        ),
                       ),
                     ),
                   ),
-                )
-              ],
-            ),
-          ),
+                  Positioned(
+                      top: 23,
+                      left: 0,
+                      bottom: 0,
+                      child: Container(
+                        height: 1,
+                        color: Theme.of(context).colorScheme.primary,
+                        width: constraints.maxWidth *
+                            (levelInfo.currentExp! / levelInfo.nextExp!),
+                      ))
+                ],
+              ),
+            );
+          }),
         ],
         const SizedBox(height: 30),
         Padding(

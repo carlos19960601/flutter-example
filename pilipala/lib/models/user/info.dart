@@ -148,5 +148,6 @@ class LevelInfo {
   Map<String, dynamic> toJson() => {
         "currentLevel": currentLevel,
         "currentExp": currentExp,
+        "nextExp": nextExp,
       };
 }

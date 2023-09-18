@@ -48,13 +48,16 @@ class MineController extends GetxController {
     }
   }
 
-  queryUserInfo() async {
+  Future queryUserInfo() async {
     if (!userLogin.value) {
       return {'status': false};
     }
     var res = await UserHttp.userInfo();
     if (res["status"]) {
       if (res['data'].isLogin) {
+        userInfo.value = res["data"];
+        userInfoCache.put("userInfoCache", res["data"]);
+        userLogin.value = true;
       } else {
         resetUserInfo();
       }

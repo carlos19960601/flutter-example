@@ -28,6 +28,12 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBody: true,
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        toolbarHeight: 0,
+        elevation: 0,
+      ),
       body: Column(
         children: [
           CustomAppBar(
@@ -46,8 +52,13 @@ class _HomePageState extends State<HomePage> {
                   for (var i in _homeController.tabs) Tab(text: i["label"])
                 ],
                 isScrollable: true,
+                dividerColor: Colors.transparent,
                 enableFeedback: true,
                 splashBorderRadius: BorderRadius.circular(10),
+                onTap: (value) {
+                  if (_homeController.initialIndex == value) {}
+                  _homeController.initialIndex = value;
+                },
               ),
             ),
           ),

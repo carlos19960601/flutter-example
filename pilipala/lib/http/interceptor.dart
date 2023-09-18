@@ -1,4 +1,6 @@
 import 'package:dio/dio.dart';
+import 'package:hive/hive.dart';
+import 'package:pilipala/utils/storage.dart';
 
 class ApiInterceptor extends Interceptor {
   @override
@@ -8,6 +10,25 @@ class ApiInterceptor extends Interceptor {
 
   @override
   void onResponse(Response response, ResponseInterceptorHandler handler) {
+    try {
+      if (response.statusCode == 302) {
+        List<String> locations = response.headers["location"]!;
+        if (locations.isNotEmpty) {
+          if (locations.first.startsWith("https://www.mcbbs.net")) {
+            final uri = Uri.parse(locations.first);
+            final accessKey = uri.queryParameters["access_key"];
+            final mid = uri.queryParameters["mid"];
+            try {
+              Box localCache = GStorage.localCache;
+              localCache.put(
+                  LocalCacheKey.accessKey, {"mid": mid, "value": accessKey});
+            } catch (_) {}
+          }
+        }
+      }
+    } catch (err) {
+      print("ApiInterceptor: $err");
+    }
     handler.next(response);
   }
 

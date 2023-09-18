@@ -1,4 +1,9 @@
 class Api {
+  // 推荐视频
+  static const String recommendListApp =
+      'https://app.bilibili.com/x/v2/feed/index';
+  static const String recommendList = '/x/web-interface/index/top/feed/rcmd';
+
   // 获取用户信息
   static const String userInfo = "/x/web-interface/nav";
 

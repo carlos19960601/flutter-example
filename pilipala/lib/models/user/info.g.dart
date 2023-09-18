@@ -121,9 +121,9 @@ class LevelInfoAdapter extends TypeAdapter<LevelInfo> {
     };
     return LevelInfo(
       currentLevel: fields[0] as int?,
-    )
-      ..currentMin = fields[1] as int?
-      ..currentExp = fields[2] as int?;
+      currentMin: fields[1] as int?,
+      currentExp: fields[2] as int?,
+    );
   }
 
   @override

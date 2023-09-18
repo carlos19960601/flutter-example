@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pilipala/pages/dynamics/controller.dart';
+import 'package:pilipala/pages/home/controller.dart';
 import 'package:pilipala/pages/main/controller.dart';
 
 class MainApp extends StatefulWidget {
@@ -11,6 +13,8 @@ class MainApp extends StatefulWidget {
 
 class _MainAppState extends State<MainApp> {
   final MainController _mainController = Get.put(MainController());
+  final DynamicsController _dynamicsController = Get.put(DynamicsController());
+  final HomeController _homeController = Get.put(HomeController());
 
   PageController? _pageController;
   int selectedIndex = 0;

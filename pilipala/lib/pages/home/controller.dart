@@ -5,6 +5,7 @@ import 'package:pilipala/models/common/tab_type.dart';
 import 'package:pilipala/utils/storage.dart';
 
 class HomeController extends GetxController with GetTickerProviderStateMixin {
+  int initialIndex = 1;
   late List tabs;
   late List<Widget> tabsPageList;
   late TabController tabController;
