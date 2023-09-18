@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pilipala/common/constants.dart';
+import 'package:pilipala/common/skeleton/video_card_h.dart';
 import 'package:pilipala/pages/hot/controller.dart';
 
 class HotPage extends StatefulWidget {
@@ -29,6 +31,19 @@ class _HotPageState extends State<HotPage> {
         },
         child: CustomScrollView(
           controller: scrollController,
+          slivers: [
+            SliverPadding(
+              padding:
+                  const EdgeInsets.fromLTRB(0, StyleString.safeSpace - 5, 0, 0),
+              sliver: SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                (context, index) {
+                  return const VideoCardHSkeleton();
+                },
+                childCount: 10,
+              )),
+            ),
+          ],
         ),
       ),
     );

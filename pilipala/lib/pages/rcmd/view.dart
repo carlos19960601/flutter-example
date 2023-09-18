@@ -19,7 +19,14 @@ class _RcmdPageState extends State<RcmdPage> {
       ),
       child: RefreshIndicator(
         onRefresh: () async {},
-        child: CustomScrollView(),
+        child: CustomScrollView(
+          slivers: [
+            SliverPadding(
+              padding:
+                  const EdgeInsets.fromLTRB(0, StyleString.safeSpace, 0, 0),
+            )
+          ],
+        ),
       ),
     );
   }

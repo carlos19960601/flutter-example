@@ -19,7 +19,7 @@ class Utils {
   }
 
   static Future<bool> checkUpdate() async {
-    var result = await Request().get(Api.latestApp);
+    // var result = await Request().get(Api.latestApp);
 
     return false;
   }
