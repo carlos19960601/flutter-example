@@ -1,10 +1,16 @@
+import 'dart:async';
 import 'dart:io';
 
+import 'package:easy_debounce/easy_throttle.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
 import 'package:pilipala/common/constants.dart';
+import 'package:pilipala/common/skeleton/video_card_v.dart';
 import 'package:pilipala/common/widgets/http_error.dart';
+import 'package:pilipala/common/widgets/video_card_v.dart';
 import 'package:pilipala/models/home/rcmd/result.dart';
+import 'package:pilipala/pages/main/controller.dart';
 import 'package:pilipala/pages/rcmd/controller.dart';
 
 class RcmdPage extends StatefulWidget {
@@ -14,18 +20,52 @@ class RcmdPage extends StatefulWidget {
   State<RcmdPage> createState() => _RcmdPageState();
 }
 
-class _RcmdPageState extends State<RcmdPage> {
+class _RcmdPageState extends State<RcmdPage>
+    with AutomaticKeepAliveClientMixin {
   final RcmdController _rcmdController = Get.put(RcmdController());
   late Future _futureBuilderFuture;
 
   @override
   void initState() {
     super.initState();
+    ScrollController scrollController = _rcmdController.scrollController;
     _futureBuilderFuture = _rcmdController.queryRcmdFeed("init");
+    StreamController<bool> mainStream =
+        Get.find<MainController>().bottomBarStream;
+
+    scrollController.addListener(() {
+      if (scrollController.position.pixels >=
+          scrollController.position.maxScrollExtent - 200) {
+        EasyThrottle.throttle(
+          "my-throttler",
+          const Duration(milliseconds: 500),
+          () {
+            _rcmdController.isLoadingMore = true;
+            _rcmdController.onLoad();
+          },
+        );
+      }
+
+      final ScrollDirection direction =
+          scrollController.position.userScrollDirection;
+      if (direction == ScrollDirection.forward) {
+        mainStream.add(true);
+      } else if (direction == ScrollDirection.reverse) {
+        mainStream.add(false);
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _rcmdController.scrollController.removeListener(() {});
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
+
     return Container(
       margin: const EdgeInsets.only(
         left: StyleString.safeSpace,
@@ -73,10 +113,18 @@ class _RcmdPageState extends State<RcmdPage> {
                         },
                       );
                     }
+                  } else {
+                    if (_rcmdController.videoList.isNotEmpty) {
+                      return contentGrid(
+                          _rcmdController, _rcmdController.videoList);
+                    } else {
+                      return contentGrid(_rcmdController, []);
+                    }
                   }
                 },
               ),
-            )
+            ),
+            const LoadingMore(),
           ],
         ),
       ),
@@ -84,8 +132,60 @@ class _RcmdPageState extends State<RcmdPage> {
   }
 
   Widget contentGrid(RcmdController ctr, List<RecVideoItemAppModel> videoList) {
+    int crossAxisCount = ctr.crossAxisCount.value;
+    double mainAxisExtent =
+        (Get.size.width / crossAxisCount / StyleString.aspectRatio) +
+            (crossAxisCount == 1
+                ? 68
+                : 86 * MediaQuery.of(context).textScaleFactor);
+
     return SliverGrid(
-        delegate: SliverChildBuilderDelegate(),
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount());
+      delegate: SliverChildBuilderDelegate(
+        (context, index) {
+          return videoList.isNotEmpty
+              ? VideoCardV(
+                  videoItem: videoList[index],
+                  crossAxisCount: crossAxisCount,
+                  longPress: () {},
+                )
+              : const VideoCardVSkeleton();
+        },
+        childCount: videoList!.isNotEmpty ? videoList!.length : 10,
+      ),
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        // 行间距
+        mainAxisSpacing: StyleString.safeSpace,
+        // 列间距
+        crossAxisSpacing: StyleString.safeSpace,
+        crossAxisCount: crossAxisCount,
+        mainAxisExtent: mainAxisExtent,
+      ),
+    );
+  }
+
+  @override
+  bool get wantKeepAlive => true;
+}
+
+class LoadingMore extends StatelessWidget {
+  const LoadingMore({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverToBoxAdapter(
+      child: Container(
+        height: MediaQuery.of(context).padding.bottom + 80,
+        padding: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom),
+        child: Center(
+          child: Text(
+            "加载中...",
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.outline,
+              fontSize: 13,
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }

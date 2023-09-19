@@ -11,6 +11,7 @@ class RcmdController extends GetxController {
   RxList<RecVideoItemAppModel> videoList = <RecVideoItemAppModel>[].obs;
   Box recVideo = GStorage.recVideo;
   final ScrollController scrollController = ScrollController();
+  RxInt crossAxisCount = 2.obs;
 
   @override
   void onInit() {

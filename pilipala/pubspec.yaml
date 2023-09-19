@@ -48,6 +48,7 @@ dependencies:
   cookie_jar: ^4.0.8
   flutter_smart_dialog: ^4.9.4
   cached_network_image: ^3.2.3
+  easy_debounce: ^2.0.3
 
 dev_dependencies:
   flutter_test:
