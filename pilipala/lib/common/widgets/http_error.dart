@@ -10,7 +10,8 @@ class HttpError extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement builßd
-    throw UnimplementedError();
+    return Center(
+      child: Text(errMsg ?? "请求错误"),
+    );
   }
 }

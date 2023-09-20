@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hive/hive.dart';
 import 'package:pilipala/pages/dynamics/controller.dart';
 import 'package:pilipala/pages/home/controller.dart';
 import 'package:pilipala/pages/main/controller.dart';
+import 'package:pilipala/utils/storage.dart';
 
 class MainApp extends StatefulWidget {
   const MainApp({super.key});
@@ -36,10 +38,14 @@ class _MainAppState extends State<MainApp> {
 
   @override
   Widget build(BuildContext context) {
+    double statusBarHeight = MediaQuery.of(context).padding.top;
+    Box localCache = GStorage.localCache;
+    localCache.put('statusBarHeight', statusBarHeight);
     return WillPopScope(
       child: Scaffold(
         extendBody: true,
         body: PageView(
+          physics: const NeverScrollableScrollPhysics(),
           controller: _pageController,
           children: _mainController.pages,
           onPageChanged: (value) {

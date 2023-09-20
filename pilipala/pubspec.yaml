@@ -49,6 +49,7 @@ dependencies:
   flutter_smart_dialog: ^4.9.4
   cached_network_image: ^3.2.3
   easy_debounce: ^2.0.3
+  logger: ^2.0.2
 
 dev_dependencies:
   flutter_test:

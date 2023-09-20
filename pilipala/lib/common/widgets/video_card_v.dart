@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
+import 'package:get/get.dart';
 import 'package:pilipala/common/constants.dart';
 import 'package:pilipala/common/widgets/badge.dart';
 import 'package:pilipala/common/widgets/network_img_layer.dart';
+import 'package:pilipala/utils/id_utils.dart';
+import 'package:pilipala/utils/utils.dart';
 
 class VideoCardV extends StatelessWidget {
   final dynamic videoItem;
@@ -17,9 +21,37 @@ class VideoCardV extends StatelessWidget {
     this.longPressEnd,
   });
 
+  onPushDetail(heroTag) async {
+    String goto = videoItem.goto;
+    switch (goto) {
+      case "av":
+        String bvid = videoItem.bvid ?? IdUtils.av2bv(videoItem.aid);
+        Get.toNamed('/video?bvid=$bvid&cid=${videoItem.cid}', arguments: {
+          // 'videoItem': videoItem,
+          'pic': videoItem.pic,
+          'heroTag': heroTag,
+        });
+        break;
+      default:
+        SmartDialog.showToast(videoItem.goto);
+        Get.toNamed(
+          '/webview',
+          parameters: {
+            'url': videoItem.uri,
+            'type': 'url',
+            'pageTitle': videoItem.title,
+          },
+        );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    String heroTag = Utils.makeHeroTag(videoItem.id);
     return Card(
+      elevation: 0,
+      clipBehavior: Clip.hardEdge,
+      margin: EdgeInsets.zero,
       child: GestureDetector(
         onLongPress: () {
           if (longPress != null) {
@@ -27,6 +59,7 @@ class VideoCardV extends StatelessWidget {
           }
         },
         child: InkWell(
+          onTap: () async => onPushDetail(heroTag),
           child: Column(
             children: [
               AspectRatio(
@@ -37,10 +70,13 @@ class VideoCardV extends StatelessWidget {
                     double maxHeight = constraints.maxHeight;
                     return Stack(
                       children: [
-                        NetworkImgLayer(
-                          src: videoItem.pic,
-                          width: maxWidth,
-                          height: maxHeight,
+                        Hero(
+                          tag: heroTag,
+                          child: NetworkImgLayer(
+                            src: videoItem.pic,
+                            width: maxWidth,
+                            height: maxHeight,
+                          ),
                         ),
                         if (videoItem.duration != null)
                           if (crossAxisCount == 1) ...[
@@ -114,33 +150,6 @@ class VideoContent extends StatelessWidget {
               if (crossAxisCount == 1) const SizedBox(height: 4),
               Row(
                 children: [
-                  // if (videoItem.goto == 'bangumi') ...[
-                  //   PBadge(
-                  //     text: videoItem.bangumiBadge,
-                  //     stack: 'normal',
-                  //     size: 'small',
-                  //     type: 'line',
-                  //     fs: 9,
-                  //   )
-                  // ],
-                  // if (videoItem.rcmdReason != null &&
-                  //     videoItem.rcmdReason.content != '') ...[
-                  //   PBadge(
-                  //     text: videoItem.rcmdReason.content,
-                  //     stack: 'normal',
-                  //     size: 'small',
-                  //     type: 'color',
-                  //   )
-                  // ],
-                  // if (videoItem.goto == 'picture') ...[
-                  //   const PBadge(
-                  //     text: '动态',
-                  //     stack: 'normal',
-                  //     size: 'small',
-                  //     type: 'line',
-                  //     fs: 9,
-                  //   )
-                  // ],
                   Expanded(
                     flex: crossAxisCount == 1 ? 0 : 1,
                     child: Text(

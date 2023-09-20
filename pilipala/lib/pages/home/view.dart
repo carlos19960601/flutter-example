@@ -56,7 +56,9 @@ class _HomePageState extends State<HomePage> {
                 enableFeedback: true,
                 splashBorderRadius: BorderRadius.circular(10),
                 onTap: (value) {
-                  if (_homeController.initialIndex == value) {}
+                  if (_homeController.initialIndex == value) {
+                    _homeController.tabCtrList[value]().animateToTop();
+                  }
                   _homeController.initialIndex = value;
                 },
               ),

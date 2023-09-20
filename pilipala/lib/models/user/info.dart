@@ -134,7 +134,7 @@ class LevelInfo {
   int? currentMin;
   @HiveField(2)
   int? currentExp;
-  @HiveType(typeId: 3)
+  @HiveField(3)
   int? nextExp;
 
   LevelInfo.fromJson(Map<String, dynamic> json) {

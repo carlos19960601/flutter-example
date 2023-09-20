@@ -154,6 +154,7 @@ class _MinePageState extends State<MinePage> {
         if (_mineController.userInfo.value.levelInfo != null) ...[
           LayoutBuilder(builder: (context, BoxConstraints constraints) {
             LevelInfo levelInfo = _mineController.userInfo.value.levelInfo;
+            print(levelInfo.toJson());
             return SizedBox(
               width: constraints.maxWidth,
               height: 24,

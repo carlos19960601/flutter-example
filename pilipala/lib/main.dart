@@ -17,7 +17,7 @@ void main() async {
       .then((value) async {
     await GStorage.init();
     runApp(const MyApp());
-    await Request.setCookie();
+    await Request().setCookie();
   });
 }
 

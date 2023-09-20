@@ -9,6 +9,7 @@ class HomeController extends GetxController with GetTickerProviderStateMixin {
   late List tabs;
   late List<Widget> tabsPageList;
   late TabController tabController;
+  late List tabCtrList;
   Box userInfoCache = GStorage.userInfo;
   RxBool userLogin = false.obs;
   RxString userFace = "".obs;
@@ -25,6 +26,7 @@ class HomeController extends GetxController with GetTickerProviderStateMixin {
     // 进行tabs配置
     tabs = tabsConfig;
     tabsPageList = tabsConfig.map<Widget>((e) => e["page"]).toList();
+    tabCtrList = tabsConfig.map((e) => e['ctr']).toList();
 
     tabController = TabController(length: tabs.length, vsync: this);
   }

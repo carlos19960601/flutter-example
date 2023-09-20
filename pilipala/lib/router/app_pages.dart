@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:pilipala/pages/hot/view.dart';
 import 'package:pilipala/pages/member/view.dart';
 import 'package:pilipala/pages/setting/view.dart';
+import 'package:pilipala/pages/video/view.dart';
 import 'package:pilipala/pages/webview/view.dart';
 
 class Routes {
@@ -14,6 +15,9 @@ class Routes {
       name: "/webview",
       page: () => const WebviewPage(),
     ),
+
+    // 视频详情
+    CustomGetPage(name: '/video', page: () => const VideoDetailPage()),
     // 用户中心
     CustomGetPage(name: '/member', page: () => const MemberPage()),
     // 设置
