@@ -86,6 +86,69 @@ class Request {
     }
   }
 
+  /*
+   * post请求
+   */
+  post(url, {data, queryParameters, options, cancelToken, extra}) async {
+    // print('post-data: $data');
+    Response response;
+    try {
+      response = await dio.post(
+        url,
+        data: data,
+        queryParameters: queryParameters,
+        options: options,
+        cancelToken: cancelToken,
+      );
+      // print('post success: ${response.data}');
+      return response;
+    } on DioException catch (e) {
+      print('post error: $e');
+      return Future.error(await ApiInterceptor.dioError(e));
+    }
+  }
+
+  /*
+   * 下载文件
+   */
+  downloadFile(urlPath, savePath) async {
+    Response response;
+    try {
+      response = await dio.download(urlPath, savePath,
+          onReceiveProgress: (int count, int total) {
+        //进度
+        // print("$count $total");
+      });
+      print('downloadFile success: ${response.data}');
+
+      return response.data;
+    } on DioException catch (e) {
+      print('downloadFile error: $e');
+      return Future.error(ApiInterceptor.dioError(e));
+    }
+  }
+
+  // 从cookie中获取 csrf token
+  static Future<String> getCsrf() async {
+    var cookies = await cookieManager.cookieJar
+        .loadForRequest(Uri.parse(HttpString.baseApiUrl));
+    String token = '';
+    if (cookies.where((e) => e.name == 'bili_jct').isNotEmpty) {
+      token = cookies.firstWhere((e) => e.name == 'bili_jct').value;
+    }
+    return token;
+  }
+
+  /*
+   * 取消请求
+   *
+   * 同一个cancel token 可以用于多个请求，当一个cancel token取消时，所有使用该cancel token的请求都会被取消。
+   * 所以参数可选
+   */
+  void cancelRequests(CancelToken token) {
+    token.cancel("cancelled");
+  }
+
   String headerUa({type = "mob"}) {
     String headerUa = "";
     if (type == "mob") {
