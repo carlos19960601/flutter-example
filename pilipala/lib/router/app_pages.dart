@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:pilipala/pages/hot/view.dart';
 import 'package:pilipala/pages/member/view.dart';
 import 'package:pilipala/pages/setting/view.dart';
-import 'package:pilipala/pages/video/view.dart';
+import 'package:pilipala/pages/video/detail/view.dart';
 import 'package:pilipala/pages/webview/view.dart';
 
 class Routes {

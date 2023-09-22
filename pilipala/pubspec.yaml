@@ -50,6 +50,9 @@ dependencies:
   cached_network_image: ^3.2.3
   easy_debounce: ^2.0.3
   logger: ^2.0.2
+  media_kit_video: ^1.1.8
+  media_kit: ^1.1.7
+  media_kit_libs_video: ^1.0.1
 
 dev_dependencies:
   flutter_test:

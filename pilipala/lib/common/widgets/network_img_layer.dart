@@ -28,12 +28,10 @@ class NetworkImgLayer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    int picQuality = 10;
     return src != ""
         ? ClipRect(
             child: CachedNetworkImage(
-              imageUrl:
-                  '${src!.startsWith('//') ? 'https:${src!}' : src!}@${quality ?? picQuality}q.webp',
+              imageUrl: src!.startsWith('//') ? 'https:${src!}' : src!,
               width: width ?? double.infinity,
               height: height ?? double.infinity,
               alignment: Alignment.center,
