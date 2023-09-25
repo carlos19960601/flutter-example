@@ -26,6 +26,7 @@ class _PLVideoPlayerState extends State<PLVideoPlayer>
   late AnimationController animationController;
   late VideoController videoController;
   final PLVideoPlayerController _ctr = Get.put(PLVideoPlayerController());
+  late bool enableBackgroundPlay;
 
   @override
   void initState() {
@@ -35,12 +36,43 @@ class _PLVideoPlayerState extends State<PLVideoPlayer>
       duration: const Duration(milliseconds: 300),
     );
     videoController = widget.controller.videoController!;
+    enableBackgroundPlay = false;
   }
 
   @override
   Widget build(BuildContext context) {
+    final _ = widget.controller;
+    Color colorTheme = Theme.of(context).colorScheme.primary;
+    TextStyle subTitleStyle = const TextStyle(
+      height: 1.5,
+      fontSize: 40.0,
+      letterSpacing: 0.0,
+      wordSpacing: 0.0,
+      color: Color(0xffffffff),
+      fontWeight: FontWeight.normal,
+      backgroundColor: Color(0xaa000000),
+    );
+
+    const textStyle = TextStyle(
+      color: Colors.white,
+      fontSize: 12,
+    );
     return Stack(
-      children: [Obx(() => Video(controller: videoController))],
+      children: [
+        Obx(
+          () => Video(
+            controller: videoController,
+            controls: NoVideoControls,
+            pauseUponEnteringBackgroundMode: !enableBackgroundPlay,
+            subtitleViewConfiguration: SubtitleViewConfiguration(
+              style: subTitleStyle,
+              textAlign: TextAlign.center,
+              padding: const EdgeInsets.all(24.0),
+            ),
+            fit: _.videoFit.value,
+          ),
+        ),
+      ],
     );
   }
 }

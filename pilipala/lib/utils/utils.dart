@@ -49,4 +49,20 @@ class Utils {
   static String makeHeroTag(v) {
     return v.toString() + Random().nextInt(9999).toString();
   }
+
+  static int findClosestNumber(int target, List<int> numbers) {
+    int minDiff = 127;
+    late int closestNumber;
+    try {
+      for (int number in numbers) {
+        int diff = (number - target).abs();
+
+        if (diff < minDiff) {
+          minDiff = diff;
+          closestNumber = number;
+        }
+      }
+    } catch (_) {}
+    return closestNumber;
+  }
 }

@@ -5,7 +5,6 @@ import 'package:pilipala/pages/video/detail/controller.dart';
 import 'package:pilipala/pages/video/detail/reply/view.dart';
 import 'package:pilipala/plugin/pl_player/controller.dart';
 import 'package:pilipala/plugin/pl_player/view.dart';
-import 'package:pilipala/utils/logger.dart';
 import 'package:pilipala/utils/storage.dart';
 
 class VideoDetailPage extends StatefulWidget {
@@ -111,13 +110,14 @@ class _VideoDetailPageState extends State<VideoDetailPage> with RouteAware {
                       child: SizedBox(
                         width: double.infinity,
                         height: 0,
-                        child: Obx(() => TabBar(
+                        child: Obx(
+                          () => TabBar(
                             controller: videoDetailController.tabCtr,
                             tabs: videoDetailController.tabs
-                                .map(
-                                  (String name) => Tab(text: name),
-                                )
-                                .toList())),
+                                .map((String name) => Tab(text: name))
+                                .toList(),
+                          ),
+                        ),
                       ),
                     ),
                     Expanded(
@@ -147,7 +147,6 @@ class _VideoDetailPageState extends State<VideoDetailPage> with RouteAware {
 
   @override
   void didPopNext() {
-    Log().info("=======");
     super.didPopNext();
   }
 }

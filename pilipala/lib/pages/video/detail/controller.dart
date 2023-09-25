@@ -3,12 +3,15 @@ import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:pilipala/common/search_type.dart';
+import 'package:pilipala/http/constants.dart';
 import 'package:pilipala/http/video.dart';
+import 'package:pilipala/models/video/play/quality.dart';
 import 'package:pilipala/models/video/play/url.dart';
 import 'package:pilipala/pages/video/detail/widgets/header_control.dart';
 import 'package:pilipala/plugin/pl_player/controller.dart';
-import 'package:pilipala/utils/logger.dart';
+import 'package:pilipala/plugin/pl_player/models/data_source.dart';
 import 'package:pilipala/utils/storage.dart';
+import 'package:pilipala/utils/utils.dart';
 
 class VideoDetailController extends GetxController
     with GetSingleTickerProviderStateMixin {
@@ -26,6 +29,17 @@ class VideoDetailController extends GetxController
   RxBool autoPlay = true.obs;
   Box setting = GStorage.setting;
 
+  /// 播放器配置 画质 音质 解码格式
+  late VideoQuality currentVideoQa;
+  AudioQuality? currentAudioQa;
+  late VideoDecodeFormats currentDecodeFormats;
+
+  late VideoItem firstVideo;
+  late AudioItem firstAudio;
+  late String videoUrl;
+  late String audioUrl;
+  late Duration defaultST;
+
   late TabController tabCtr;
   RxList<String> tabs = <String>["简介", "评论"].obs;
   // 封面图的展示
@@ -42,8 +56,21 @@ class VideoDetailController extends GetxController
     headerControl = HeaderControl();
   }
 
-  Future playeInit() async {
-    await plPlayerController.setDataSource();
+  Future playeInit(
+      {video, audio, seekToTime, duration, bool autoplay = true}) async {
+    await plPlayerController.setDataSource(
+      DataSource(
+        videoSource: video ?? videoUrl,
+        audioSource: audio ?? audioUrl,
+        type: DataSourceType.network,
+        httpHeaders: {
+          'user-agent':
+              'Mozilla/5.0 (Macintosh; Intel Mac OS X 13_3_1) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.4 Safari/605.1.15',
+          'referer': HttpString.baseUrl
+        },
+      ),
+      autoplay: autoplay,
+    );
   }
 
   // 视频链接
@@ -52,29 +79,28 @@ class VideoDetailController extends GetxController
     if (result['status']) {
       data = result['data'];
       List<VideoItem> allVideosList = data.dash!.video!;
-      Log().info(allVideosList);
 
       try {
-        //     // 当前可播放的最高质量视频
-        //     int currentHighVideoQa = allVideosList.first.quality!.code;
-        //     // 使用预设的画质 ｜ 当前可用的最高质量
-        //     int cacheVideoQa = setting.get(SettingBoxKey.defaultVideoQa,
-        //         defaultValue: currentHighVideoQa);
-        //     int resVideoQa = currentHighVideoQa;
-        //     if (cacheVideoQa <= currentHighVideoQa) {
-        //       // 如果预设的画质低于当前最高
-        //       List<int> numbers = data.acceptQuality!
-        //           .where((e) => e <= currentHighVideoQa)
-        //           .toList();
-        //       resVideoQa = Utils.findClosestNumber(cacheVideoQa, numbers);
-        //     }
-        //     currentVideoQa = VideoQualityCode.fromCode(resVideoQa)!;
+        // 当前可播放的最高质量视频
+        int currentHighVideoQa = allVideosList.first.quality!.code;
+        // 使用预设的画质 ｜ 当前可用的最高质量
+        int cacheVideoQa = setting.get(SettingBoxKey.defaultVideoQa,
+            defaultValue: currentHighVideoQa);
+        int resVideoQa = currentHighVideoQa;
+        if (cacheVideoQa <= currentHighVideoQa) {
+          // 如果预设的画质低于当前最高
+          List<int> numbers = data.acceptQuality!
+              .where((e) => e <= currentHighVideoQa)
+              .toList();
+          resVideoQa = Utils.findClosestNumber(cacheVideoQa, numbers);
+        }
+        currentVideoQa = VideoQualityCode.fromCode(resVideoQa)!;
 
-        //     /// 取出符合当前画质的videoList
-        //     List<VideoItem> videosList =
-        //         allVideosList.where((e) => e.quality!.code == resVideoQa).toList();
+        /// 取出符合当前画质的videoList
+        List<VideoItem> videosList =
+            allVideosList.where((e) => e.quality!.code == resVideoQa).toList();
 
-        //     /// 优先顺序 设置中指定解码格式 -> 当前可选的首个解码格式
+        /// 优先顺序 设置中指定解码格式 -> 当前可选的首个解码格式
         //     List<FormatItem> supportFormats = data.supportFormats!;
         //     // 根据画质选编码格式
         //     List supportDecodeFormats =
@@ -98,14 +124,14 @@ class VideoDetailController extends GetxController
         //       SmartDialog.showToast('DecodeFormats error: $err');
         //     }
 
-        //     /// 取出符合当前解码格式的videoItem
-        //     try {
-        //       firstVideo = videosList.firstWhere(
-        //           (e) => e.codecs!.startsWith(currentDecodeFormats.code));
-        //     } catch (_) {
-        //       firstVideo = videosList.first;
-        //     }
-        //     videoUrl = firstVideo.baseUrl!;
+        /// 取出符合当前解码格式的videoItem
+        try {
+          firstVideo = videosList.firstWhere(
+              (e) => e.codecs!.startsWith(currentDecodeFormats.code));
+        } catch (_) {
+          firstVideo = videosList.first;
+        }
+        videoUrl = firstVideo.baseUrl!;
       } catch (err) {
         SmartDialog.showToast('firstVideo error: $err');
       }
@@ -115,40 +141,40 @@ class VideoDetailController extends GetxController
       List<AudioItem> audiosList = data.dash!.audio!;
 
       try {
-        //     int resultAudioQa = setting.get(SettingBoxKey.defaultAudioQa,
-        //         defaultValue: AudioQuality.hiRes.code);
-        //     if (data.dash!.dolby?.audio?.isNotEmpty == true) {
-        //       // 杜比
-        //       audiosList.insert(0, data.dash!.dolby!.audio!.first);
-        //     }
+        int resultAudioQa = setting.get(SettingBoxKey.defaultAudioQa,
+            defaultValue: AudioQuality.hiRes.code);
+        if (data.dash!.dolby?.audio?.isNotEmpty == true) {
+          // 杜比
+          audiosList.insert(0, data.dash!.dolby!.audio!.first);
+        }
 
-        //     if (data.dash!.flac?.audio != null) {
-        //       // 无损
-        //       audiosList.insert(0, data.dash!.flac!.audio!);
-        //     }
+        if (data.dash!.flac?.audio != null) {
+          // 无损
+          audiosList.insert(0, data.dash!.flac!.audio!);
+        }
 
-        //     if (audiosList.isNotEmpty) {
-        //       List<int> numbers = audiosList.map((map) => map.id!).toList();
-        //       int closestNumber = Utils.findClosestNumber(resultAudioQa, numbers);
-        //       if (!numbers.contains(resultAudioQa) &&
-        //           numbers.any((e) => e > resultAudioQa)) {
-        //         closestNumber = 30280;
-        //       }
-        //       firstAudio = audiosList.firstWhere((e) => e.id == closestNumber);
-        //     } else {
-        //       firstAudio = AudioItem();
-        //     }
+        if (audiosList.isNotEmpty) {
+          List<int> numbers = audiosList.map((map) => map.id!).toList();
+          int closestNumber = Utils.findClosestNumber(resultAudioQa, numbers);
+          if (!numbers.contains(resultAudioQa) &&
+              numbers.any((e) => e > resultAudioQa)) {
+            closestNumber = 30280;
+          }
+          firstAudio = audiosList.firstWhere((e) => e.id == closestNumber);
+        } else {
+          firstAudio = AudioItem();
+        }
       } catch (err) {
         firstAudio = audiosList.isNotEmpty ? audiosList.first : AudioItem();
         SmartDialog.showToast('firstAudio error: $err');
       }
 
-      //   audioUrl = firstAudio.baseUrl ?? '';
-      //   //
-      //   if (firstAudio.id != null) {
-      //     currentAudioQa = AudioQualityCode.fromCode(firstAudio.id!)!;
-      //   }
-      //   defaultST = Duration(milliseconds: data.lastPlayTime!);
+      audioUrl = firstAudio.baseUrl ?? '';
+      //
+      if (firstAudio.id != null) {
+        currentAudioQa = AudioQualityCode.fromCode(firstAudio.id!)!;
+      }
+      defaultST = Duration(milliseconds: data.lastPlayTime!);
       if (autoPlay.value) {
         await playeInit();
         isShowCover.value = false;
