@@ -20,5 +20,10 @@ class En {
         translation.enterNameHint: "Enter name",
         translation.nameHint: "Name",
         translation.income: "Income",
+        translation.categories: "Categories",
+        translation.done: "Done",
+        translation.cancel: "Cancel",
+        translation.addedCategories: "Added categories",
+        translation.defaultCategories: "Default categories",
       };
 }

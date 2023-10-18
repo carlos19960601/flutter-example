@@ -15,3 +15,9 @@ const imageDesc = "imageDesc";
 const enterNameHint = "enterNameHint";
 const nameHint = "nameHint";
 const income = "income";
+const categories = "categories";
+const done = "done";
+const cancel = "cancel";
+const addedCategories = "addedCategories";
+const defaultCategories = "defaultCategories";
+

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:paisa/localization/translation_keys.dart' as translation;
+import 'package:paisa/pages/on_boarding/view.dart';
 import 'package:paisa/utils/storage.dart';
 
 class IntroPage extends StatefulWidget {
@@ -92,6 +93,7 @@ class _IntroPageState extends State<IntroPage> {
           child: ElevatedButton(
             onPressed: () {
               setting.put(SettingBoxKey.userIntroShown, true);
+              Get.off(const UserOnboardingPage());
             },
             style: ElevatedButton.styleFrom(
               padding: const EdgeInsets.all(16),

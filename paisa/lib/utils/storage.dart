@@ -15,4 +15,5 @@ class SettingBoxKey {
   static const String userIntroShown = 'user_intro_shown';
   static const String userNameKey = 'user_name_key';
   static const String userImageKey = 'user_image_key';
+  static String userCategorySelectorKey = 'user_category_selector_key';
 }

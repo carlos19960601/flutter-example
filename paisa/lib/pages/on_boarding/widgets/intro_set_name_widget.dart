@@ -53,9 +53,10 @@ class IntroSetNameWidget extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           Form(
+            key: formState,
             child: TextFormField(
               controller: nameController,
-              keyboardType: TextInputType.none,
+              // keyboardType: TextInputType.none,
               textCapitalization: TextCapitalization.none,
               decoration: InputDecoration(
                 counterText: "",

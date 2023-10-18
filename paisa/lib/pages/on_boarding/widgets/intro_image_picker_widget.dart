@@ -16,19 +16,28 @@ class IntroImagePickerWidget extends StatefulWidget {
 
 class _IntroImagePickerWidgetState extends State<IntroImagePickerWidget> {
   Box setting = GStorage.setting;
+  late String image;
 
   pickImage(BuildContext context) {
     final ImagePicker picker = ImagePicker();
     picker.pickImage(source: ImageSource.gallery).then((pickedFile) {
       if (pickedFile != null) {
         setting.put(SettingBoxKey.userImageKey, pickedFile.path);
+        setState(() {
+          image = pickedFile.path;
+        });
       }
     });
   }
 
   @override
+  void initState() {
+    super.initState();
+    image = setting.get(SettingBoxKey.userImageKey, defaultValue: "");
+  }
+
+  @override
   Widget build(BuildContext context) {
-    String image = setting.get(SettingBoxKey.userImageKey, defaultValue: "");
     return SafeArea(
       child: Column(
         children: [
@@ -65,28 +74,21 @@ class _IntroImagePickerWidgetState extends State<IntroImagePickerWidget> {
                 builder: (context) {
                   if (image.isEmpty) {
                     return CircleAvatar(
-                      child: Icon(Icons.account_circle_outlined),
+                      backgroundColor: Theme.of(context).primaryColor,
                       maxRadius: 72,
+                      child: Icon(
+                        Icons.account_circle_outlined,
+                        color: Theme.of(context).colorScheme.onPrimary,
+                      ),
                     );
                   } else {
                     return CircleAvatar(
                       foregroundImage: FileImage(File(image)),
+                      maxRadius: 72,
                     );
                   }
                 },
               ),
-              // child: Builder(builder: (context) {
-              //   if (image.isEmpty) {
-              //     return CircleAvatar(
-              //       child: Icon(Icons.account_circle_outlined),
-              //       maxRadius: 72,
-              //     );
-              //   } else {
-              //     return CircleAvatar(
-              //       foregroundImage: FileImage(File(image)),
-              //     );
-              //   }
-              // }),
             ),
           )
         ],

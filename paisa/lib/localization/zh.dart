@@ -19,5 +19,10 @@ class Zh {
         translation.enterNameHint: "输入名称",
         translation.nameHint: "名字",
         translation.income: "收入",
+        translation.categories: "类别",
+        translation.done: "完成",
+        translation.cancel: "取消",
+        translation.addedCategories: "已添加的类别",
+        translation.defaultCategories: "默认的类别",
       };
 }
