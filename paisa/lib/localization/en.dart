@@ -25,5 +25,8 @@ class En {
         translation.cancel: "Cancel",
         translation.addedCategories: "Added categories",
         translation.defaultCategories: "Default categories",
+        translation.accounts: "Accounts",
+        translation.addedAccounts: "Added accounts",
+        translation.defaultAccounts: "Default accounts",
       };
 }

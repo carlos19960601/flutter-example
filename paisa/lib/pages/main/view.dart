@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:paisa/pages/account_selector/view.dart';
 import 'package:paisa/pages/category_selector/view.dart';
 import 'package:paisa/pages/intro/view.dart';
 import 'package:paisa/pages/on_boarding/view.dart';
@@ -18,6 +19,7 @@ class _MainPageState extends State<MainPage> {
   late String name;
   late String image;
   late bool userCategorySelectorDone;
+  late bool accountSelectorDone;
 
   @override
   void initState() {
@@ -28,6 +30,8 @@ class _MainPageState extends State<MainPage> {
     image = setting.get(SettingBoxKey.userImageKey, defaultValue: "");
     userCategorySelectorDone =
         setting.get(SettingBoxKey.userCategorySelectorKey, defaultValue: false);
+    accountSelectorDone =
+        setting.get(SettingBoxKey.userAccountSelectorKey, defaultValue: false);
   }
 
   @override
@@ -43,6 +47,9 @@ class _MainPageState extends State<MainPage> {
       return const CategorySelectorPage();
     }
 
+    if (!accountSelectorDone) {
+      return const AccountSelectorPage();
+    }
     return const Placeholder();
   }
 }

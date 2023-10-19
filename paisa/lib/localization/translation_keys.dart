@@ -20,4 +20,6 @@ const done = "done";
 const cancel = "cancel";
 const addedCategories = "addedCategories";
 const defaultCategories = "defaultCategories";
-
+const accounts = "accounts";
+const addedAccounts = "addedAccounts";
+const defaultAccounts = "defaultAccounts";

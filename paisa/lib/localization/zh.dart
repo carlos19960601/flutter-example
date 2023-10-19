@@ -24,5 +24,8 @@ class Zh {
         translation.cancel: "取消",
         translation.addedCategories: "已添加的类别",
         translation.defaultCategories: "默认的类别",
+        translation.accounts: "账户",
+        translation.addedAccounts: "已添加的账户",
+        translation.defaultAccounts: "默认的账户",
       };
 }

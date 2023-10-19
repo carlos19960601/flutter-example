@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:paisa/localization/translation_keys.dart' as translation;
+import 'package:paisa/pages/category_selector/view.dart';
 import 'package:paisa/pages/on_boarding/widgets/intro_image_picker_widget.dart';
 import 'package:paisa/pages/on_boarding/widgets/intro_set_name_widget.dart';
 import 'package:paisa/utils/storage.dart';
@@ -47,6 +48,8 @@ class _UserOnboardingPageState extends State<UserOnboardingPage> {
               Visibility(
                 visible: currentIndex != 0,
                 child: FloatingActionButton.extended(
+                  // if not set heroTag, please see https://stackoverflow.com/questions/51125024/there-are-multiple-heroes-that-share-the-same-tag-within-a-subtree
+                  heroTag: null,
                   onPressed: () {
                     _pageController.previousPage(
                       duration: const Duration(milliseconds: 300),
@@ -66,6 +69,7 @@ class _UserOnboardingPageState extends State<UserOnboardingPage> {
               ),
               const Spacer(),
               FloatingActionButton.extended(
+                heroTag: null,
                 onPressed: () {
                   if (currentIndex == 0) {
                     if (_formState.currentState!.validate()) {
@@ -82,7 +86,7 @@ class _UserOnboardingPageState extends State<UserOnboardingPage> {
                     if (image.isEmpty) {
                       setting.put(SettingBoxKey.userImageKey, "no-image");
                     }
-                    // Get.off(page);
+                    Get.off(() => const CategorySelectorPage());
                   }
                 },
                 label: const Icon(Icons.arrow_forward),
