@@ -41,9 +41,10 @@ class _MainAppState extends State<MainApp> {
     double statusBarHeight = MediaQuery.of(context).padding.top;
     Box localCache = GStorage.localCache;
     localCache.put('statusBarHeight', statusBarHeight);
-    return WillPopScope(
+    return PopScope(
+      canPop: true,
       child: Scaffold(
-        extendBody: true,
+        extendBody: true, // 回延伸body到bottomNavigationBar的位置
         body: PageView(
           physics: const NeverScrollableScrollPhysics(),
           controller: _pageController,
@@ -53,23 +54,36 @@ class _MainAppState extends State<MainApp> {
             setState(() {});
           },
         ),
-        bottomNavigationBar: NavigationBar(
-          onDestinationSelected: (value) => setIndex(value),
-          selectedIndex: selectedIndex,
-          destinations: _mainController.navigationBars
-              .map(
-                (e) => NavigationDestination(
-                  icon: e["icon"],
-                  label: e["label"],
-                  selectedIcon: e["selectIcon"],
-                ),
-              )
-              .toList(),
+        // Q: 为什么用 StreamBuilder, 和 setState 有什么区别？
+        // A: StreamBuilder性能更好，setState回导致子树rebuild
+        bottomNavigationBar: StreamBuilder(
+          stream: _mainController.bottomBarStream.stream,
+          initialData: true,
+          builder: (context, AsyncSnapshot snapshot) {
+            return AnimatedSlide(
+              curve: Curves.easeInOutCubicEmphasized,
+              offset: Offset(
+                0,
+                snapshot.data ? 0 : 1,
+              ), // 控制下面的导航菜单显示，dx，dy是相对child的大小的
+              duration: const Duration(milliseconds: 500),
+              child: NavigationBar(
+                onDestinationSelected: (value) => setIndex(value),
+                selectedIndex: selectedIndex,
+                destinations: _mainController.navigationBars
+                    .map(
+                      (e) => NavigationDestination(
+                        icon: e["icon"],
+                        label: e["label"],
+                        selectedIcon: e["selectIcon"],
+                      ),
+                    )
+                    .toList(),
+              ),
+            );
+          },
         ),
       ),
-      onWillPop: () async {
-        return true;
-      },
     );
   }
 }

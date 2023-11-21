@@ -123,19 +123,22 @@ class LevelInfoAdapter extends TypeAdapter<LevelInfo> {
       currentLevel: fields[0] as int?,
       currentMin: fields[1] as int?,
       currentExp: fields[2] as int?,
+      nextExp: fields[3] as int?,
     );
   }
 
   @override
   void write(BinaryWriter writer, LevelInfo obj) {
     writer
-      ..writeByte(3)
+      ..writeByte(4)
       ..writeByte(0)
       ..write(obj.currentLevel)
       ..writeByte(1)
       ..write(obj.currentMin)
       ..writeByte(2)
-      ..write(obj.currentExp);
+      ..write(obj.currentExp)
+      ..writeByte(3)
+      ..write(obj.nextExp);
   }
 
   @override

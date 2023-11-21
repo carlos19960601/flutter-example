@@ -8,6 +8,7 @@ class GStorage {
   static late final Box recVideo;
   static late final Box localCache;
   static late final Box setting;
+  static late final Box historyword;
 
   static Future<void> init() async {
     final dir = await getApplicationSupportDirectory();
@@ -34,6 +35,13 @@ class GStorage {
 
     // 设置
     setting = await Hive.openBox('setting');
+    // 搜索历史
+    historyword = await Hive.openBox(
+      'historyWord',
+      compactionStrategy: (entries, deletedEntries) {
+        return deletedEntries > 10;
+      },
+    );
   }
 
   static regAdapter() {
@@ -115,4 +123,5 @@ class SettingBoxKey {
   static const String customColor = 'customColor'; // 自定义主题色
   static const String iosTransition = 'iosTransition'; // ios路由
   static const String enableSingleRow = 'enableSingleRow'; // 首页单列
+  static const String customRows = 'customRows'; // 自定义列
 }

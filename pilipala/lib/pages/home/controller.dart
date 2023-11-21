@@ -28,7 +28,11 @@ class HomeController extends GetxController with GetTickerProviderStateMixin {
     tabsPageList = tabsConfig.map<Widget>((e) => e["page"]).toList();
     tabCtrList = tabsConfig.map((e) => e['ctr']).toList();
 
-    tabController = TabController(length: tabs.length, vsync: this);
+    tabController = TabController(
+      initialIndex: initialIndex,
+      length: tabs.length,
+      vsync: this,
+    );
   }
 
   void updateLoginStatus(val) async {

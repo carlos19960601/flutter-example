@@ -1,5 +1,6 @@
 import 'package:pilipala/http/api.dart';
 import 'package:pilipala/http/init.dart';
+import 'package:pilipala/models/user/fav_folder.dart';
 import 'package:pilipala/models/user/info.dart';
 import 'package:pilipala/models/user/stat.dart';
 
@@ -23,6 +24,32 @@ class UserHttp {
       return {'status': true, 'data': data};
     } else {
       return {'status': false, 'data': [], 'msg': res.data['message']};
+    }
+  }
+
+  // 收藏夹
+  static Future<dynamic> userfavFolder({
+    required int pn,
+    required int ps,
+    required int mid,
+  }) async {
+    var res = await Request().get(Api.userFavFolder, data: {
+      'pn': pn,
+      'ps': ps,
+      'up_mid': mid,
+    });
+    if (res.data['code'] == 0) {
+      late FavFolderData data;
+      if (res.data['data'] != null) {
+        data = FavFolderData.fromJson(res.data['data']);
+        return {'status': true, 'data': data};
+      }
+    } else {
+      return {
+        'status': false,
+        'data': [],
+        'msg': res.data['message'] ?? '账号未登录'
+      };
     }
   }
 }
