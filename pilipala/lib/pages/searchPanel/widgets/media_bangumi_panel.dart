@@ -5,7 +5,7 @@ Widget searchMbangumiPanel(BuildContext context, ctr, list) {
   return ListView.builder(itemBuilder: (context, index) {
     return InkWell(
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(
+        padding: EdgeInsets.fromLTRB(
             StyleString.safeSpace, 7, StyleString.safeSpace, 7),
         child: Row(
           children: [],

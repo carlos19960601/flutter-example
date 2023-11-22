@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
+import 'package:pilipala/models/common/search_type.dart';
+import 'package:pilipala/pages/bangumi/introduction/view.dart';
 import 'package:pilipala/pages/video/detail/controller.dart';
+import 'package:pilipala/pages/video/detail/introduction/view.dart';
+import 'package:pilipala/pages/video/detail/related/view.dart';
 import 'package:pilipala/pages/video/detail/reply/view.dart';
 import 'package:pilipala/plugin/pl_player/controller.dart';
 import 'package:pilipala/plugin/pl_player/view.dart';
@@ -12,6 +16,8 @@ class VideoDetailPage extends StatefulWidget {
 
   @override
   State<VideoDetailPage> createState() => _VideoDetailPageState();
+  static final RouteObserver<PageRoute> routeObserver =
+      RouteObserver<PageRoute>();
 }
 
 class _VideoDetailPageState extends State<VideoDetailPage> with RouteAware {
@@ -23,6 +29,7 @@ class _VideoDetailPageState extends State<VideoDetailPage> with RouteAware {
   late double statusBarHeight;
   Box localCache = GStorage.localCache;
   Box setting = GStorage.setting;
+  late bool autoPlayEnable;
 
   @override
   void initState() {
@@ -30,10 +37,19 @@ class _VideoDetailPageState extends State<VideoDetailPage> with RouteAware {
     heroTag = Get.arguments["heroTag"];
     videoDetailController = Get.put(VideoDetailController(), tag: heroTag);
     statusBarHeight = localCache.get('statusBarHeight');
-    videoSouceInit();
+    autoPlayEnable =
+        setting.get(SettingBoxKey.autoPlayEnable, defaultValue: true);
+    videoSourceInit();
   }
 
-  Future<void> videoSouceInit() async {
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    VideoDetailPage.routeObserver
+        .subscribe(this, ModalRoute.of(context) as PageRoute);
+  }
+
+  Future<void> videoSourceInit() async {
     _futureBuilderFuture = videoDetailController.queryVideoUrl();
     if (videoDetailController.autoPlay.value) {
       plPlayerController = videoDetailController.plPlayerController;
@@ -41,14 +57,13 @@ class _VideoDetailPageState extends State<VideoDetailPage> with RouteAware {
   }
 
   Future<void> handlePlay() async {
-    await videoDetailController.playeInit();
+    await videoDetailController.playerInit();
     videoDetailController.autoPlay.value = true;
   }
 
   @override
   Widget build(BuildContext context) {
     final videoHeight = MediaQuery.of(context).size.width * 9 / 16;
-
     Widget childWhenDisabled = SafeArea(
       top: false,
       bottom: false,
@@ -70,7 +85,6 @@ class _VideoDetailPageState extends State<VideoDetailPage> with RouteAware {
                           builder: (context, constraints) {
                             double maxWidth = constraints.maxWidth;
                             double maxHeight = constraints.maxHeight;
-
                             return Stack(
                               children: [
                                 FutureBuilder(
@@ -78,15 +92,17 @@ class _VideoDetailPageState extends State<VideoDetailPage> with RouteAware {
                                   builder: (context, snapshot) {
                                     if (snapshot.hasData &&
                                         snapshot.data["status"]) {
-                                      return Obx(() => !videoDetailController
-                                              .autoPlay.value
-                                          ? const SizedBox()
-                                          : PLVideoPlayer(
-                                              controller: plPlayerController!,
-                                              headerControl:
-                                                  videoDetailController
-                                                      .headerControl,
-                                            ));
+                                      return Obx(
+                                        () => !videoDetailController
+                                                .autoPlay.value
+                                            ? const SizedBox()
+                                            : PLVideoPlayer(
+                                                controller: plPlayerController!,
+                                                headerControl:
+                                                    videoDetailController
+                                                        .headerControl,
+                                              ),
+                                      );
                                     }
                                     return const SizedBox();
                                   },
@@ -126,7 +142,30 @@ class _VideoDetailPageState extends State<VideoDetailPage> with RouteAware {
                         children: [
                           Builder(
                             builder: (context) {
-                              return CustomScrollView();
+                              return CustomScrollView(
+                                slivers: [
+                                  if (SearchType.video ==
+                                      videoDetailController.videoType) ...[
+                                    const VideoIntroPanel(),
+                                  ] else if (SearchType.media_bangumi ==
+                                      videoDetailController.videoType) ...[
+                                    Obx(
+                                      () => BangumiIntroPanel(
+                                          cid: videoDetailController.cid.value),
+                                    ),
+                                  ],
+                                  SliverToBoxAdapter(
+                                    child: Divider(
+                                      indent: 12,
+                                      endIndent: 12,
+                                      color: Theme.of(context)
+                                          .dividerColor
+                                          .withOpacity(0.06),
+                                    ),
+                                  ),
+                                  const RelatedVideoPanel(),
+                                ],
+                              );
                             },
                           ),
                           VideoReplyPanel(bvid: videoDetailController.bvid),
@@ -146,7 +185,34 @@ class _VideoDetailPageState extends State<VideoDetailPage> with RouteAware {
   }
 
   @override
-  void didPopNext() {
+  // 返回当前页面时
+  void didPopNext() async {
+    bool autoplay = autoPlayEnable;
+    videoDetailController.playerInit(autoplay: autoplay);
+
+    if (autoplay) {
+      await Future.delayed(const Duration(milliseconds: 300));
+      plPlayerController!.seekTo(videoDetailController.defaultST);
+      plPlayerController?.play();
+    }
     super.didPopNext();
+  }
+
+  @override
+  // 离开当前页面时
+  void didPushNext() {
+    if (plPlayerController != null) {
+      videoDetailController.defaultST = plPlayerController!.position.value;
+      plPlayerController!.pause();
+    }
+    super.didPushNext();
+  }
+
+  @override
+  void dispose() {
+    if (plPlayerController != null) {
+      plPlayerController!.dispose();
+    }
+    super.dispose();
   }
 }

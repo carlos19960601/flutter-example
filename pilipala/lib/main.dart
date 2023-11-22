@@ -8,6 +8,7 @@ import 'package:pilipala/common/widgets/custom_toast.dart';
 import 'package:pilipala/http/init.dart';
 import 'package:pilipala/models/common/color_type.dart';
 import 'package:pilipala/pages/main/view.dart';
+import 'package:pilipala/pages/video/detail/view.dart';
 import 'package:pilipala/router/app_pages.dart';
 import 'package:pilipala/utils/storage.dart';
 
@@ -20,6 +21,7 @@ void main() async {
     await GStorage.init();
     runApp(const MyApp());
     await Request().setCookie();
+    GStorage.lazyInit();
   });
 }
 
@@ -62,6 +64,9 @@ class MyApp extends StatelessWidget {
               child: child!,
             );
           },
+          navigatorObservers: [
+            VideoDetailPage.routeObserver,
+          ],
         );
       },
     );

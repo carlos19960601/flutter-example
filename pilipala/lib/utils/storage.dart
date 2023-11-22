@@ -9,6 +9,7 @@ class GStorage {
   static late final Box localCache;
   static late final Box setting;
   static late final Box historyword;
+  static late final Box video;
 
   static Future<void> init() async {
     final dir = await getApplicationSupportDirectory();
@@ -42,6 +43,11 @@ class GStorage {
         return deletedEntries > 10;
       },
     );
+  }
+
+  static Future<void> lazyInit() async {
+    // 视频设置
+    video = await Hive.openBox('video');
   }
 
   static regAdapter() {
@@ -78,6 +84,16 @@ class VideoBoxKey {
   static const String videoBrightness = 'videoBrightness';
   // 倍速
   static const String videoSpeed = 'videoSpeed';
+  // 播放顺序
+  static const String playRepeat = 'playRepeat';
+  // 默认倍速
+  static const String playSpeedDefault = 'playSpeedDefault';
+  // 默认长按倍速
+  static const String longPressSpeedDefault = 'longPressSpeedDefault';
+  // 自定义倍速集合
+  static const String customSpeedsList = 'customSpeedsList';
+  // 画面填充比例
+  static const String cacheVideoFit = 'cacheVideoFit';
 }
 
 class SettingBoxKey {

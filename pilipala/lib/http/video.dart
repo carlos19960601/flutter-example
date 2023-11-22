@@ -5,6 +5,7 @@ import 'package:pilipala/http/init.dart';
 import 'package:pilipala/models/home/rcmd/result.dart';
 import 'package:pilipala/models/model_hot_video_item.dart';
 import 'package:pilipala/models/video/play/url.dart';
+import 'package:pilipala/models/video/video_detail_res.dart';
 import 'package:pilipala/utils/storage.dart';
 
 class VideoHttp {
@@ -99,6 +100,83 @@ class VideoHttp {
       }
     } catch (err) {
       return {'status': false, 'data': [], 'msg': err};
+    }
+  }
+
+  // 视频信息 标题、简介
+  static Future videoIntro({required String bvid}) async {
+    var res = await Request().get(Api.videoIntro, data: {'bvid': bvid});
+    VideoDetailResponse result = VideoDetailResponse.fromJson(res.data);
+    if (result.code == 0) {
+      return {'status': true, 'data': result.data!};
+    } else {
+      Map errMap = {
+        -400: '请求错误',
+        -403: '权限不足',
+        -404: '视频资源失效',
+        62002: '稿件不可见',
+        62004: '稿件审核中',
+      };
+      return {
+        'status': false,
+        'data': null,
+        'code': result.code,
+        'msg': errMap[result.code] ?? '请求异常',
+      };
+    }
+  }
+
+  // 获取点赞状态
+  static Future hasLikeVideo({required String bvid}) async {
+    var res = await Request().get(Api.hasLikeVideo, data: {'bvid': bvid});
+    if (res.data['code'] == 0) {
+      return {'status': true, 'data': res.data['data']};
+    } else {
+      return {'status': false, 'data': []};
+    }
+  }
+
+  // 获取投币状态
+  static Future hasCoinVideo({required String bvid}) async {
+    var res = await Request().get(Api.hasCoinVideo, data: {'bvid': bvid});
+    if (res.data['code'] == 0) {
+      return {'status': true, 'data': res.data['data']};
+    } else {
+      return {'status': true, 'data': []};
+    }
+  }
+
+  // 获取收藏状态
+  static Future hasFavVideo({required int aid}) async {
+    var res = await Request().get(Api.hasFavVideo, data: {'aid': aid});
+    if (res.data['code'] == 0) {
+      return {'status': true, 'data': res.data['data']};
+    } else {
+      return {'status': false, 'data': []};
+    }
+  }
+
+  // 查询是否关注up
+  static Future hasFollow({required int mid}) async {
+    var res = await Request().get(Api.hasFollow, data: {'fid': mid});
+    if (res.data['code'] == 0) {
+      return {'status': true, 'data': res.data['data']};
+    } else {
+      return {'status': true, 'data': []};
+    }
+  }
+
+  // 相关视频
+  static Future relatedVideoList({required String bvid}) async {
+    var res = await Request().get(Api.relatedList, data: {'bvid': bvid});
+    if (res.data['code'] == 0) {
+      List<HotVideoItemModel> list = [];
+      for (var i in res.data['data']) {
+        list.add(HotVideoItemModel.fromJson(i));
+      }
+      return {'status': true, 'data': list};
+    } else {
+      return {'status': false, 'data': []};
     }
   }
 }

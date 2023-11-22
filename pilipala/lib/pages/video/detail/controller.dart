@@ -1,10 +1,13 @@
+import 'dart:io';
+
+import 'package:floating/floating.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
-import 'package:pilipala/common/search_type.dart';
 import 'package:pilipala/http/constants.dart';
 import 'package:pilipala/http/video.dart';
+import 'package:pilipala/models/common/search_type.dart';
 import 'package:pilipala/models/video/play/quality.dart';
 import 'package:pilipala/models/video/play/url.dart';
 import 'package:pilipala/pages/video/detail/widgets/header_control.dart';
@@ -16,7 +19,7 @@ import 'package:pilipala/utils/utils.dart';
 class VideoDetailController extends GetxController
     with GetSingleTickerProviderStateMixin {
   String bvid = Get.parameters["bvid"]!;
-  int cid = int.parse(Get.parameters["cid"]!);
+  RxInt cid = int.parse(Get.parameters["cid"]!).obs;
   RxInt danmakuCid = 0.obs;
   String heroTag = Get.arguments["heroTag"];
   // 视频详情
@@ -44,6 +47,7 @@ class VideoDetailController extends GetxController
   RxList<String> tabs = <String>["简介", "评论"].obs;
   // 封面图的展示
   RxBool isShowCover = true.obs;
+  Floating? floating;
 
   PlPlayerController plPlayerController = PlPlayerController.getInstance();
   late PreferredSizeWidget headerControl;
@@ -53,10 +57,17 @@ class VideoDetailController extends GetxController
     super.onInit();
     tabCtr = TabController(length: 2, vsync: this);
 
-    headerControl = HeaderControl();
+    if (Platform.isAndroid) {
+      floating = Floating();
+    }
+    headerControl = HeaderControl(
+      controller: plPlayerController,
+      videoDetailCtr: this,
+      floating: floating,
+    );
   }
 
-  Future playeInit(
+  Future playerInit(
       {video, audio, seekToTime, duration, bool autoplay = true}) async {
     await plPlayerController.setDataSource(
       DataSource(
@@ -71,11 +82,15 @@ class VideoDetailController extends GetxController
       ),
       autoplay: autoplay,
     );
+
+    /// 开启自动全屏时，在player初始化完成后立即传入headerControl
+    plPlayerController.headerControl = headerControl;
   }
 
   // 视频链接
+  // 如果 autoplay == true, 会去初始化Player
   Future queryVideoUrl() async {
-    var result = await VideoHttp.videoUrl(cid: cid, bvid: bvid);
+    var result = await VideoHttp.videoUrl(cid: cid.value, bvid: bvid);
     if (result['status']) {
       data = result['data'];
       List<VideoItem> allVideosList = data.dash!.video!;
@@ -100,29 +115,29 @@ class VideoDetailController extends GetxController
         List<VideoItem> videosList =
             allVideosList.where((e) => e.quality!.code == resVideoQa).toList();
 
-        /// 优先顺序 设置中指定解码格式 -> 当前可选的首个解码格式
-        //     List<FormatItem> supportFormats = data.supportFormats!;
-        //     // 根据画质选编码格式
-        //     List supportDecodeFormats =
-        //         supportFormats.firstWhere((e) => e.quality == resVideoQa).codecs!;
-        //     // 默认从设置中取AVC
-        //     currentDecodeFormats = VideoDecodeFormatsCode.fromString(setting.get(
-        //         SettingBoxKey.defaultDecode,
-        //         defaultValue: VideoDecodeFormats.values.last.code))!;
-        //     try {
-        //       // 当前视频没有对应格式返回第一个
-        //       bool flag = false;
-        //       for (var i in supportDecodeFormats) {
-        //         if (i.startsWith(currentDecodeFormats.code)) {
-        //           flag = true;
-        //         }
-        //       }
-        //       currentDecodeFormats = flag
-        //           ? currentDecodeFormats
-        //           : VideoDecodeFormatsCode.fromString(supportDecodeFormats.first)!;
-        //     } catch (err) {
-        //       SmartDialog.showToast('DecodeFormats error: $err');
-        //     }
+        // 优先顺序 设置中指定解码格式 -> 当前可选的首个解码格式
+        List<FormatItem> supportFormats = data.supportFormats!;
+        // 根据画质选编码格式
+        List supportDecodeFormats =
+            supportFormats.firstWhere((e) => e.quality == resVideoQa).codecs!;
+        // 默认从设置中取AVC
+        currentDecodeFormats = VideoDecodeFormatsCode.fromString(setting.get(
+            SettingBoxKey.defaultDecode,
+            defaultValue: VideoDecodeFormats.values.last.code))!;
+        try {
+          // 当前视频没有对应格式返回第一个
+          bool flag = false;
+          for (var i in supportDecodeFormats) {
+            if (i.startsWith(currentDecodeFormats.code)) {
+              flag = true;
+            }
+          }
+          currentDecodeFormats = flag
+              ? currentDecodeFormats
+              : VideoDecodeFormatsCode.fromString(supportDecodeFormats.first)!;
+        } catch (err) {
+          SmartDialog.showToast('DecodeFormats error: $err');
+        }
 
         /// 取出符合当前解码格式的videoItem
         try {
@@ -176,7 +191,7 @@ class VideoDetailController extends GetxController
       }
       defaultST = Duration(milliseconds: data.lastPlayTime!);
       if (autoPlay.value) {
-        await playeInit();
+        await playerInit();
         isShowCover.value = false;
       }
     } else {

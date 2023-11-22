@@ -67,6 +67,5 @@ class _BangumiPageState extends State<BangumiPage>
   }
 
   @override
-  // TODO: implement wantKeepAlive
   bool get wantKeepAlive => true;
 }

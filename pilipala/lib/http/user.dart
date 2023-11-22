@@ -52,4 +52,32 @@ class UserHttp {
       };
     }
   }
+
+  // 稍后再看
+  static Future toViewLater({String? bvid, dynamic aid}) async {
+    var data = {'csrf': await Request.getCsrf()};
+    if (bvid != null) {
+      data['bvid'] = bvid;
+    } else if (aid != null) {
+      data['aid'] = aid;
+    }
+    var res = await Request().post(
+      Api.toViewLater,
+      queryParameters: data,
+    );
+    if (res.data['code'] == 0) {
+      return {'status': true, 'msg': 'yeah！稍后再看'};
+    } else {
+      return {'status': false, 'msg': res.data['message']};
+    }
+  }
+
+  static Future<dynamic> userStat({required int mid}) async {
+    var res = await Request().get(Api.userStat, data: {'vmid': mid});
+    if (res.data['code'] == 0) {
+      return {'status': true, 'data': res.data['data']};
+    } else {
+      return {'status': false};
+    }
+  }
 }

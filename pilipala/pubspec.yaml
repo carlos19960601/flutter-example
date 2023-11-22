@@ -54,6 +54,10 @@ dependencies:
   media_kit: ^1.1.7
   media_kit_libs_video: ^1.0.1
   universal_platform: ^1.0.0+1
+  custom_sliding_segmented_control: ^1.8.1
+  flutter_svg: ^2.0.9
+  floating: ^2.0.1
+  font_awesome_flutter: ^10.6.0
 
 dev_dependencies:
   flutter_test:

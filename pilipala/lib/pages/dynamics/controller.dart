@@ -16,6 +16,7 @@ class DynamicsController extends GetxController {
   RxString dynamicsTypeLable = "全部".obs;
   final ScrollController scrollController = ScrollController();
   Rx<FollowUpModel> upData = FollowUpModel().obs;
+  // 默认获取全部动态
   RxInt mid = (-1).obs;
   Rx<UpItem> upInfo = UpItem().obs;
   List filterTypeList = [
@@ -52,6 +53,15 @@ class DynamicsController extends GetxController {
     userInfo = userInfoCache.get('userInfoCache');
     userLogin.value = userInfo != null;
     dynamicsType = DynamicsType.values[initialValue.value].obs;
+  }
+
+  onSelectType(value) async {
+    dynamicsType.value = filterTypeList[value]['value'];
+    dynamicsList.value = [DynamicItemModel()];
+    page = 1;
+    initialValue.value = value;
+    await queryFollowDynamic();
+    scrollController.jumpTo(0);
   }
 
   Future queryFollowDynamic({type = "init"}) async {
@@ -93,6 +103,7 @@ class DynamicsController extends GetxController {
     if (!userLogin.value) {
       return {'status': false, 'msg': '账号未登录'};
     }
+
     if (type == 'init') {
       upData.value.upList = [];
       upData.value.liveUsers = LiveUsers();

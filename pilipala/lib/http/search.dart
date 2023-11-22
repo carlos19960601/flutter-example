@@ -1,9 +1,9 @@
 import 'dart:convert';
 
 import 'package:hive/hive.dart';
-import 'package:pilipala/common/search_type.dart';
 import 'package:pilipala/http/api.dart';
 import 'package:pilipala/http/init.dart';
+import 'package:pilipala/models/common/search_type.dart';
 import 'package:pilipala/models/search/hot.dart';
 import 'package:pilipala/models/search/result.dart';
 import 'package:pilipala/models/search/suggest.dart';
