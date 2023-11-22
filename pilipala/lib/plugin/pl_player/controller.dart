@@ -142,9 +142,6 @@ class PlPlayerController {
     return _instance!;
   }
 
-  /// 视频比例
-  Rx<BoxFit> get videoFit => _videoFit;
-
   VideoController? get videoController => _videoController;
 
   Future<Player> _createVideoController(
