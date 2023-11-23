@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:floating/floating.dart';
@@ -69,6 +70,7 @@ class VideoDetailController extends GetxController
 
   Future playerInit(
       {video, audio, seekToTime, duration, bool autoplay = true}) async {
+    log("=== plPlayerController: ${plPlayerController.toString()}");
     await plPlayerController.setDataSource(
       DataSource(
         videoSource: video ?? videoUrl,
@@ -80,6 +82,7 @@ class VideoDetailController extends GetxController
           'referer': HttpString.baseUrl
         },
       ),
+      duration: duration ?? Duration(milliseconds: data.timeLength ?? 0),
       autoplay: autoplay,
     );
 
@@ -146,6 +149,7 @@ class VideoDetailController extends GetxController
         } catch (_) {
           firstVideo = videosList.first;
         }
+        log("=======");
         videoUrl = firstVideo.baseUrl!;
       } catch (err) {
         SmartDialog.showToast('firstVideo error: $err');

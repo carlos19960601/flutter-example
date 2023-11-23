@@ -58,6 +58,7 @@ dependencies:
   flutter_svg: ^2.0.9
   floating: ^2.0.1
   font_awesome_flutter: ^10.6.0
+  audio_video_progress_bar: ^2.0.1
 
 dev_dependencies:
   flutter_test:

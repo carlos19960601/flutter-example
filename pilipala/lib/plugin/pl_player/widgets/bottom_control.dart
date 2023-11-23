@@ -1,9 +1,11 @@
+import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:pilipala/plugin/pl_player/controller.dart';
 import 'package:pilipala/plugin/pl_player/utils.dart';
 import 'package:pilipala/plugin/pl_player/widgets/common_btn.dart';
+import 'package:pilipala/plugin/pl_player/widgets/play_pause.btn.dart';
 
 class BottomControl extends StatelessWidget implements PreferredSizeWidget {
   final PlPlayerController? controller;
@@ -13,6 +15,7 @@ class BottomControl extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    Color colorTheme = Theme.of(context).colorScheme.primary;
     const textStyle = TextStyle(
       color: Colors.white,
       fontSize: 12,
@@ -24,9 +27,34 @@ class BottomControl extends StatelessWidget implements PreferredSizeWidget {
       height: 85,
       padding: const EdgeInsets.only(left: 14, right: 14),
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
         children: [
+
+          Obx(() {
+            final int max = _.duration.value.inSeconds;
+            final int value = _.sliderPosition.value.inSeconds;
+            final int buffer = _.buffered.value.inSeconds;
+            return Padding(
+              padding: const EdgeInsets.only(left: 7, right: 7, bottom: 6),
+              child: ProgressBar(
+                progress: Duration(seconds: value),
+                total: Duration(seconds: max),
+                buffered: Duration(seconds: buffer),
+                barHeight: 3.0,
+                thumbRadius: 5,
+                progressBarColor: colorTheme,
+                baseBarColor: Colors.white.withOpacity(0.2),
+                bufferedBarColor: colorTheme.withOpacity(0.4),
+                timeLabelLocation: TimeLabelLocation.none,
+                thumbColor: colorTheme,
+              ),
+            );
+          }),
           Row(
             children: [
+               PlayOrPauseButton(
+                controller: _,
+              ),
               const SizedBox(width: 4),
               // 播放时间
               Obx(() {
@@ -80,7 +108,7 @@ class BottomControl extends StatelessWidget implements PreferredSizeWidget {
               ),
             ],
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 12,),
         ],
       ),
     );

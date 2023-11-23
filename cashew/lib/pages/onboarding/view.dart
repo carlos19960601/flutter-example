@@ -1,4 +1,5 @@
 import 'package:cashew/common/constants.dart';
+import 'package:cashew/common/widgets/button_icon.dart';
 import 'package:cashew/common/widgets/text_font.dart';
 import 'package:flutter/material.dart';
 import 'package:cashew/localization/translation_keys.dart' as translation_keys;
@@ -45,16 +46,51 @@ class _OnBoardingPageBodyState extends State<OnBoardingPageBody> {
             child: imageLanding1,
           ),
           const SizedBox(height: 15),
-          TextFont(
-            text: translation_keys.onboardingTitle1
-                .trParams({"app": globalAppName}),
-            fontWeight: FontWeight.bold,
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 25),
+            child: TextFont(
+              text: translation_keys.onboardingTitle1
+                  .trParams({"app": globalAppName}),
+              fontWeight: FontWeight.bold,
+              textAlign: TextAlign.center,
+              fontSize: 25,
+              maxLines: 5,
+            ),
           ),
           const SizedBox(height: 15),
-          TextFont(text: translation_keys.onboardingInfo1.tr),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 25),
+            child: TextFont(
+              text: translation_keys.onboardingInfo1.tr,
+              textAlign: TextAlign.center,
+              fontSize: 16,
+              maxLines: 5,
+            ),
+          ),
           const SizedBox(height: 55),
         ],
       ),
+      OnBoardPage(widgets: [
+        Container(
+          child: imageLanding2,
+        ),
+        const SizedBox(height: 15),
+        TextFont(
+          text: translation_keys.onboardingTitle2.tr,
+          fontWeight: FontWeight.bold,
+          textAlign: TextAlign.center,
+          fontSize: 25,
+          maxLines: 5,
+        ),
+        const SizedBox(
+          height: 10,
+        ),
+        TextFont(
+          text: translation_keys.onboardingInfo2.tr,
+          fontSize: 15,
+          maxLines: 5,
+        ),
+      ]),
       OnBoardPage(widgets: [
         Container(
           child: imageLanding3,
@@ -82,66 +118,63 @@ class _OnBoardingPageBodyState extends State<OnBoardingPageBody> {
           child: Padding(
             padding: EdgeInsets.only(
                 bottom: MediaQuery.of(context).viewPadding.bottom),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                AnimatedOpacity(
-                  opacity: currentIndex <= 0 ? 0 : 1,
-                  duration: const Duration(milliseconds: 200),
-                  child: IconButton(
-                    padding: const EdgeInsets.all(3),
-                    onPressed: () {},
-                    icon: const Icon(
-                      Icons.chevron_left_rounded,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 15),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  AnimatedOpacity(
+                    opacity: currentIndex <= 0 ? 0 : 1,
+                    duration: const Duration(milliseconds: 200),
+                    child: const ButtonIcon(
                       size: 50,
+                      padding: EdgeInsets.all(3),
+                      icon: Icons.chevron_left_rounded,
                     ),
                   ),
-                ),
-                Row(
-                  children: [
-                    ...List<int>.generate(children.length, (index) => index)
-                        .map((int index) => Builder(
-                              builder: (BuildContext contenxt) => AnimatedScale(
-                                scale: index == currentIndex ? 1.3 : 1,
-                                duration: const Duration(
-                                  milliseconds: 900,
-                                ),
-                                child: Container(
-                                  width: 6,
-                                  height: 6,
-                                  margin:
-                                      const EdgeInsets.symmetric(horizontal: 3),
-                                  decoration: BoxDecoration(
-                                    color: index == currentIndex
-                                        ? Theme.of(context)
-                                            .colorScheme
-                                            .secondary
-                                            .withOpacity(0.7)
-                                        : Theme.of(context)
-                                            .colorScheme
-                                            .secondary
-                                            .withOpacity(0.2),
-                                    borderRadius: BorderRadius.circular(10),
+                  Row(
+                    children: [
+                      ...List<int>.generate(children.length, (index) => index)
+                          .map((int index) => Builder(
+                                builder: (BuildContext contenxt) =>
+                                    AnimatedScale(
+                                  scale: index == currentIndex ? 1.3 : 1,
+                                  duration: const Duration(
+                                    milliseconds: 900,
+                                  ),
+                                  child: Container(
+                                    width: 6,
+                                    height: 6,
+                                    margin: const EdgeInsets.symmetric(
+                                        horizontal: 3),
+                                    decoration: BoxDecoration(
+                                      color: index == currentIndex
+                                          ? Theme.of(context)
+                                              .colorScheme
+                                              .secondary
+                                              .withOpacity(0.7)
+                                          : Theme.of(context)
+                                              .colorScheme
+                                              .secondary
+                                              .withOpacity(0.2),
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ))
-                        .toList()
-                  ],
-                ),
-                AnimatedOpacity(
-                  opacity: currentIndex == children.length - 1 ? 0 : 1,
-                  duration: const Duration(milliseconds: 200),
-                  child: IconButton(
-                    padding: const EdgeInsets.all(3),
-                    onPressed: () {},
-                    icon: const Icon(
-                      Icons.chevron_right_rounded,
+                              ))
+                    ],
+                  ),
+                  AnimatedOpacity(
+                    opacity: currentIndex == children.length - 1 ? 0 : 1,
+                    duration: const Duration(milliseconds: 200),
+                    child: const ButtonIcon(
                       size: 50,
+                      padding: EdgeInsets.all(3),
+                      icon: Icons.chevron_right_rounded,
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

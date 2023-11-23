@@ -55,7 +55,12 @@ class PlPlayerController {
   PlayRepeat playRepeat = PlayRepeat.pause;
 
   // 播放位置
+  // ignore: prefer_final_fields
+  Rx<bool> _isSliderMoving = false.obs;
   final Rx<Duration> _position = Rx(Duration.zero);
+  final Rx<Duration> _sliderPosition = Rx(Duration.zero);
+
+  final Rx<Duration> _buffered = Rx(Duration.zero);
 
   Rx<int> get playerCount => _playerCount;
 
@@ -64,6 +69,11 @@ class PlPlayerController {
 
   /// 视频当前播放位置
   Rx<Duration> get position => _position;
+  Rx<Duration> get sliderPosition => _sliderPosition;
+  Rx<bool> get isSliderMoving => _isSliderMoving;
+
+  // 视频缓冲
+  Rx<Duration> get buffered => _buffered;
 
   /// 全屏状态
   Rx<bool> get isFullScreen => _isFullScreen;
@@ -288,6 +298,12 @@ class PlPlayerController {
       }),
       videoPlayerController!.stream.position.listen((event) {
         _position.value = event;
+        if (!_isSliderMoving.value) {
+          _sliderPosition.value = event;
+        }
+      }),
+      videoPlayerController!.stream.buffer.listen((event) {
+        _buffered.value = event;
       })
     ]);
   }
@@ -346,10 +362,8 @@ class PlPlayerController {
     playerStatus.status.value = PlayerStatus.playing;
     // screenManager.setOverlays(false);
 
-    // 播放时自动隐藏控制条
-    // if (hideControls) {
-    //   _hideTaskControls();
-    // }
+
+    _duration.value = duration ;
   }
 
   // 全屏
@@ -390,5 +404,13 @@ class PlPlayerController {
   Future<void> pause({bool notify = true, bool isInterrupt = false}) async {
     await _videoPlayerController?.pause();
     playerStatus.status.value = PlayerStatus.paused;
+  }
+
+  void onChangedSliderStart() {
+    _isSliderMoving.value = true;
+  }
+
+  void onChangedSliderEnd() {
+    _isSliderMoving.value = false;
   }
 }

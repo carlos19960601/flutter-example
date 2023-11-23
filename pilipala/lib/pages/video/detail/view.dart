@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
@@ -35,6 +37,7 @@ class _VideoDetailPageState extends State<VideoDetailPage> with RouteAware {
   void initState() {
     super.initState();
     heroTag = Get.arguments["heroTag"];
+    log("videoDetailPage heroTag:$heroTag");
     videoDetailController = Get.put(VideoDetailController(), tag: heroTag);
     statusBarHeight = localCache.get('statusBarHeight');
     autoPlayEnable =
