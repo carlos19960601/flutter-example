@@ -15,4 +15,5 @@ class ColorPanel {
   static const Color flamingo = Color(0xFFF95A2C);
   static const Color woodSmoke = Color(0xFF18191F);
   static const Color trout = Color(0xFF474A57);
+  static const Color selago = Color(0xFFE9E7FC);
 }

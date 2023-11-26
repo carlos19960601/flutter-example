@@ -1,6 +1,7 @@
 import 'package:contra_flutter_kit/pages/onboarding/onboard_main.dart';
 import 'package:contra_flutter_kit/pages/onboarding/type1/pager.dart';
 import 'package:contra_flutter_kit/pages/onboarding/type2/pager.dart';
+import 'package:contra_flutter_kit/pages/onboarding/welcome_screen.dart';
 import 'package:get/route_manager.dart';
 
 class Routes {
@@ -16,7 +17,7 @@ class Routes {
     // GetPage(
     //     name: '/onboard_type_four', page: () => const OnboardPageTypeFour()),
     // GetPage(name: '/empty_state', page: () => const EmptyState()),
-    // GetPage(name: '/welcome_screen', page: () => const WelcomeScreenPage()),
+    GetPage(name: '/welcome_screen', page: () => const WelcomeScreenPage()),
     // GetPage(name: '/login_all', page: () => const LoginMainPage()),
     // GetPage(name: '/login_type_one', page: () => const LoginFormTypeOne()),
     // GetPage(name: '/login_type_two', page: () => const LoginFormTypeTwo()),
