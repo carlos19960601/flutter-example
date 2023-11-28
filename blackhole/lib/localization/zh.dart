@@ -14,5 +14,8 @@ class Zh {
         aboard: "开始使用",
         langQue: "您想听什么语言的歌曲？",
         countryQue: "您希望看到哪个国家的 Spotify 热门排行？",
+        topCharts: "排行榜",
+        home: "主页",
+        settings: "设置",
       };
 }

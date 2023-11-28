@@ -67,3 +67,6 @@ const welcome = "welcome";
 const prefReq = "prefReq";
 const langQue = "langQue";
 const countryQue = "countryQue";
+const topCharts = "topCharts";
+const home = "home";
+const settings = "settings";

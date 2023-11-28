@@ -27,4 +27,5 @@ class SettingBoxKey {
   static const String userId = "userId";
   static const String preferredLanguage = "preferredLanguage";
   static const String region = "region";
+  static const String sectionsToShow = "sectionsToShow";
 }
