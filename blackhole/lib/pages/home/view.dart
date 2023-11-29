@@ -8,6 +8,7 @@ import 'package:blackhole/utils/storage.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
+import 'package:blackhole/localization/translation_keys.dart' as translation_keys;
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -38,12 +39,12 @@ class _HomePageState extends State<HomePage> {
         case "Home":
           return CustomBottomNavBarItem(
             icon: const Icon(Icons.home_rounded),
-            title: const Text("home"),
+            title: const Text(translation_keys.home.tr),
           );
         default:
           return CustomBottomNavBarItem(
             icon: const Icon(Icons.settings_rounded),
-            title: const Text("settings"),
+            title: const Text(translation_keys.settings.tr),
           );
       }
     }).toList();
