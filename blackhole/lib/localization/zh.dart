@@ -17,5 +17,7 @@ class Zh {
         topCharts: "排行榜",
         home: "主页",
         settings: "设置",
+        youtube: "YouTube",
+        library: "音乐库",
       };
 }

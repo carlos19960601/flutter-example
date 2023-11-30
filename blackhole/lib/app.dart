@@ -11,6 +11,12 @@ class BlackholeApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       translations: Messages(),
+      theme: ThemeData(
+        useMaterial3: true,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color(0x0053d6cf),
+        ),
+      ),
       locale: const Locale("zh", "CN"),
       fallbackLocale: const Locale("en", "US"),
       getPages: Routes.getPages,

@@ -70,3 +70,5 @@ const countryQue = "countryQue";
 const topCharts = "topCharts";
 const home = "home";
 const settings = "settings";
+const youtube = "youtube";
+const library = "library";
