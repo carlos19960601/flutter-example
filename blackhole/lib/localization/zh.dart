@@ -19,5 +19,10 @@ class Zh {
         settings: "设置",
         youtube: "YouTube",
         library: "音乐库",
+        homeGreet: "你好，",
+        searchText: "歌曲，专辑或艺术家",
+        spotifyCharts: "Spotify 排行榜",
+        local: "本地",
+        global: "全球",
       };
 }
