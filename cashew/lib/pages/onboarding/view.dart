@@ -1,9 +1,11 @@
 import 'package:cashew/common/constants.dart';
 import 'package:cashew/common/widgets/button_icon.dart';
 import 'package:cashew/common/widgets/text_font.dart';
+import 'package:cashew/utils/storage.dart';
 import 'package:flutter/material.dart';
 import 'package:cashew/localization/translation_keys.dart' as translation_keys;
 import 'package:get/get.dart';
+import 'package:hive/hive.dart';
 
 class OnBoardingPage extends StatelessWidget {
   const OnBoardingPage({super.key});
@@ -26,6 +28,7 @@ class OnBoardingPageBody extends StatefulWidget {
 class _OnBoardingPageBodyState extends State<OnBoardingPageBody> {
   int currentIndex = 0;
   final PageController controller = PageController();
+  Box settings = GStorage.settings;
 
   final Image imageLanding1 = const Image(
     image: AssetImage("assets/landing/Graph.png"),
@@ -103,6 +106,26 @@ class _OnBoardingPageBodyState extends State<OnBoardingPageBody> {
         const SizedBox(height: 25),
       ]),
     ];
+
+    void nextOnBoardPage() {
+      if (currentIndex < children.length - 1) {
+        controller.nextPage(
+          duration: const Duration(milliseconds: 1100),
+          curve: const ElasticOutCurve(1.3),
+        );
+      } else {
+        settings.put(SettingBoxKey.hasOnboarded, true);
+        Get.toNamed("/navigation");
+      }
+    }
+
+    void previousOnBoardPage() {
+      controller.previousPage(
+        duration: const Duration(milliseconds: 1100),
+        curve: const ElasticOutCurve(1.3),
+      );
+    }
+
     return Stack(
       children: [
         PageView(
@@ -126,10 +149,13 @@ class _OnBoardingPageBodyState extends State<OnBoardingPageBody> {
                   AnimatedOpacity(
                     opacity: currentIndex <= 0 ? 0 : 1,
                     duration: const Duration(milliseconds: 200),
-                    child: const ButtonIcon(
+                    child: ButtonIcon(
                       size: 50,
-                      padding: EdgeInsets.all(3),
+                      padding: const EdgeInsets.all(3),
                       icon: Icons.chevron_left_rounded,
+                      onTap: () {
+                        previousOnBoardPage();
+                      },
                     ),
                   ),
                   Row(
@@ -164,14 +190,13 @@ class _OnBoardingPageBodyState extends State<OnBoardingPageBody> {
                               ))
                     ],
                   ),
-                  AnimatedOpacity(
-                    opacity: currentIndex == children.length - 1 ? 0 : 1,
-                    duration: const Duration(milliseconds: 200),
-                    child: const ButtonIcon(
-                      size: 50,
-                      padding: EdgeInsets.all(3),
-                      icon: Icons.chevron_right_rounded,
-                    ),
+                  ButtonIcon(
+                    size: 50,
+                    padding: const EdgeInsets.all(3),
+                    icon: Icons.chevron_right_rounded,
+                    onTap: () {
+                      nextOnBoardPage();
+                    },
                   ),
                 ],
               ),

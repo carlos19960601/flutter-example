@@ -1,12 +1,12 @@
 import 'package:hive_flutter/hive_flutter.dart';
 
 class GStorage {
-  static late final Box setting;
+  static late final Box settings;
 
   static Future<void> init() async {
     await Hive.initFlutter('hive');
     // 设置
-    setting = await Hive.openBox('setting');
+    settings = await Hive.openBox('settings');
   }
 
   static regAdapter() {
@@ -16,4 +16,5 @@ class GStorage {
 
 class SettingBoxKey {
   static const String accentColor = 'accentColor';
+  static const String hasOnboarded = "hasOnboarded";
 }
