@@ -1,4 +1,9 @@
+import 'dart:developer';
+
 import 'package:apidash/pages/dashboard/controller.dart';
+import 'package:apidash/pages/home/view.dart';
+import 'package:apidash/pages/intro/view.dart';
+import 'package:apidash/pages/settings/view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -26,12 +31,17 @@ class _DashboardState extends State<Dashboard> {
                 ),
                 Column(
                   children: [
-                    IconButton(
-                      onPressed: () {},
-                      icon: const Icon(
-                        Icons.auto_awesome_mosaic_outlined,
+                    Obx(
+                      () => IconButton(
+                        onPressed: () {
+                          _dashboardController.railIdx.value = 0;
+                        },
+                        isSelected: _dashboardController.railIdx.value == 0,
+                        icon: const Icon(
+                          Icons.auto_awesome_mosaic_outlined,
+                        ),
+                        selectedIcon: const Icon(Icons.auto_awesome_mosaic),
                       ),
-                      selectedIcon: const Icon(Icons.auto_awesome_mosaic),
                     ),
                     Text(
                       "Requests",
@@ -41,21 +51,51 @@ class _DashboardState extends State<Dashboard> {
                 ),
                 Expanded(
                   child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       Padding(
                         padding: const EdgeInsets.only(bottom: 16),
-                        child: Obx(() => buttomButton(
-                              context,
-                              _dashboardController.railIdx.value,
-                              1,
-                              Icons.help,
-                              Icons.help_outline,
-                            )),
+                        child: Obx(
+                          () => buttomButton(
+                            context,
+                            _dashboardController.railIdx.value,
+                            1,
+                            Icons.help,
+                            Icons.help_outline,
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 16),
+                        child: Obx(
+                          () => buttomButton(
+                            context,
+                            _dashboardController.railIdx.value,
+                            2,
+                            Icons.settings,
+                            Icons.settings_outlined,
+                          ),
+                        ),
                       ),
                     ],
                   ),
                 ),
               ],
+            ),
+            VerticalDivider(
+              thickness: 1,
+              width: 1,
+              color: Theme.of(context).colorScheme.surfaceVariant,
+            ),
+            Expanded(
+              child: IndexedStack(
+                index: _dashboardController.railIdx.value,
+                children: const [
+                  HomePage(),
+                  IntroPage(),
+                  SettingsPage(),
+                ],
+              ),
             )
           ],
         ),
@@ -72,6 +112,18 @@ class _DashboardState extends State<Dashboard> {
   ) {
     bool isSelected = railIdx == buttonIdx;
     return TextButton(
-        onPressed: () {}, child: Icon(isSelected ? selectedIcon : icon));
+      style: isSelected
+          ? TextButton.styleFrom(
+              backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
+            )
+          : null,
+      onPressed: () {
+        _dashboardController.railIdx.value = buttonIdx;
+      },
+      child: Icon(
+        isSelected ? selectedIcon : icon,
+        color: Theme.of(context).colorScheme.onSurfaceVariant,
+      ),
+    );
   }
 }
