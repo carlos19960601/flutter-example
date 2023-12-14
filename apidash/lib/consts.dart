@@ -67,3 +67,6 @@ final kColorHttpMethodPost = Colors.blue.shade800;
 final kColorHttpMethodPut = Colors.amber.shade900;
 final kColorHttpMethodPatch = kColorHttpMethodPut;
 final kColorHttpMethodDelete = Colors.red.shade800;
+
+const kDefaultHttpMethod = HTTPVerb.get;
+const kDefaultContentType = ContentType.json;

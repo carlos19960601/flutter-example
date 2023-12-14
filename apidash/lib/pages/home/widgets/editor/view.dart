@@ -38,7 +38,7 @@ class RequestEditorDefault extends StatelessWidget {
               WidgetSpan(
                 child: ElevatedButton(
                   onPressed: () {
-                    _collectionController.addCollection();
+                    _collectionController.add();
                   },
                   child: const Text(
                     kLabelPlusNew,

@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:apidash/pages/dashboard/controller.dart';
 import 'package:apidash/pages/home/view.dart';
 import 'package:apidash/pages/intro/view.dart';

@@ -1,14 +1,36 @@
 import 'package:apidash/models/request_model.dart';
+import 'package:apidash/utils/storage.dart';
 import 'package:apidash/utils/uuid.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hive/hive.dart';
 
 class CollectionController extends GetxController {
+  Box dataBox = GStorage.data;
   RxList<String> ids = <String>[].obs;
   RxMap<String, RequestModel> requestItems = <String, RequestModel>{}.obs;
   RxString activeId = "".obs;
   RxString editRequestId = "".obs;
+  FocusNode nameTextFieldFocusNode = FocusNode();
+  RxBool savingData = false.obs;
 
-  addCollection() {
+  @override
+  void onInit() {
+    super.onInit();
+    List<String> boxIds = dataBox.get(DataBoxKey.ids, defaultValue: <String>[]);
+    for (String id in boxIds) {
+      var jsonModel = dataBox.get(id);
+      if (jsonModel != null) {
+        RequestModel requestModel =
+            RequestModel.fromJson(Map<String, dynamic>.from(jsonModel));
+        requestItems.putIfAbsent(id, () => requestModel);
+      }
+    }
+
+    ids.value = boxIds;
+  }
+
+  add() {
     final id = UUID.v1();
     ids.add(id);
 
@@ -16,5 +38,31 @@ class CollectionController extends GetxController {
     requestItems.putIfAbsent(id, () => newRequestModel);
 
     activeId.value = id;
+  }
+
+  remove(String id) {
+    int idx = ids.indexOf(id);
+    ids.remove(id);
+
+    String newId;
+    if (idx == 0 && ids.isNotEmpty) {
+      newId = ids[0];
+    } else if (ids.length > 1) {
+      newId = ids[idx - 1];
+    } else {
+      newId = "";
+    }
+
+    activeId.value = newId;
+    requestItems.remove(id);
+  }
+
+  Future<void> saveData() async {
+    savingData.value = true;
+    dataBox.put(DataBoxKey.ids, ids);
+    for (String id in ids) {
+      dataBox.put(id, requestItems[id]!.toJson());
+    }
+    savingData.value = false;
   }
 }

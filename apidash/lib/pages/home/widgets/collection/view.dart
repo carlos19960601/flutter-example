@@ -18,6 +18,7 @@ class _CollectionPaneState extends State<CollectionPane> {
 
   @override
   Widget build(BuildContext context) {
+    var sm = ScaffoldMessenger.of(context);
     return Padding(
       padding: kP24CollectionPane,
       child: Column(
@@ -28,7 +29,17 @@ class _CollectionPaneState extends State<CollectionPane> {
               alignment: WrapAlignment.spaceBetween,
               children: [
                 TextButton.icon(
-                  onPressed: () {},
+                  onPressed: () {
+                    _collectionController.saveData();
+                    sm.showSnackBar(
+                      const SnackBar(
+                        width: 300,
+                        behavior: SnackBarBehavior.floating,
+                        content: Text("Saved"),
+                        showCloseIcon: true,
+                      ),
+                    );
+                  },
                   icon: const Icon(
                     Icons.save,
                     size: 20,
@@ -40,7 +51,7 @@ class _CollectionPaneState extends State<CollectionPane> {
                 ),
                 ElevatedButton(
                     onPressed: () {
-                      _collectionController.addCollection();
+                      _collectionController.add();
                     },
                     child: const Text(
                       kLabelPlusNew,
@@ -75,6 +86,8 @@ class _RequestListState extends State<RequestList> {
       controller: _scrollController,
       child: Obx(
         () => ReorderableListView.builder(
+          scrollController: _scrollController,
+          buildDefaultDragHandles: false,
           itemBuilder: (context, index) {
             String id = _collectionController.ids[index];
             return Padding(
@@ -94,39 +107,56 @@ class _RequestListState extends State<RequestList> {
   }
 }
 
-class RequestItem extends StatelessWidget {
-  RequestItem({
+class RequestItem extends StatefulWidget {
+  const RequestItem({
     super.key,
     required this.id,
     required this.requestModel,
   });
   final String id;
   final RequestModel requestModel;
+
+  @override
+  State<RequestItem> createState() => _RequestItemState();
+}
+
+class _RequestItemState extends State<RequestItem> {
   final CollectionController _collectionController =
       Get.find<CollectionController>();
 
   @override
   Widget build(BuildContext context) {
     return Obx(() => SidebarRequestCard(
-          id: id,
-          method: requestModel.method,
-          name: requestModel.name,
+          id: widget.id,
+          method: widget.requestModel.method,
+          name: widget.requestModel.name,
           editRequestId: _collectionController.editRequestId.value,
           activeRequestId: _collectionController.activeId.value,
           onTap: () {
-            _collectionController.activeId.value = id;
+            _collectionController.activeId.value = widget.id;
           },
           onDoubleTap: () {
-            _collectionController.activeId.value = id;
-            _collectionController.editRequestId.value = id;
+            _collectionController.activeId.value = widget.id;
+            _collectionController.editRequestId.value = widget.id;
           },
           onChangedNameEditor: (String value) {
             value = value.trim();
-            RequestModel requestItem = _collectionController.requestItems[id]!;
+            RequestModel requestItem =
+                _collectionController.requestItems[widget.id]!;
             requestItem.name = value;
           },
           onTapOutsideNameEditor: () {
             _collectionController.editRequestId.value = "";
+          },
+          focusNode: _collectionController.nameTextFieldFocusNode,
+          onMenuSelected: (RequestItemMenuOption item) {
+            if (item == RequestItemMenuOption.edit) {
+              _collectionController.editRequestId.value = widget.id;
+              _collectionController.nameTextFieldFocusNode.requestFocus();
+            }
+            if (item == RequestItemMenuOption.delete) {
+              _collectionController.remove(widget.id);
+            }
           },
         ));
   }

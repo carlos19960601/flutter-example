@@ -23,4 +23,5 @@ class SettingBoxKey {
 
 class DataBoxKey {
   static const String ids = "ids";
+  static const String data = "data";
 }

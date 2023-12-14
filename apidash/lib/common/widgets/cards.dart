@@ -1,3 +1,4 @@
+import 'package:apidash/common/widgets/menus.dart';
 import 'package:apidash/common/widgets/texts.dart';
 import 'package:apidash/consts.dart';
 import 'package:apidash/utils/http.dart';
@@ -16,6 +17,8 @@ class SidebarRequestCard extends StatelessWidget {
     this.onDoubleTap,
     this.onChangedNameEditor,
     this.onTapOutsideNameEditor,
+    this.onMenuSelected,
+    this.focusNode,
   });
 
   final String id;
@@ -28,6 +31,8 @@ class SidebarRequestCard extends StatelessWidget {
   final void Function()? onDoubleTap;
   final Function(String)? onChangedNameEditor;
   final Function()? onTapOutsideNameEditor;
+  final Function(RequestItemMenuOption)? onMenuSelected;
+  final FocusNode? focusNode;
 
   @override
   Widget build(BuildContext context) {
@@ -43,10 +48,13 @@ class SidebarRequestCard extends StatelessWidget {
         : getRequestTitleFromUrl(url);
     return Tooltip(
       message: nm,
+      waitDuration: const Duration(seconds: 1),
       child: Card(
         shape: const RoundedRectangleBorder(
           borderRadius: kBorderRadius8,
         ),
+        color: color,
+        elevation: isActiveId ? 1 : 0,
         margin: EdgeInsets.zero,
         child: InkWell(
           hoverColor: colorVariant,
@@ -54,8 +62,8 @@ class SidebarRequestCard extends StatelessWidget {
           onTap: inEditMode ? null : onTap,
           onDoubleTap: inEditMode ? null : onDoubleTap,
           child: Padding(
-            padding:
-                const EdgeInsets.only(left: 6, top: 5, bottom: 5, right: 6),
+            padding: EdgeInsets.only(
+                left: 6, top: 5, bottom: 5, right: isActiveId ? 6 : 10),
             child: SizedBox(
               height: 20,
               child: Row(
@@ -65,15 +73,30 @@ class SidebarRequestCard extends StatelessWidget {
                   Expanded(
                     child: inEditMode
                         ? TextFormField(
+                            focusNode: focusNode,
                             initialValue: name,
+                            style: Theme.of(context).textTheme.bodyMedium,
                             decoration: const InputDecoration(
+                              isCollapsed: true,
                               border: InputBorder.none,
+                              contentPadding: EdgeInsets.zero,
                             ),
                             onChanged: onChangedNameEditor,
-                            onTapOutside: onTapOutsideNameEditor?.call(),
+                            onTapOutside: (_) {
+                              onTapOutsideNameEditor?.call();
+                            },
                           )
                         : Text(nm),
                   ),
+                  Visibility(
+                    visible: isActiveId && !inEditMode,
+                    child: SizedBox(
+                      width: 28,
+                      child: RequestCardMenu(
+                        onSelected: onMenuSelected,
+                      ),
+                    ),
+                  )
                 ],
               ),
             ),
