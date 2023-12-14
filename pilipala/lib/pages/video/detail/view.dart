@@ -1,15 +1,16 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:pilipala/models/common/search_type.dart';
 import 'package:pilipala/pages/bangumi/introduction/view.dart';
 import 'package:pilipala/pages/video/detail/controller.dart';
+import 'package:pilipala/pages/video/detail/introduction/controller.dart';
 import 'package:pilipala/pages/video/detail/introduction/view.dart';
 import 'package:pilipala/pages/video/detail/related/view.dart';
 import 'package:pilipala/pages/video/detail/reply/view.dart';
 import 'package:pilipala/plugin/pl_player/controller.dart';
+import 'package:pilipala/plugin/pl_player/models/play_repeat.dart';
+import 'package:pilipala/plugin/pl_player/models/play_status.dart';
 import 'package:pilipala/plugin/pl_player/view.dart';
 import 'package:pilipala/utils/storage.dart';
 
@@ -27,19 +28,24 @@ class _VideoDetailPageState extends State<VideoDetailPage> with RouteAware {
   late VideoDetailController videoDetailController;
   PlPlayerController? plPlayerController;
   final ScrollController _extendNestCtr = ScrollController();
+  late VideoIntroController videoIntroController;
   late Future _futureBuilderFuture;
   late double statusBarHeight;
   Box localCache = GStorage.localCache;
   Box setting = GStorage.setting;
+  // 自动退出全屏
+  late bool autoExitFullscreen;
   late bool autoPlayEnable;
 
   @override
   void initState() {
     super.initState();
     heroTag = Get.arguments["heroTag"];
-    log("videoDetailPage heroTag:$heroTag");
     videoDetailController = Get.put(VideoDetailController(), tag: heroTag);
+    videoIntroController = Get.put(VideoIntroController(), tag: heroTag);
     statusBarHeight = localCache.get('statusBarHeight');
+    autoExitFullscreen =
+        setting.get(SettingBoxKey.enableAutoExit, defaultValue: false);
     autoPlayEnable =
         setting.get(SettingBoxKey.autoPlayEnable, defaultValue: true);
     videoSourceInit();
@@ -56,6 +62,23 @@ class _VideoDetailPageState extends State<VideoDetailPage> with RouteAware {
     _futureBuilderFuture = videoDetailController.queryVideoUrl();
     if (videoDetailController.autoPlay.value) {
       plPlayerController = videoDetailController.plPlayerController;
+      plPlayerController!.addStatusLister(playerListener);
+    }
+  }
+
+  void playerListener(PlayerStatus status) async {
+    if (status == PlayerStatus.completed) {
+      if (autoExitFullscreen) {
+        plPlayerController!.triggerFullScreen(status: false);
+      }
+
+      if (plPlayerController!.playRepeat != PlayRepeat.pause &&
+          plPlayerController!.playRepeat != PlayRepeat.singleCycle) {}
+
+      if (plPlayerController!.playRepeat == PlayRepeat.singleCycle) {
+        plPlayerController!.seekTo(Duration.zero);
+        plPlayerController!.play();
+      }
     }
   }
 

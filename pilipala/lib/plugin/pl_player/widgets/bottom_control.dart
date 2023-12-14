@@ -29,7 +29,6 @@ class BottomControl extends StatelessWidget implements PreferredSizeWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-
           Obx(() {
             final int max = _.duration.value.inSeconds;
             final int value = _.sliderPosition.value.inSeconds;
@@ -52,7 +51,7 @@ class BottomControl extends StatelessWidget implements PreferredSizeWidget {
           }),
           Row(
             children: [
-               PlayOrPauseButton(
+              PlayOrPauseButton(
                 controller: _,
               ),
               const SizedBox(width: 4),
@@ -103,12 +102,14 @@ class BottomControl extends StatelessWidget implements PreferredSizeWidget {
                     size: 15,
                     color: Colors.white,
                   ),
-                  fuc: () => triggerFullScreen!(),
+                  fuc: () => triggerFullScreen?.call(),
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 12,),
+          const SizedBox(
+            height: 12,
+          ),
         ],
       ),
     );

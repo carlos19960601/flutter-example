@@ -9,9 +9,12 @@ import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:pilipala/plugin/pl_player/models/data_source.dart';
 import 'package:pilipala/plugin/pl_player/models/data_status.dart';
+import 'package:pilipala/plugin/pl_player/models/fullscreen_mode.dart';
 import 'package:pilipala/plugin/pl_player/models/play_repeat.dart';
 import 'package:pilipala/plugin/pl_player/models/play_status.dart';
+import 'package:pilipala/plugin/pl_player/utils/fullscreen.dart';
 import 'package:pilipala/utils/storage.dart';
+import 'package:status_bar_control/status_bar_control.dart';
 import 'package:universal_platform/universal_platform.dart';
 
 Box videoStorage = GStorage.video;
@@ -293,7 +296,19 @@ class PlPlayerController {
         if (event) {
           playerStatus.status.value = PlayerStatus.playing;
         } else {
-          // playerStatus.status.value = PlayerStatus.paused;
+          playerStatus.status.value = PlayerStatus.paused;
+        }
+
+        for (Function(PlayerStatus status) element in _statusListeners) {
+          element(event ? PlayerStatus.playing : PlayerStatus.paused);
+        }
+      }),
+      videoPlayerController!.stream.completed.listen((event) {
+        if (event) {
+          playerStatus.status.value = PlayerStatus.completed;
+          for (Function(PlayerStatus status) element in _statusListeners) {
+            element(PlayerStatus.completed);
+          }
         }
       }),
       videoPlayerController!.stream.position.listen((event) {
@@ -301,10 +316,17 @@ class PlPlayerController {
         if (!_isSliderMoving.value) {
           _sliderPosition.value = event;
         }
+
+        for (Function(Duration position) element in _positionListeners) {
+          element(event);
+        }
+      }),
+      videoPlayerController!.stream.duration.listen((event) {
+        duration.value = event;
       }),
       videoPlayerController!.stream.buffer.listen((event) {
         _buffered.value = event;
-      })
+      }),
     ]);
   }
 
@@ -362,12 +384,38 @@ class PlPlayerController {
     playerStatus.status.value = PlayerStatus.playing;
     // screenManager.setOverlays(false);
 
-
-    _duration.value = duration ;
+    _duration.value = duration;
   }
 
   // 全屏
-  Future<void> triggerFullScreen({bool status = true}) async {}
+  Future<void> triggerFullScreen({bool status = true}) async {
+    FullScreenMode mode = FullScreenModeCode.fromCode(
+        setting.get(SettingBoxKey.fullScreenMode, defaultValue: 0))!;
+    await StatusBarControl.setHidden(true, animation: StatusBarAnimation.FADE);
+
+    if (!isFullScreen.value && status) {
+      switch (mode) {
+        case FullScreenMode.auto:
+          break;
+        case FullScreenMode.horizontal:
+          break;
+        case FullScreenMode.vertical:
+          break;
+      }
+
+      toggleFullScreen(true);
+      
+    } else if (isFullScreen.value) {
+      StatusBarControl.setHidden(false, animation: StatusBarAnimation.FADE);
+      Get.back();
+      exitFullScreen();
+      toggleFullScreen(false);
+    }
+  }
+
+  void toggleFullScreen(bool val) {
+    _isFullScreen.value = val;
+  }
 
   // 还原默认速度
   Future<void> setDefaultSpeed() async {
@@ -413,4 +461,13 @@ class PlPlayerController {
   void onChangedSliderEnd() {
     _isSliderMoving.value = false;
   }
+
+  void addPositionListener(Function(Duration position) listener) =>
+      _positionListeners.add(listener);
+  void removePositionListener(Function(Duration position) listener) =>
+      _positionListeners.remove(listener);
+  void addStatusLister(Function(PlayerStatus status) listener) =>
+      _statusListeners.add(listener);
+  void removeStatusLister(Function(PlayerStatus status) listener) =>
+      _statusListeners.remove(listener);
 }

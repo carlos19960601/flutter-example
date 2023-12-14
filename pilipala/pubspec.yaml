@@ -59,6 +59,8 @@ dependencies:
   floating: ^2.0.1
   font_awesome_flutter: ^10.6.0
   audio_video_progress_bar: ^2.0.1
+  status_bar_control: ^3.2.1
+  device_info_plus: ^9.1.1
 
 dev_dependencies:
   flutter_test:

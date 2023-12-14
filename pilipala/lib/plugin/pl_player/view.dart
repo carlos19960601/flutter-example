@@ -95,14 +95,16 @@ class _PLVideoPlayerState extends State<PLVideoPlayer>
                 const Spacer(),
                 ClipRect(
                   child: AppBarAni(
-                      controller: animationController,
-                      visible: !_.controlsLock.value && _.showControls.value,
-                      position: 'bottom',
-                      child: widget.bottomControl ??
-                          BottomControl(
-                              controller: widget.controller,
-                              triggerFullScreen:
-                                  widget.controller.triggerFullScreen)),
+                    controller: animationController,
+                    visible: !_.controlsLock.value && _.showControls.value,
+                    position: 'bottom',
+                    child: widget.bottomControl ??
+                        BottomControl(
+                          controller: widget.controller,
+                          triggerFullScreen:
+                              widget.controller.triggerFullScreen,
+                        ),
+                  ),
                 ),
               ],
             ),

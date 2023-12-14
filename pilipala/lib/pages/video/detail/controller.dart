@@ -70,7 +70,6 @@ class VideoDetailController extends GetxController
 
   Future playerInit(
       {video, audio, seekToTime, duration, bool autoplay = true}) async {
-    log("=== plPlayerController: ${plPlayerController.toString()}");
     await plPlayerController.setDataSource(
       DataSource(
         videoSource: video ?? videoUrl,
@@ -149,7 +148,6 @@ class VideoDetailController extends GetxController
         } catch (_) {
           firstVideo = videosList.first;
         }
-        log("=======");
         videoUrl = firstVideo.baseUrl!;
       } catch (err) {
         SmartDialog.showToast('firstVideo error: $err');
@@ -204,6 +202,7 @@ class VideoDetailController extends GetxController
       }
       SmartDialog.showToast(result['msg'].toString());
     }
+
     return result;
   }
 }
