@@ -25,6 +25,22 @@ class RequestModel {
     };
   }
 
+  RequestModel copyWith({
+    String? id,
+    HTTPVerb? method,
+    String? url,
+    String? name,
+    String? description,
+  }) {
+    return RequestModel(
+      id: id ?? this.id,
+      method: method ?? this.method,
+      url: url ?? this.url,
+      name: name ?? this.name,
+      description: description ?? this.description,
+    );
+  }
+
   factory RequestModel.fromJson(Map<String, dynamic> data) {
     HTTPVerb method;
 

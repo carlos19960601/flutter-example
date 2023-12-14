@@ -1,5 +1,6 @@
 import 'package:apidash/consts.dart';
 import 'package:apidash/pages/home/widgets/collection/controller.dart';
+import 'package:apidash/pages/home/widgets/editor/widgets/url_card.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -11,9 +12,23 @@ class RequestEditorPane extends StatefulWidget {
 }
 
 class _RequestEditorPaneState extends State<RequestEditorPane> {
+  final CollectionController _collectionController =
+      Get.find<CollectionController>();
+
   @override
   Widget build(BuildContext context) {
-    return RequestEditorDefault();
+    return Obx(
+      () => _collectionController.activeId.isEmpty
+          ? RequestEditorDefault()
+          : const Padding(
+              padding: kPt24o8,
+              child: Column(
+                children: [
+                  EditorPaneRequestURLCard(),
+                ],
+              ),
+            ),
+    );
   }
 }
 

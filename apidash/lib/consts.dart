@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -70,3 +73,13 @@ final kColorHttpMethodDelete = Colors.red.shade800;
 
 const kDefaultHttpMethod = HTTPVerb.get;
 const kDefaultContentType = ContentType.json;
+
+final kIsApple = !kIsWeb && (Platform.isIOS || Platform.isMacOS);
+
+final kFontFamilyFallback =
+    kIsApple ? null : <String>[GoogleFonts.notoColorEmoji().fontFamily!];
+
+final kCodeStyle = TextStyle(
+  fontFamily: GoogleFonts.sourceCodePro().fontFamily,
+  fontFamilyFallback: kFontFamilyFallback,
+);

@@ -1,3 +1,6 @@
+import 'dart:developer';
+
+import 'package:apidash/consts.dart';
 import 'package:apidash/models/request_model.dart';
 import 'package:apidash/utils/storage.dart';
 import 'package:apidash/utils/uuid.dart';
@@ -8,11 +11,12 @@ import 'package:hive/hive.dart';
 class CollectionController extends GetxController {
   Box dataBox = GStorage.data;
   RxList<String> ids = <String>[].obs;
-  RxMap<String, RequestModel> requestItems = <String, RequestModel>{}.obs;
+  RxMap<String, RequestModel?> requestItems = <String, RequestModel>{}.obs;
   RxString activeId = "".obs;
   RxString editRequestId = "".obs;
   FocusNode nameTextFieldFocusNode = FocusNode();
   RxBool savingData = false.obs;
+  Rxn<RequestModel> activeRequestModel = Rxn<RequestModel>();
 
   @override
   void onInit() {
@@ -28,6 +32,20 @@ class CollectionController extends GetxController {
     }
 
     ids.value = boxIds;
+  }
+
+  setActiveId(String id) {
+    activeId.value = id;
+    activeRequestModel.value = requestItems[id]!;
+  }
+
+  updateRequest(String id, {HTTPVerb? method}) {
+    RequestModel newModel = requestItems[id]!.copyWith(method: method);
+    if (activeId.value == id) {
+      activeRequestModel.value = newModel;
+    }
+
+    requestItems[id] = newModel;
   }
 
   add() {

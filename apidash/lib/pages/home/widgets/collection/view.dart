@@ -133,7 +133,7 @@ class _RequestItemState extends State<RequestItem> {
           editRequestId: _collectionController.editRequestId.value,
           activeRequestId: _collectionController.activeId.value,
           onTap: () {
-            _collectionController.activeId.value = widget.id;
+            _collectionController.setActiveId(widget.id);
           },
           onDoubleTap: () {
             _collectionController.activeId.value = widget.id;
