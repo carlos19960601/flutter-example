@@ -37,6 +37,7 @@ const kVSpacer8 = SizedBox(height: 8);
 const kVSpacer10 = SizedBox(height: 10);
 const kVSpacer20 = SizedBox(height: 20);
 
+const kHintTextUrlCard = "Enter API endpoint like api.foss42.com/country/codes";
 const kLabelPlusNew = "+ New";
 const kLabelSend = "Send";
 const kLabelSending = "Sending..";
@@ -83,3 +84,24 @@ final kCodeStyle = TextStyle(
   fontFamily: GoogleFonts.sourceCodePro().fontFamily,
   fontFamilyFallback: kFontFamilyFallback,
 );
+
+const kWindowTitle = "API Dash";
+const kMinWindowSize = Size(900, 600);
+const kMinInitialWindowWidth = 1200.0;
+const kMinInitialWindowHeight = 800.0;
+const kMinRequestEditorDetailsCardPaneSize = 300.0;
+
+const kTabAnimationDuration = Duration(milliseconds: 200);
+const kTabHeight = 45.0;
+const kHeaderHeight = 32.0;
+const kSegmentHeight = 24.0;
+const kTextButtonMinWidth = 44.0;
+
+const kSupportedUriSchemes = ["https", "http"];
+const kDefaultUriScheme = "https";
+const kMethodsWithBody = [
+  HTTPVerb.post,
+  HTTPVerb.put,
+  HTTPVerb.patch,
+  HTTPVerb.delete,
+];

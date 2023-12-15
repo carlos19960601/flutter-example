@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:apidash/consts.dart';
 import 'package:apidash/models/request_model.dart';
 import 'package:apidash/utils/storage.dart';
@@ -13,10 +11,12 @@ class CollectionController extends GetxController {
   RxList<String> ids = <String>[].obs;
   RxMap<String, RequestModel?> requestItems = <String, RequestModel>{}.obs;
   RxString activeId = "".obs;
+  RxString sentRequestId = "".obs;
   RxString editRequestId = "".obs;
   FocusNode nameTextFieldFocusNode = FocusNode();
   RxBool savingData = false.obs;
   Rxn<RequestModel> activeRequestModel = Rxn<RequestModel>();
+  RxBool codePaneVisible = false.obs;
 
   @override
   void onInit() {
@@ -39,8 +39,11 @@ class CollectionController extends GetxController {
     activeRequestModel.value = requestItems[id]!;
   }
 
-  updateRequest(String id, {HTTPVerb? method}) {
-    RequestModel newModel = requestItems[id]!.copyWith(method: method);
+  updateRequest(String id, {HTTPVerb? method, String? url}) {
+    RequestModel newModel = requestItems[id]!.copyWith(
+      method: method,
+      url: url,
+    );
     if (activeId.value == id) {
       activeRequestModel.value = newModel;
     }
@@ -82,5 +85,15 @@ class CollectionController extends GetxController {
       dataBox.put(id, requestItems[id]!.toJson());
     }
     savingData.value = false;
+  }
+
+  reorder(int oldIndex, int newIndex) {
+    var itemId = ids.removeAt(oldIndex);
+    ids.insert(newIndex, itemId);
+  }
+
+  sendRequest() {
+    sentRequestId.value = activeId.value;
+    codePaneVisible.value = false;
   }
 }

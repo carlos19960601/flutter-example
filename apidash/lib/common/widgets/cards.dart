@@ -86,7 +86,11 @@ class SidebarRequestCard extends StatelessWidget {
                               onTapOutsideNameEditor?.call();
                             },
                           )
-                        : Text(nm),
+                        : Text(
+                            nm,
+                            softWrap: true,
+                            overflow: TextOverflow.fade,
+                          ),
                   ),
                   Visibility(
                     visible: isActiveId && !inEditMode,
@@ -103,6 +107,28 @@ class SidebarRequestCard extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class RequestDetailsCard extends StatefulWidget {
+  const RequestDetailsCard({
+    super.key,
+    this.child,
+  });
+
+  final Widget? child;
+
+  @override
+  State<RequestDetailsCard> createState() => _RequestDetailsCardState();
+}
+
+class _RequestDetailsCardState extends State<RequestDetailsCard> {
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      shape: const RoundedRectangleBorder(),
+      child: widget.child,
     );
   }
 }

@@ -30,15 +30,20 @@ class _CollectionPaneState extends State<CollectionPane> {
               children: [
                 TextButton.icon(
                   onPressed: () {
-                    _collectionController.saveData();
-                    sm.showSnackBar(
-                      const SnackBar(
-                        width: 300,
-                        behavior: SnackBarBehavior.floating,
-                        content: Text("Saved"),
-                        showCloseIcon: true,
-                      ),
-                    );
+                    _collectionController.savingData.value
+                        ? null
+                        : () async {
+                            _collectionController.saveData();
+                            sm.hideCurrentSnackBar();
+                            sm.showSnackBar(
+                              const SnackBar(
+                                width: 300,
+                                behavior: SnackBarBehavior.floating,
+                                content: Text("Saved"),
+                                showCloseIcon: true,
+                              ),
+                            );
+                          };
                   },
                   icon: const Icon(
                     Icons.save,
@@ -61,7 +66,9 @@ class _CollectionPaneState extends State<CollectionPane> {
             ),
           ),
           kVSpacer8,
-          const Expanded(child: RequestList()),
+          const Expanded(
+            child: RequestList(),
+          ),
         ],
       ),
     );
@@ -90,17 +97,28 @@ class _RequestListState extends State<RequestList> {
           buildDefaultDragHandles: false,
           itemBuilder: (context, index) {
             String id = _collectionController.ids[index];
-            return Padding(
+            return ReorderableDragStartListener(
+              index: index,
               key: ValueKey(id),
-              padding: kP1,
-              child: RequestItem(
-                id: id,
-                requestModel: _collectionController.requestItems[id]!,
+              child: Padding(
+                key: ValueKey(id),
+                padding: kP1,
+                child: RequestItem(
+                  id: id,
+                  requestModel: _collectionController.requestItems[id]!,
+                ),
               ),
             );
           },
           itemCount: _collectionController.ids.length,
-          onReorder: (oldIndex, newIndex) {},
+          onReorder: (oldIndex, newIndex) {
+            if (oldIndex < newIndex) {
+              newIndex -= 1;
+            }
+            if (oldIndex != newIndex) {
+              _collectionController.reorder(oldIndex, newIndex);
+            }
+          },
         ),
       ),
     );
@@ -130,6 +148,7 @@ class _RequestItemState extends State<RequestItem> {
           id: widget.id,
           method: widget.requestModel.method,
           name: widget.requestModel.name,
+          url: widget.requestModel.url,
           editRequestId: _collectionController.editRequestId.value,
           activeRequestId: _collectionController.activeId.value,
           onTap: () {

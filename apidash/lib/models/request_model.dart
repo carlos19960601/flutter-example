@@ -1,4 +1,5 @@
 import 'package:apidash/consts.dart';
+import 'package:apidash/models/name_value_model.dart';
 
 class RequestModel {
   RequestModel({
@@ -7,6 +8,9 @@ class RequestModel {
     this.name = "",
     this.url = "",
     this.description = "",
+    this.requestHeaders,
+    this.requestParams,
+    this.requestBodyContentType = ContentType.json,
   });
 
   final String id;
@@ -14,6 +18,9 @@ class RequestModel {
   String name;
   final String url;
   final String description;
+  final List<NameValueModel>? requestHeaders;
+  final List<NameValueModel>? requestParams;
+  final ContentType requestBodyContentType;
 
   Map<String, dynamic> toJson() {
     return {
@@ -31,13 +38,23 @@ class RequestModel {
     String? url,
     String? name,
     String? description,
+    List<NameValueModel>? requestHeaders,
+    List<NameValueModel>? requestParams,
+    ContentType? requestBodyContentType,
   }) {
+    var headers = requestHeaders ?? this.requestHeaders;
+    var params = requestParams ?? this.requestParams;
+
     return RequestModel(
       id: id ?? this.id,
       method: method ?? this.method,
       url: url ?? this.url,
       name: name ?? this.name,
       description: description ?? this.description,
+      requestHeaders: headers != null ? [...headers] : null,
+      requestParams: params != null ? [...params] : null,
+      requestBodyContentType:
+          requestBodyContentType ?? this.requestBodyContentType,
     );
   }
 

@@ -44,7 +44,7 @@ class _DropdownButtonHttpMethodState extends State<DropdownButtonHttpMethod> {
           );
         },
       ).toList(),
-      onChanged: (HTTPVerb? value) {},
+      onChanged: widget.onChanged,
     );
   }
 }
