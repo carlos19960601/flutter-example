@@ -44,7 +44,7 @@ class _MainAppState extends State<MainApp> {
     return PopScope(
       canPop: true,
       child: Scaffold(
-        extendBody: true, // 回延伸body到bottomNavigationBar的位置
+        extendBody: true, // 会延伸body到bottomNavigationBar的位置
         body: PageView(
           physics: const NeverScrollableScrollPhysics(),
           controller: _pageController,

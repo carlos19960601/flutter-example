@@ -24,7 +24,7 @@ class _HomePageState extends State<HomePage> {
         height: 450,
         child: MinePage(),
       ),
-      isScrollControlled: true,
+      isScrollControlled: false,
     );
   }
 
@@ -32,11 +32,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       extendBody: true,
-      extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        toolbarHeight: 0,
-        elevation: 0,
-      ),
+      extendBodyBehindAppBar: false,
       body: Column(
         children: [
           CustomAppBar(

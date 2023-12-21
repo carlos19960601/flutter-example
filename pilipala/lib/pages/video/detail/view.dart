@@ -102,6 +102,7 @@ class _VideoDetailPageState extends State<VideoDetailPage> with RouteAware {
               headerSliverBuilder: (context, innerBoxIsScrolled) {
                 return <Widget>[
                   SliverAppBar(
+                    automaticallyImplyLeading: false,
                     backgroundColor: Colors.black,
                     expandedHeight: videoHeight,
                     flexibleSpace: FlexibleSpaceBar(

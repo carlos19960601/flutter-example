@@ -54,10 +54,10 @@ class MyApp extends StatelessWidget {
           title: "PiLiPaLa",
           theme: ThemeData(
             colorScheme: lightColorScheme,
-            useMaterial3: true,
           ),
           getPages: Routes.getPages,
           home: const MainApp(),
+          locale: const Locale("zh", "CN"),
           builder: (BuildContext context, Widget? child) {
             return FlutterSmartDialog(
               toastBuilder: (msg) => CustomToast(msg: msg),

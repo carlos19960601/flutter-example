@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -78,6 +80,7 @@ class _MinePageState extends State<MinePage> {
                         if (snapshot.data == null) {
                           return const SizedBox();
                         }
+                        if (snapshot.data["status"]) {}
                       }
                       return userInfoBuild(mineController, context);
                     }),
@@ -89,23 +92,23 @@ class _MinePageState extends State<MinePage> {
     );
   }
 
-  Widget userInfoBuild(_mineController, context) {
+  Widget userInfoBuild(MineController mineController, BuildContext context) {
     return Column(
       children: [
         const SizedBox(
           height: 5,
         ),
         GestureDetector(
-          onTap: () => _mineController.onLogin(),
+          onTap: () => mineController.onLogin(),
           child: ClipOval(
             child: Container(
               width: 85,
               height: 85,
               color: Theme.of(context).colorScheme.onInverseSurface,
               child: Center(
-                child: _mineController.userInfo.value.face != null
+                child: mineController.userInfo.value.face != null
                     ? NetworkImgLayer(
-                        src: _mineController.userInfo.value.face,
+                        src: mineController.userInfo.value.face,
                         width: 85,
                         height: 85,
                       )
@@ -119,12 +122,12 @@ class _MinePageState extends State<MinePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              _mineController.userInfo.value.uname ?? "点击头像登录",
+              mineController.userInfo.value.uname ?? "点击头像登录",
               style: Theme.of(context).textTheme.titleMedium,
             ),
             const SizedBox(width: 4),
             Image.asset(
-              'assets/images/lv/lv${_mineController.userInfo.value.levelInfo != null ? _mineController.userInfo.value.levelInfo!.currentLevel : '0'}.png',
+              'assets/images/lv/lv${mineController.userInfo.value.levelInfo != null ? mineController.userInfo.value.levelInfo!.currentLevel : '0'}.png',
               height: 10,
             ),
           ],
@@ -141,7 +144,7 @@ class _MinePageState extends State<MinePage> {
                     style: TextStyle(
                         color: Theme.of(context).colorScheme.outline)),
                 TextSpan(
-                    text: (_mineController.userInfo.value.money ?? 'pilipala')
+                    text: (mineController.userInfo.value.money ?? 'pilipala')
                         .toString(),
                     style: TextStyle(
                         color: Theme.of(context).colorScheme.primary)),
@@ -151,10 +154,9 @@ class _MinePageState extends State<MinePage> {
         ),
         const SizedBox(height: 25),
         // 等级
-        if (_mineController.userInfo.value.levelInfo != null) ...[
+        if (mineController.userInfo.value.levelInfo != null) ...[
           LayoutBuilder(builder: (context, BoxConstraints constraints) {
-            LevelInfo levelInfo = _mineController.userInfo.value.levelInfo;
-            print(levelInfo.toJson());
+            LevelInfo levelInfo = mineController.userInfo.value.levelInfo!;
             return SizedBox(
               width: constraints.maxWidth,
               height: 24,
@@ -182,15 +184,16 @@ class _MinePageState extends State<MinePage> {
                     ),
                   ),
                   Positioned(
-                      top: 23,
-                      left: 0,
-                      bottom: 0,
-                      child: Container(
-                        height: 1,
-                        color: Theme.of(context).colorScheme.primary,
-                        width: constraints.maxWidth *
-                            (levelInfo.currentExp! / levelInfo.nextExp!),
-                      ))
+                    top: 23,
+                    left: 0,
+                    bottom: 0,
+                    child: Container(
+                      height: 1,
+                      color: Theme.of(context).colorScheme.primary,
+                      width: constraints.maxWidth *
+                          (levelInfo.currentExp! / levelInfo.nextExp!),
+                    ),
+                  ),
                 ],
               ),
             );
@@ -224,9 +227,9 @@ class _MinePageState extends State<MinePage> {
                           transitionBuilder: (child, animation) =>
                               ScaleTransition(scale: animation, child: child),
                           child: Text(
-                            (_mineController.userStat.value.dynamicCount ?? '-')
+                            (mineController.userStat.value.dynamicCount ?? '-')
                                 .toString(),
-                            key: ValueKey<String>(_mineController
+                            key: ValueKey<String>(mineController
                                 .userStat.value.following
                                 .toString()),
                             style: style,
@@ -251,9 +254,9 @@ class _MinePageState extends State<MinePage> {
                           transitionBuilder: (child, animation) =>
                               ScaleTransition(scale: animation, child: child),
                           child: Text(
-                            (_mineController.userStat.value.following ?? '-')
+                            (mineController.userStat.value.following ?? '-')
                                 .toString(),
-                            key: ValueKey(_mineController
+                            key: ValueKey(mineController
                                 .userStat.value.following
                                 .toString()),
                             style: style,
@@ -278,10 +281,9 @@ class _MinePageState extends State<MinePage> {
                           transitionBuilder: (child, animation) =>
                               ScaleTransition(scale: animation, child: child),
                           child: Text(
-                            (_mineController.userStat.value.follower ?? '-')
+                            (mineController.userStat.value.follower ?? '-')
                                 .toString(),
-                            key: ValueKey(_mineController
-                                .userStat.value.follower
+                            key: ValueKey(mineController.userStat.value.follower
                                 .toString()),
                             style: style,
                           ),

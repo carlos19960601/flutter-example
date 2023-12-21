@@ -43,14 +43,14 @@ class Request {
     dio = Dio(options);
 
     dio.interceptors.add(ApiInterceptor());
-    dio.interceptors.add(
-      LogInterceptor(
-        request: false,
-        requestHeader: false,
-        responseHeader: false,
-        responseBody: false,
-      ),
-    );
+    // dio.interceptors.add(
+    //   LogInterceptor(
+    //     request: false,
+    //     requestHeader: false,
+    //     responseHeader: false,
+    //     responseBody: false,
+    //   ),
+    // );
   }
 
   get(url, {data, cacheOptions, options, cancelToken, extra}) async {

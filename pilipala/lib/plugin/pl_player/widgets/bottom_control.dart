@@ -46,6 +46,17 @@ class BottomControl extends StatelessWidget implements PreferredSizeWidget {
                 bufferedBarColor: colorTheme.withOpacity(0.4),
                 timeLabelLocation: TimeLabelLocation.none,
                 thumbColor: colorTheme,
+                onDragStart: (ThumbDragDetails details) {
+                  _.onChangedSliderStart();
+                },
+                onDragUpdate: (ThumbDragDetails details) {
+                  _.onUpdatedSliderProgress(details.timeStamp);
+                },
+                onSeek: (Duration duration) {
+                  _.onChangedSliderEnd();
+                  _.onChangedSlider(duration.inSeconds.toDouble());
+                  _.seekTo(Duration(seconds: duration.inSeconds));
+                },
               ),
             );
           }),

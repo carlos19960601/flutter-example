@@ -13,6 +13,7 @@ import 'package:pilipala/plugin/pl_player/models/fullscreen_mode.dart';
 import 'package:pilipala/plugin/pl_player/models/play_repeat.dart';
 import 'package:pilipala/plugin/pl_player/models/play_status.dart';
 import 'package:pilipala/plugin/pl_player/utils/fullscreen.dart';
+import 'package:pilipala/plugin/pl_player/view.dart';
 import 'package:pilipala/utils/storage.dart';
 import 'package:status_bar_control/status_bar_control.dart';
 import 'package:universal_platform/universal_platform.dart';
@@ -102,6 +103,9 @@ class PlPlayerController {
   /// 视频比例
   Rx<BoxFit> get videoFit => _videoFit;
   Rx<String> get videoFitDEsc => _videoFitDesc;
+
+  /// 全屏方向
+  Rx<String> get direction => _direction;
 
   // 记录历史记录
   String _bvid = '';
@@ -364,6 +368,10 @@ class PlPlayerController {
     }
     _position.value = position;
     _heartDuration = position.inSeconds;
+
+    if (duration.value.inSeconds != 0) {
+      await _videoPlayerController?.seek(position);
+    }
   }
 
   /// 播放视频
@@ -396,19 +404,64 @@ class PlPlayerController {
     if (!isFullScreen.value && status) {
       switch (mode) {
         case FullScreenMode.auto:
+          if (direction.value == "horizontal") {
+            // 进入全屏
+            await enterFullScreen();
+            // 横屏
+            await landScape();
+          } else {
+            // 竖屏
+            await verticalScreen();
+          }
           break;
         case FullScreenMode.horizontal:
+          // 进入全屏
+          await enterFullScreen();
+          // 横屏
+          await landScape();
           break;
         case FullScreenMode.vertical:
+          // 进入全屏
+          await enterFullScreen();
+          // 竖屏
+          await verticalScreen();
           break;
       }
 
       toggleFullScreen(true);
-      
+      bool isValid =
+          direction.value == 'vertical' || mode == FullScreenMode.vertical
+              ? true
+              : false;
+      var result = await showDialog(
+        context: Get.context!,
+        useSafeArea: false,
+        builder: (context) => Dialog.fullscreen(
+          backgroundColor: Colors.black,
+          child: SafeArea(
+            // 忽略手机安全区域
+            top: isValid,
+            left: false,
+            right: false,
+            bottom: isValid,
+            child: PLVideoPlayer(
+              controller: this,
+              headerControl: headerControl,
+              bottomControl: bottomControl,
+            ),
+          ),
+        ),
+      );
+      if (result == null) {
+        exitFullScreen();
+        await verticalScreen();
+        toggleFullScreen(false);
+      }
     } else if (isFullScreen.value) {
       StatusBarControl.setHidden(false, animation: StatusBarAnimation.FADE);
       Get.back();
       exitFullScreen();
+      await verticalScreen();
       toggleFullScreen(false);
     }
   }
@@ -460,6 +513,15 @@ class PlPlayerController {
 
   void onChangedSliderEnd() {
     _isSliderMoving.value = false;
+  }
+
+  void onUpdatedSliderProgress(Duration value) {
+    _sliderPosition.value = value;
+  }
+
+  /// 调整播放时间
+  onChangedSlider(double v) {
+    _sliderPosition.value = Duration(seconds: v.floor());
   }
 
   void addPositionListener(Function(Duration position) listener) =>
