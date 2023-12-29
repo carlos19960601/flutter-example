@@ -12,6 +12,7 @@ class _GuidePageState extends State<GuidePage> with TickerProviderStateMixin {
   AnimationController? baseAnimationController; // 标题动画
 
   late Animation<double> titleAnim;
+  int activePage = 1;
 
   // 主要维护标题动画
   void initBaseAnim() {
@@ -36,7 +37,7 @@ class _GuidePageState extends State<GuidePage> with TickerProviderStateMixin {
         child: Stack(
           children: [
             Container(
-              // color: const Color(0xFF181818),
+              color: const Color(0xFF181818),
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height,
               padding: const EdgeInsets.fromLTRB(20, 80, 10, 80),
@@ -51,13 +52,26 @@ class _GuidePageState extends State<GuidePage> with TickerProviderStateMixin {
                       style: GoogleFonts.akayaKanadaka(
                         fontSize: 30,
                         fontWeight: FontWeight.bold,
-                        color: Colors.grey[100],
+                        color: Colors.white,
                       ),
                     ),
-                  )
+                  ),
                 ],
               ),
-            )
+            ),
+            if (activePage == 1)
+              Container(
+                padding: const EdgeInsets.only(bottom: 260),
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height,
+                child: SizedBox(
+                  height: 400,
+                  child: Image.asset(
+                    'assets/guide/flame-space-adventures.gif',
+                    fit: BoxFit.contain,
+                  ),
+                ),
+              ),
           ],
         ),
       ),

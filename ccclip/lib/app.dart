@@ -10,7 +10,11 @@ class CcClipApp extends StatelessWidget {
     return GetMaterialApp(
       title: 'CC Clip',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color(0xFF181818),
+          primary: Colors.white,
+          background: const Color(0xFF181818),
+        ),
         useMaterial3: true,
       ),
       home: const GuidePage(),
