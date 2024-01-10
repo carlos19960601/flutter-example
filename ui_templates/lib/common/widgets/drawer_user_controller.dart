@@ -10,23 +10,35 @@ class DrawerUserController extends StatefulWidget {
     this.drawerWidth = 250,
     this.onDrawerCall,
     this.screenIndex,
+    this.screenView,
+    this.menuView,
+    this.animatedIconData = AnimatedIcons.arrow_menu,
   });
+  final Widget? menuView;
+  final Widget? screenView;
   final double drawerWidth;
   final DrawerIndex? screenIndex;
   final Function(DrawerIndex)? onDrawerCall;
+  final AnimatedIconData? animatedIconData;
 
   @override
   State<DrawerUserController> createState() => _DrawerUserControllerState();
 }
 
-class _DrawerUserControllerState extends State<DrawerUserController> {
+class _DrawerUserControllerState extends State<DrawerUserController>
+    with TickerProviderStateMixin {
   ScrollController? scrollController;
+  AnimationController? iconAnimationController;
+  double scrolloffset = 0.0;
 
   @override
   void initState() {
     super.initState();
+    iconAnimationController = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 0));
     scrollController =
         ScrollController(initialScrollOffset: widget.drawerWidth);
+    scrollController!.addListener(() {});
   }
 
   @override
@@ -68,7 +80,44 @@ class _DrawerUserControllerState extends State<DrawerUserController> {
                       ),
                     ],
                   ),
-                  child: const Stack(),
+                  child: Stack(
+                    children: [
+                      IgnorePointer(
+                        ignoring: false,
+                        child: widget.screenView,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(
+                            top: MediaQuery.of(context).padding.top + 8,
+                            left: 8),
+                        child: SizedBox(
+                          width: AppBar().preferredSize.height - 8,
+                          height: AppBar().preferredSize.height - 8,
+                          child: Material(
+                            color: Colors.transparent,
+                            child: InkWell(
+                              borderRadius: BorderRadius.circular(
+                                  AppBar().preferredSize.height),
+                              child: Center(
+                                // if you use your own menu view UI you add form initialization
+                                child: widget.menuView ??
+                                    AnimatedIcon(
+                                        color: AppTheme.darkGrey,
+                                        icon: widget.animatedIconData ??
+                                            AnimatedIcons.arrow_menu,
+                                        progress: iconAnimationController!),
+                              ),
+                              onTap: () {
+                                FocusScope.of(context)
+                                    .requestFocus(FocusNode());
+                                onDrawerClick();
+                              },
+                            ),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
                 ),
               ),
             ],
@@ -80,13 +129,17 @@ class _DrawerUserControllerState extends State<DrawerUserController> {
 
   void onDrawerClick() {
     if (scrollController!.offset != 0.0) {
-      scrollController?.animateTo(0.0,
-          duration: const Duration(milliseconds: 400),
-          curve: Curves.fastOutSlowIn);
+      scrollController?.animateTo(
+        0.0,
+        duration: const Duration(milliseconds: 400),
+        curve: Curves.fastOutSlowIn,
+      );
     } else {
-      scrollController?.animateTo(widget.drawerWidth,
-          duration: const Duration(microseconds: 400),
-          curve: Curves.fastOutSlowIn);
+      scrollController?.animateTo(
+        widget.drawerWidth,
+        duration: const Duration(milliseconds: 400),
+        curve: Curves.fastOutSlowIn,
+      );
     }
   }
 }

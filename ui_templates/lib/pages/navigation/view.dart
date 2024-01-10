@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:ui_templates/common/app_theme.dart';
 import 'package:ui_templates/common/widgets/drawer_user_controller.dart';
 import 'package:ui_templates/common/widgets/home_drawer.dart';
+import 'package:ui_templates/pages/feedback/view.dart';
 import 'package:ui_templates/pages/help/view.dart';
 import 'package:ui_templates/pages/home/view.dart';
 
@@ -15,6 +16,13 @@ class NavigationHomePage extends StatefulWidget {
 class _NavigationHomePageState extends State<NavigationHomePage> {
   Widget? screenView;
   DrawerIndex? drawerIndex;
+
+  @override
+  void initState() {
+    super.initState();
+    drawerIndex = DrawerIndex.HOME;
+    screenView = const MyHomePage();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,6 +40,7 @@ class _NavigationHomePageState extends State<NavigationHomePage> {
               changeIndex(drawerIndexdata);
               //callback from drawer for replace screen as user need with passing DrawerIndex(Enum index)
             },
+            screenView: screenView,
           ),
         ),
       ),
@@ -52,11 +61,11 @@ class _NavigationHomePageState extends State<NavigationHomePage> {
             screenView = const HelpPage();
           });
           break;
-        // case DrawerIndex.FeedBack:
-        //   setState(() {
-        //     screenView = FeedbackScreen();
-        //   });
-        //   break;
+        case DrawerIndex.FeedBack:
+          setState(() {
+            screenView = const FeedbackPage();
+          });
+          break;
         // case DrawerIndex.Invite:
         //   setState(() {
         //     screenView = InviteFriend();

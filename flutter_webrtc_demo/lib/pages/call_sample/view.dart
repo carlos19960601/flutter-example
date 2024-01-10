@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
+import 'package:flutter_webrtc_demo/common/signaling.dart';
 
 class CallSample extends StatefulWidget {
   const CallSample({super.key, required this.host});
@@ -14,15 +15,23 @@ class _CallSampleState extends State<CallSample> {
   final RTCVideoRenderer _localRenderer = RTCVideoRenderer();
   final RTCVideoRenderer _remoteRenderer = RTCVideoRenderer();
 
+  final bool _inCalling = false;
+  Signaling? _signaling;
+
   @override
   void initState() {
     super.initState();
     initRenderers();
+    _connect(context);
   }
 
   initRenderers() async {
     await _localRenderer.initialize();
     await _remoteRenderer.initialize();
+  }
+
+  void _connect(BuildContext context) async {
+    _signaling ??= Signaling(widget.host, context)..connect();
   }
 
   @override

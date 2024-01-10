@@ -95,6 +95,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(
           title: const Text('Flutter-WebRTC example'),
@@ -102,7 +103,6 @@ class _MyAppState extends State<MyApp> {
         body: ListView.builder(
             shrinkWrap: true,
             itemCount: items.length,
-            // padding: const EdgeInsets.all(0.0),
             itemBuilder: (context, index) {
               return _buildRow(context, items[index]);
             }),

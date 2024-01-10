@@ -1,0 +1,24 @@
+import 'package:flutter_cloud_music/pages/home/binding.dart';
+import 'package:flutter_cloud_music/pages/home/view.dart';
+import 'package:flutter_cloud_music/pages/splash/binding.dart';
+import 'package:flutter_cloud_music/pages/splash/view.dart';
+import 'package:flutter_cloud_music/routes/app_routes.dart';
+import 'package:get/get.dart';
+
+class AppPages {
+  AppPages._();
+
+  static final routes = [
+    GetPage(
+      name: Routes.SPLASH,
+      page: () => const SplashPage(),
+      binding: SplashBinding(),
+    ),
+    GetPage(
+      name: Routes.HOME,
+      page: () => const HomePage(),
+      binding: HomeBinding(),
+      transition: Transition.fadeIn,
+    ),
+  ];
+}
