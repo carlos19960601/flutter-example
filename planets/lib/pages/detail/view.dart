@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:planets/models/planet_info.dart';
@@ -24,6 +22,7 @@ class _DetailPageState extends State<DetailPage> {
               padding: const EdgeInsets.only(left: 20.0, right: 20, top: 32),
               child: SingleChildScrollView(
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const SizedBox(
                       height: 300,
@@ -50,6 +49,68 @@ class _DetailPageState extends State<DetailPage> {
                     ),
                     const SizedBox(
                       height: 30,
+                    ),
+                    SizedBox(
+                      height: 140,
+                      width: Get.mediaQuery.size.width * 0.95,
+                      child: SingleChildScrollView(
+                        physics: const BouncingScrollPhysics(),
+                        child: Text(
+                          planetInfo.description.toString(),
+                          style: const TextStyle(
+                            fontSize: 20,
+                            overflow: TextOverflow.ellipsis,
+                            color: Color(0xff868686),
+                            fontWeight: FontWeight.w400,
+                          ),
+                          maxLines: 60,
+                          textAlign: TextAlign.left,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 30,
+                    ),
+                    const Divider(
+                      color: Colors.black38,
+                    ),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    const Text(
+                      "Gallery",
+                      style: TextStyle(
+                        fontSize: 24,
+                        overflow: TextOverflow.ellipsis,
+                        color: Color(0xff868686),
+                        fontWeight: FontWeight.w300,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    SizedBox(
+                      height: 250,
+                      child: ListView.builder(
+                        physics: const BouncingScrollPhysics(),
+                        scrollDirection: Axis.horizontal,
+                        itemCount: planetInfo.images!.length,
+                        itemBuilder: (context, index) {
+                          return Card(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(24),
+                            ),
+                            child: AspectRatio(
+                              aspectRatio: 1,
+                              child: Image.network(
+                                planetInfo.images![index],
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
                     ),
                   ],
                 ),

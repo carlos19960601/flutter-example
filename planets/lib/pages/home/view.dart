@@ -29,6 +29,7 @@ class _HomePageState extends State<HomePage> {
         ),
         child: SafeArea(
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
                 padding: const EdgeInsets.all(32),
@@ -76,99 +77,105 @@ class _HomePageState extends State<HomePage> {
               ),
               SizedBox(
                 height: 500,
-                child: Swiper(
-                  layout: SwiperLayout.STACK,
-                  itemCount: planets.length,
-                  itemWidth: Get.mediaQuery.size.width - 2 * 64,
-                  pagination: SwiperPagination(
-                    builder: DotSwiperPaginationBuilder(
-                      activeSize: 20,
-                      activeColor: Colors.yellow.shade300,
-                      space: 5,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 32),
+                  child: Swiper(
+                    fade: 0.3,
+                    layout: SwiperLayout.STACK,
+                    itemCount: planets.length,
+                    itemWidth: Get.mediaQuery.size.width - 2 * 32,
+                    pagination: SwiperPagination(
+                      builder: DotSwiperPaginationBuilder(
+                        activeSize: 20,
+                        activeColor: Colors.yellow.shade300,
+                        space: 5,
+                      ),
                     ),
-                  ),
-                  itemBuilder: (context, index) {
-                    return InkWell(
-                      onTap: () {
-                        Get.toNamed(
-                          AppRoutes.detail,
-                          arguments: planets[index],
-                        );
-                      },
-                      child: Stack(
-                        children: [
-                          Column(
-                            children: [
-                              const SizedBox(height: 100),
-                              Card(
-                                elevation: 8,
-                                color: Colors.white,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(32.0),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(32.0),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      const SizedBox(height: 100),
-                                      Text(
-                                        planets[index].name.toString(),
-                                        style: const TextStyle(
-                                          fontSize: 40,
-                                          color: Color(0xff47455f),
-                                          fontWeight: FontWeight.w900,
+                    itemBuilder: (context, index) {
+                      return InkWell(
+                        onTap: () {
+                          Get.toNamed(
+                            AppRoutes.detail,
+                            arguments: planets[index],
+                          );
+                        },
+                        child: Stack(
+                          children: [
+                            Column(
+                              children: [
+                                const SizedBox(height: 100),
+                                Card(
+                                  elevation: 8,
+                                  color: Colors.white,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(32.0),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(32.0),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        const SizedBox(height: 100),
+                                        Text(
+                                          planets[index].name.toString(),
+                                          style: const TextStyle(
+                                            fontSize: 40,
+                                            fontFamily: 'Avenir',
+                                            color: Color(0xff47455f),
+                                            fontWeight: FontWeight.w900,
+                                          ),
+                                          textAlign: TextAlign.left,
                                         ),
-                                        textAlign: TextAlign.left,
-                                      ),
-                                      const Text(
-                                        "Solar System",
-                                        style: TextStyle(
-                                          fontSize: 23,
-                                          fontFamily: 'Avenir',
-                                          color:
-                                              Color.fromARGB(255, 58, 58, 59),
-                                          fontWeight: FontWeight.w400,
+                                        const Text(
+                                          "Solar System",
+                                          style: TextStyle(
+                                            fontSize: 23,
+                                            fontFamily: 'Avenir',
+                                            color:
+                                                Color.fromARGB(255, 58, 58, 59),
+                                            fontWeight: FontWeight.w400,
+                                          ),
+                                          textAlign: TextAlign.left,
                                         ),
-                                        textAlign: TextAlign.left,
-                                      ),
-                                      const Padding(
-                                        padding: EdgeInsets.only(top: 32),
-                                        child: Row(
-                                          children: [
-                                            Text(
-                                              "Know more",
-                                              style: TextStyle(
-                                                  fontSize: 16,
-                                                  color: Color(0xFFE4979E),
-                                                  fontWeight: FontWeight.w400),
-                                              textAlign: TextAlign.left,
-                                            ),
-                                            Icon(
-                                              Icons.arrow_forward_rounded,
-                                              color: Color(0xFFE4979E),
-                                              size: 18,
-                                            ),
-                                          ],
+                                        const Padding(
+                                          padding: EdgeInsets.only(top: 32),
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                "Know more",
+                                                style: TextStyle(
+                                                    fontSize: 16,
+                                                    color: Color(0xFFE4979E),
+                                                    fontWeight:
+                                                        FontWeight.w400),
+                                                textAlign: TextAlign.left,
+                                              ),
+                                              Icon(
+                                                Icons.arrow_forward_rounded,
+                                                color: Color(0xFFE4979E),
+                                                size: 18,
+                                              ),
+                                            ],
+                                          ),
                                         ),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ],
-                          ),
-                          Hero(
-                            tag: planets[index].position,
-                            child: Image.asset(
-                              planets[index].iconImage.toString(),
+                              ],
                             ),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
+                            Hero(
+                              tag: planets[index].position,
+                              child: Image.asset(
+                                planets[index].iconImage.toString(),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
                 ),
               ),
             ],
