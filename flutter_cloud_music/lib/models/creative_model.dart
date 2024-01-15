@@ -17,6 +17,19 @@ class CreativeModel {
     this.resources,
     this.algReason,
   );
+
+  factory CreativeModel.fromJson(Map<String, dynamic> json) => CreativeModel(
+        json["creativeType"],
+        json["action"],
+        json["uiElement"] == null
+            ? null
+            : UiElementModel.fromJson(json["uiElement"]),
+        json["creativeExtInfoVO"],
+        (json["resources"] as List<dynamic>?)
+            ?.map((e) => Resources.fromJson(e))
+            .toList(),
+        json["algReason"] as String?,
+      );
 }
 
 class Resources {
@@ -37,6 +50,16 @@ class Resources {
     this.actionType,
     this.valid,
   );
+
+  factory Resources.fromJson(Map<String, dynamic> json) => Resources(
+        UiElementModel.fromJson(json['uiElement']),
+        json['resourceType'] as String?,
+        json['resourceId'] as String?,
+        json['resourceExtInfo'],
+        json['action'] as String?,
+        json['actionType'] as String?,
+        json['valid'] as bool,
+      );
 }
 
 class ResourceExtInfoModel {

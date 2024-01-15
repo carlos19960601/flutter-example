@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_cloud_music/models/found_model.dart';
 import 'package:flutter_cloud_music/pages/found/controller.dart';
 import 'package:flutter_cloud_music/pages/found/widgets/found_appbar.dart';
+import 'package:flutter_cloud_music/pages/found/widgets/found_header_bg.dart';
+import 'package:flutter_cloud_music/pages/found/widgets/found_slied_playlist.dart';
 import 'package:get/get.dart';
+import 'package:flutter_cloud_music/common/show_types.dart';
 
 class FoundPage extends StatelessWidget {
   FoundPage({super.key});
@@ -11,10 +15,65 @@ class FoundPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: FoundAppbar(),
-      body: const Stack(
-        children: [],
+      body: Stack(
+        children: [
+          const Positioned(
+            top: 0,
+            child: FoundHeaderColors(),
+          ),
+          Positioned.fill(child: _buildListView(context))
+        ],
       ),
     );
+  }
+
+  Widget _buildListView(BuildContext context) {
+    final ScrollController listScroll = ScrollController();
+    return Obx(() => ListView.separated(
+          controller: listScroll,
+          itemBuilder: (BuildContext context, int index) {
+            final blocks = controller.foundData.value!.blocks[index];
+            final nextType =
+                index + 1 < controller.foundData.value!.blocks.length
+                    ? controller.foundData.value!.blocks[index + 1].showType
+                    : null;
+
+            return _buildItem(blocks, index, nextType);
+          },
+          separatorBuilder: (BuildContext context, int index) {
+            final nextType =
+                index + 1 < controller.foundData.value!.blocks.length
+                    ? controller.foundData.value!.blocks[index + 1].showType
+                    : null;
+
+            return _buildDivider(
+                controller.foundData.value!.blocks[index].showType, nextType);
+          },
+          itemCount: controller.foundData.value != null
+              ? controller.foundData.value!.blocks.length
+              : 0,
+        ));
+  }
+
+  Widget _buildDivider(String type, String? nextType) {
+    return const SizedBox();
+  }
+
+  Widget _buildItem(Blocks blocks, int index, String? nextType) {
+    final itemHeight = controller.itemHeightFromType[blocks.showType] ?? 0;
+
+    switch (blocks.showType) {
+      case SHOWTYPE_HOMEPAGE_SLIDE_PLAYLIST:
+        return FoundSliedPlaylist(
+          uiElementModel: blocks.uiElement!,
+          creatives: blocks.creatives!,
+          curIndex: index,
+          itemHeight: itemHeight,
+        );
+      default:
+        return const SizedBox();
+    }
   }
 }

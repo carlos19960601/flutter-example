@@ -12,7 +12,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       useInheritedMediaQuery: true,
-      theme: ThemeData(colorSchemeSeed: AppColors.appMain),
+      theme: ThemeData(
+        colorSchemeSeed: AppColors.appMain,
+        scaffoldBackgroundColor: AppColors.bgColor,
+        cardColor: AppColors.cardColor,
+      ),
       initialBinding: BindingsBuilder(() {}),
       initialRoute: Routes.SPLASH,
       getPages: AppPages.routes,

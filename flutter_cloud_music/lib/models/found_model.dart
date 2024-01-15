@@ -40,8 +40,12 @@ class Blocks {
         json["blockCode"],
         json["showType"],
         json["extInfo"],
-        json["uiElement"],
-        json["creatives"],
+        json["uiElement"] == null
+            ? null
+            : UiElementModel.fromJson(json["uiElement"]),
+        (json["creatives"] as List<dynamic>?)
+            ?.map<CreativeModel>((e) => CreativeModel.fromJson(e))
+            .toList(),
         json["canClose"],
       );
 }

@@ -18,10 +18,65 @@ class UiElementModel {
     this.rcmdShowType,
     this.labelType,
   );
+
+  factory UiElementModel.fromJson(Map<String, dynamic> json) => UiElementModel(
+        json["mainTitle"] == null
+            ? null
+            : TitleText.fromJson(json["mainTitle"]),
+        json["subTitle"] == null ? null : TitleText.fromJson(json["subTitle"]),
+        json["image"] == null ? null : ElementImage.fromJson(json["image"]),
+        json['button'] == null ? null : ElementButton.fromJson(json['button']),
+        (json["labelTexts"] as List<dynamic>?)
+            ?.map((e) => e as String)
+            .toList(),
+        (json["labelUrls"] as List<dynamic>?)?.map((e) => e as String).toList(),
+        json['rcmdShowType'] as String?,
+        json['labelType'] as String?,
+      );
 }
 
-class TitleText {}
+class TitleText {
+  String? title;
+  String? titleType;
+  String? titleImgUrl;
 
-class ElementImage {}
+  TitleText(this.title, this.titleType, this.titleImgUrl);
 
-class ElementButton {}
+  factory TitleText.fromJson(Map<String, dynamic> json) => TitleText(
+        json["title"],
+        json["titleType"],
+        json["titleImgUrl"],
+      );
+}
+
+class ElementImage {
+  String? imageUrl;
+
+  ElementImage(
+    this.imageUrl,
+  );
+
+  factory ElementImage.fromJson(Map<String, dynamic> json) =>
+      ElementImage(json["imageUrl"]);
+}
+
+class ElementButton {
+  String? action;
+  String? actionType;
+  String? text;
+  String? iconUrl;
+
+  ElementButton(
+    this.action,
+    this.actionType,
+    this.text,
+    this.iconUrl,
+  );
+
+  factory ElementButton.fromJson(Map<String, dynamic> json) => ElementButton(
+        json['action'] as String?,
+        json['actionType'] as String?,
+        json['text'] as String?,
+        json['iconUrl'] as String?,
+      );
+}

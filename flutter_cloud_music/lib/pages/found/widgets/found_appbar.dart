@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_cloud_music/common/app_colors.dart';
 import 'package:flutter_cloud_music/common/utils/image_utils.dart';
@@ -31,7 +29,7 @@ class FoundAppbar extends StatelessWidget implements PreferredSizeWidget {
                 margin: const EdgeInsets.only(left: 56, right: 15),
                 decoration: BoxDecoration(
                   borderRadius: const BorderRadius.all(Radius.circular(18)),
-                  color: Get.isDarkMode ? Colors.white12 : Colors.grey.shade100,
+                  color: Get.isDarkMode ? Colors.white12 : Colors.white,
                 ),
                 alignment: Alignment.center,
                 child: Text.rich(

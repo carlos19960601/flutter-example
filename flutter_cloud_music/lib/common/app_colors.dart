@@ -12,4 +12,8 @@ class AppColors {
   static Color darkBody2TxtColor = Colors.white.withOpacity(0.85);
 
   static const Color textGray = Color.fromARGB(255, 191, 190, 191);
+
+  static const Color cardColor = Color.fromARGB(255, 255, 255, 255);
+
+  static const Color bgColor = Color.fromARGB(255, 246, 245, 246);
 }
