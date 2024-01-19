@@ -55,7 +55,7 @@ class _FoundHeaderColorsState extends State<FoundHeaderColors>
                                   colors: [
                                     Get.theme.cardColor.withOpacity(0.8),
                                     Get.theme.cardColor,
-                                    Colors.red,
+                                    Get.theme.cardColor,
                                   ],
                                 ),
                               ),

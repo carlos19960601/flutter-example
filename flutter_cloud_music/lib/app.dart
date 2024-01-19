@@ -16,6 +16,13 @@ class MyApp extends StatelessWidget {
         colorSchemeSeed: AppColors.appMain,
         scaffoldBackgroundColor: AppColors.bgColor,
         cardColor: AppColors.cardColor,
+        textTheme: const TextTheme(
+          titleSmall: TextStyle(
+            color: AppColors.headline4Color,
+            fontSize: 17,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
       ),
       initialBinding: BindingsBuilder(() {}),
       initialRoute: Routes.SPLASH,

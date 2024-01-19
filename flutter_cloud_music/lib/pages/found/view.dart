@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_cloud_music/models/found_model.dart';
 import 'package:flutter_cloud_music/pages/found/controller.dart';
 import 'package:flutter_cloud_music/pages/found/widgets/found_appbar.dart';
+import 'package:flutter_cloud_music/pages/found/widgets/found_banner.dart';
 import 'package:flutter_cloud_music/pages/found/widgets/found_header_bg.dart';
 import 'package:flutter_cloud_music/pages/found/widgets/found_slied_playlist.dart';
 import 'package:get/get.dart';
@@ -23,7 +24,10 @@ class FoundPage extends StatelessWidget {
             top: 0,
             child: FoundHeaderColors(),
           ),
-          Positioned.fill(child: _buildListView(context))
+          Positioned.fill(
+            top: Get.mediaQuery.padding.top + kToolbarHeight,
+            child: _buildListView(context),
+          ),
         ],
       ),
     );
@@ -31,30 +35,31 @@ class FoundPage extends StatelessWidget {
 
   Widget _buildListView(BuildContext context) {
     final ScrollController listScroll = ScrollController();
-    return Obx(() => ListView.separated(
-          controller: listScroll,
-          itemBuilder: (BuildContext context, int index) {
-            final blocks = controller.foundData.value!.blocks[index];
-            final nextType =
-                index + 1 < controller.foundData.value!.blocks.length
-                    ? controller.foundData.value!.blocks[index + 1].showType
-                    : null;
+    return Obx(
+      () => ListView.separated(
+        padding: const EdgeInsets.only(bottom: 20),
+        controller: listScroll,
+        itemBuilder: (BuildContext context, int index) {
+          final blocks = controller.foundData.value!.blocks[index];
+          final nextType = index + 1 < controller.foundData.value!.blocks.length
+              ? controller.foundData.value!.blocks[index + 1].showType
+              : null;
 
-            return _buildItem(blocks, index, nextType);
-          },
-          separatorBuilder: (BuildContext context, int index) {
-            final nextType =
-                index + 1 < controller.foundData.value!.blocks.length
-                    ? controller.foundData.value!.blocks[index + 1].showType
-                    : null;
+          return _buildItem(blocks, index, nextType);
+        },
+        separatorBuilder: (BuildContext context, int index) {
+          final nextType = index + 1 < controller.foundData.value!.blocks.length
+              ? controller.foundData.value!.blocks[index + 1].showType
+              : null;
 
-            return _buildDivider(
-                controller.foundData.value!.blocks[index].showType, nextType);
-          },
-          itemCount: controller.foundData.value != null
-              ? controller.foundData.value!.blocks.length
-              : 0,
-        ));
+          return _buildDivider(
+              controller.foundData.value!.blocks[index].showType, nextType);
+        },
+        itemCount: controller.foundData.value != null
+            ? controller.foundData.value!.blocks.length
+            : 0,
+      ),
+    );
   }
 
   Widget _buildDivider(String type, String? nextType) {
@@ -65,6 +70,8 @@ class FoundPage extends StatelessWidget {
     final itemHeight = controller.itemHeightFromType[blocks.showType] ?? 0;
 
     switch (blocks.showType) {
+      case SHOWTYPE_BANNER:
+        return const FoundBanner();
       case SHOWTYPE_HOMEPAGE_SLIDE_PLAYLIST:
         return FoundSliedPlaylist(
           uiElementModel: blocks.uiElement!,
@@ -73,7 +80,12 @@ class FoundPage extends StatelessWidget {
           itemHeight: itemHeight,
         );
       default:
-        return const SizedBox();
+        return Container(
+          width: Get.width,
+          height: 100,
+          color: Get.theme.cardColor,
+          child: Text('未适配类型: ${blocks.showType}'),
+        );
     }
   }
 }

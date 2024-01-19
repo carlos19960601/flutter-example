@@ -16,4 +16,7 @@ class AppColors {
   static const Color cardColor = Color.fromARGB(255, 255, 255, 255);
 
   static const Color bgColor = Color.fromARGB(255, 246, 245, 246);
+
+  static const Color headline4Color = Color.fromARGB(255, 39, 38, 40);
+  static const Color darkHeadline4Color = Color.fromARGB(255, 254, 254, 254);
 }
