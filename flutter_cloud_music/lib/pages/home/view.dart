@@ -25,7 +25,7 @@ class HomePage extends GetView<HomeController> {
                 children: [
                   FoundPage(),
                   const PodcastPage(),
-                  const MinePage(),
+                  MinePage(),
                 ],
               ),
             ),

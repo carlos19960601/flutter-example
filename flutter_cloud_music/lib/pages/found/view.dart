@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_cloud_music/models/banner_model.dart';
 import 'package:flutter_cloud_music/models/found_model.dart';
 import 'package:flutter_cloud_music/pages/found/controller.dart';
 import 'package:flutter_cloud_music/pages/found/widgets/found_appbar.dart';
@@ -35,6 +36,9 @@ class FoundPage extends StatelessWidget {
 
   Widget _buildListView(BuildContext context) {
     final ScrollController listScroll = ScrollController();
+    listScroll.addListener(() {
+      controller.isScrolled.value = listScroll.position.pixels >= 15;
+    });
     return Obx(
       () => ListView.separated(
         padding: const EdgeInsets.only(bottom: 20),
@@ -63,7 +67,12 @@ class FoundPage extends StatelessWidget {
   }
 
   Widget _buildDivider(String type, String? nextType) {
-    return const SizedBox();
+    switch (type) {
+      case SHOWTYPE_BANNER:
+        return const SizedBox.shrink();
+      default:
+        return const SizedBox(height: 10);
+    }
   }
 
   Widget _buildItem(Blocks blocks, int index, String? nextType) {
@@ -71,7 +80,10 @@ class FoundPage extends StatelessWidget {
 
     switch (blocks.showType) {
       case SHOWTYPE_BANNER:
-        return const FoundBanner();
+        return FoundBanner(
+          bannerModel: BannerModel.fromJson(blocks.extInfo),
+          itemHeight: itemHeight,
+        );
       case SHOWTYPE_HOMEPAGE_SLIDE_PLAYLIST:
         return FoundSliedPlaylist(
           uiElementModel: blocks.uiElement!,

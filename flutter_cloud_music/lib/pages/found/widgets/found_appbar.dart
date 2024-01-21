@@ -23,38 +23,48 @@ class FoundAppbar extends StatelessWidget implements PreferredSizeWidget {
                 Get.toNamed(Routes.SEARCH,
                     arguments: controller.defuleSearch.value);
               },
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 18),
-                height: 36,
-                margin: const EdgeInsets.only(left: 56, right: 15),
-                decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.all(Radius.circular(18)),
-                  color: Get.isDarkMode ? Colors.white12 : Colors.white,
-                ),
-                alignment: Alignment.center,
-                child: Text.rich(
-                  TextSpan(
-                    children: [
-                      WidgetSpan(
-                        alignment: PlaceholderAlignment.middle,
-                        child: Padding(
-                          padding: const EdgeInsets.only(right: 5),
-                          child: Image.asset(
-                            ImageUtils.getImagePath("search"),
-                            color: const Color.fromARGB(255, 134, 135, 134),
-                            width: 15,
-                            height: 15,
+              child: Obx(
+                () => Container(
+                  height: 36,
+                  padding: const EdgeInsets.symmetric(horizontal: 18),
+                  margin: const EdgeInsets.only(left: 56, right: 15),
+                  decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.all(
+                      Radius.circular(18),
+                    ),
+                    color: controller.isScrolled.value
+                        ? Get.isDarkMode
+                            ? Colors.white12
+                            : Colors.grey.shade100
+                        : Get.isDarkMode
+                            ? Colors.white12
+                            : Colors.white,
+                  ),
+                  alignment: Alignment.center,
+                  child: Text.rich(
+                    TextSpan(
+                      children: [
+                        WidgetSpan(
+                          alignment: PlaceholderAlignment.middle,
+                          child: Padding(
+                            padding: const EdgeInsets.only(right: 5),
+                            child: Image.asset(
+                              ImageUtils.getImagePath("search"),
+                              color: const Color.fromARGB(255, 134, 135, 134),
+                              width: 15,
+                              height: 15,
+                            ),
                           ),
                         ),
-                      ),
-                      const TextSpan(
-                        text: "搜索",
-                        style: TextStyle(
-                          color: AppColors.textGray,
-                          fontSize: 14,
+                        const TextSpan(
+                          text: "搜索",
+                          style: TextStyle(
+                            color: AppColors.textGray,
+                            fontSize: 14,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
