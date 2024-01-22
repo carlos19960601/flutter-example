@@ -6,7 +6,6 @@ import 'package:flutter_cloud_music/common/utils/image_utils.dart';
 import 'package:flutter_cloud_music/models/banner_model.dart';
 import 'package:flutter_cloud_music/pages/found/controller.dart';
 import 'package:get/get.dart';
-import 'package:get/state_manager.dart';
 
 class FoundBanner extends StatefulWidget {
   const FoundBanner({

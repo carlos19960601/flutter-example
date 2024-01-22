@@ -26,6 +26,24 @@ class UserInfo extends Object {
     this.remarkName,
     this.avatarDetail,
   );
+
+  factory UserInfo.fromJson(Map<String, dynamic> json) => UserInfo(
+        json['followed'] as bool,
+        json['avatarUrl'] as String,
+        json['gender'] as int,
+        json['birthday'] as int,
+        json['userId'] as int,
+        json['nickname'] as String,
+        json['signature'] as String?,
+        json['description'] as String?,
+        json['detailDescription'] as String?,
+        json['backgroundUrl'] as String?,
+        json['remarkName'] as String?,
+        json['avatarDetail'] == null
+            ? null
+            : AvatarDetail.fromJson(
+                json['avatarDetail'] as Map<String, dynamic>),
+      );
 }
 
 class AvatarDetail extends Object {
@@ -34,4 +52,10 @@ class AvatarDetail extends Object {
   String identityIconUrl;
 
   AvatarDetail(this.userType, this.identityIconUrl, this.identityLevel);
+
+  factory AvatarDetail.fromJson(Map<String, dynamic> json) => AvatarDetail(
+        json['userType'] as int,
+        json['identityIconUrl'] as String,
+        json['identityLevel'] as int,
+      );
 }

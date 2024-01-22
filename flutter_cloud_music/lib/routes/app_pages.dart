@@ -1,5 +1,7 @@
 import 'package:flutter_cloud_music/pages/home/binding.dart';
 import 'package:flutter_cloud_music/pages/home/view.dart';
+import 'package:flutter_cloud_music/pages/login/view.dart';
+import 'package:flutter_cloud_music/pages/playlist_detail/view.dart';
 import 'package:flutter_cloud_music/pages/splash/binding.dart';
 import 'package:flutter_cloud_music/pages/splash/view.dart';
 import 'package:flutter_cloud_music/routes/app_routes.dart';
@@ -20,5 +22,7 @@ class AppPages {
       binding: HomeBinding(),
       transition: Transition.fadeIn,
     ),
+    GetPage(name: Routes.LOGIN, page: () => const LoginPage()),
+    GetPage(name: Routes.PLAYLIST_DETAIL, page: () => PlaylistDetailPage()),
   ];
 }

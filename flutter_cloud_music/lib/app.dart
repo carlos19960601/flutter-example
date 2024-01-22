@@ -1,6 +1,7 @@
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cloud_music/common/app_colors.dart';
+import 'package:flutter_cloud_music/common/player/player_service.dart';
 import 'package:flutter_cloud_music/routes/app_pages.dart';
 import 'package:flutter_cloud_music/routes/app_routes.dart';
 import 'package:flutter_cloud_music/services/auth_service.dart';
@@ -18,6 +19,7 @@ class MyApp extends StatelessWidget {
         colorSchemeSeed: AppColors.appMain,
         scaffoldBackgroundColor: AppColors.bgColor,
         cardColor: AppColors.cardColor,
+        shadowColor: AppColors.shadowColor,
         appBarTheme: const AppBarTheme(
           toolbarHeight: kToolbarHeight,
           backgroundColor: AppColors.cardColor,
@@ -32,6 +34,7 @@ class MyApp extends StatelessWidget {
       ),
       initialBinding: BindingsBuilder(() {
         Get.put(AuthService());
+        Get.put(PlayerService());
       }),
       initialRoute: Routes.SPLASH,
       getPages: AppPages.routes,

@@ -120,7 +120,7 @@ class _BottomBarState extends State<BottomBar> {
     }
 
     return SizedBox(
-      width: Get.width,
+      width: Get.mediaQuery.size.width,
       height: widget.height + Get.mediaQuery.padding.bottom,
       child: Stack(
         children: [

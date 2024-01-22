@@ -4,7 +4,12 @@ import 'package:flutter_cloud_music/models/login_response.dart';
 import 'package:get/get.dart';
 
 class AuthService extends GetxService {
-  final isLoggedIn = false.obs;
+  static AuthService get to => Get.find();
+
+  final RxBool isLoggedIn = false.obs;
+  final Rxn<LoginResponse> loginData = Rxn<LoginResponse>();
+
+  bool get isLoggedInValue => isLoggedIn.value;
 
   String? cookie;
   int? userId;
@@ -19,7 +24,5 @@ class AuthService extends GetxService {
   }
 
   // 登录处理逻辑
-  login(LoginResponse loginResponse) {
-    
-  }
+  login(LoginResponse loginResponse) {}
 }

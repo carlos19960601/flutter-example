@@ -1,5 +1,9 @@
+import 'package:flutter_cloud_music/common/constants.dart';
+
 class Routes {
   Routes._();
+
+  static const ROUTES_HOST = "$APP_ROUTER_TAG://";
 
   static const NOT_FOUND = '/not_found';
   static const SPLASH = '/splash';

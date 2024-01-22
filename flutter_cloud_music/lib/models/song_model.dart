@@ -57,6 +57,10 @@ class Song {
                 Map<String, dynamic>.from(json['originSongSimpleData'])),
         json['st'] as int,
       );
+
+  bool canPlay() {
+    return true;
+  }
 }
 
 class Ar {

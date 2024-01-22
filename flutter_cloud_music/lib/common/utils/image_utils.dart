@@ -14,4 +14,8 @@ class ImageUtils {
     final height = (size.height * 2).ceil();
     return '$url?param=${width}y$height';
   }
+
+  static String getPlayingMusicTag() {
+    return getImagePath('listen_music_tag_red', format: 'webp');
+  }
 }
