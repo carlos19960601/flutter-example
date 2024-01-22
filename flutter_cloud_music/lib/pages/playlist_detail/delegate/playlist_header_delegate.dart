@@ -4,7 +4,6 @@ import 'package:flutter_cloud_music/common/app_colors.dart';
 import 'package:flutter_cloud_music/common/widgets/general_blur_image.dart';
 import 'package:flutter_cloud_music/pages/playlist_detail/controller.dart';
 import 'package:flutter_cloud_music/pages/playlist_detail/widgets/top_normal_info.dart';
-import 'package:flutter_cloud_music/pages/playlist_detail/widgets/top_official_info.dart';
 import 'package:get/get.dart';
 
 class PlaylistSliverHeaderDelegate extends SliverPersistentHeaderDelegate {
