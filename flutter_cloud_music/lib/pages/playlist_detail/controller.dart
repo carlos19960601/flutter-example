@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_cloud_music/common/enums/enum.dart';
 import 'package:flutter_cloud_music/common/utils/common_utils.dart';
 import 'package:flutter_cloud_music/http/api.dart';
 import 'package:flutter_cloud_music/http/music.dart';
@@ -18,6 +19,9 @@ class PlaylistDetailController extends GetxController {
   //全部歌曲集合
   final RxList<Song> songs = RxList<Song>();
   final RxInt itemSize = 0.obs;
+  //标题状态
+  final Rx<PlayListTitleStatus> titleStatus =
+      Rx<PlayListTitleStatus>(PlayListTitleStatus.Normal);
 
   //是否是官方歌单
   final RxBool isOfficial = false.obs;

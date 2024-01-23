@@ -57,6 +57,16 @@ Widget _buildAvaterHolder(Size size) {
   );
 }
 
+String getPlayCountStrFromInt(int count) {
+  if (count < 100000) {
+    return '$count';
+  } else if (count >= 100000 && count <= 99999999) {
+    return '${count ~/ 10000}万';
+  } else {
+    return '${(count / 100000000).toStringAsFixed(1)}亿';
+  }
+}
+
 Widget errorWidget(BuildContext context, String url, dynamic e) => Container(
       color: AppColors.loadImagePlaceholder(),
     );

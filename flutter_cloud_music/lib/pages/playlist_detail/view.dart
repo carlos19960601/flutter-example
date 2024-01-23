@@ -21,6 +21,7 @@ class PlaylistDetailPage extends StatelessWidget {
     controller = Get.put(PlaylistDetailController(), tag: timeMill.toString());
     appbarHeight = context.mediaQuery.padding.top + 44;
     return Scaffold(
+      extendBodyBehindAppBar: true,
       backgroundColor: Get.theme.cardColor,
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(44),
@@ -38,6 +39,7 @@ class PlaylistDetailPage extends StatelessWidget {
       slivers: [
         //头部内容 背景和简介等
         SliverPersistentHeader(
+          pinned: true,
           delegate: PlaylistSliverHeaderDelegate(
             controller: controller,
             expendHeight: controller.expandedHeight,

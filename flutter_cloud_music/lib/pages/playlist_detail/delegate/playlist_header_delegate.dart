@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cloud_music/common/app_colors.dart';
+import 'package:flutter_cloud_music/common/enums/enum.dart';
 import 'package:flutter_cloud_music/common/widgets/general_blur_image.dart';
 import 'package:flutter_cloud_music/pages/playlist_detail/controller.dart';
 import 'package:flutter_cloud_music/pages/playlist_detail/widgets/top_normal_info.dart';
@@ -22,6 +23,15 @@ class PlaylistSliverHeaderDelegate extends SliverPersistentHeaderDelegate {
       BuildContext context, double shrinkOffset, bool overlapsContent) {
     final double mainHeight = maxExtent - shrinkOffset; //动态高度
     final offset = mainHeight / maxExtent;
+    if (controller.detail.value != null) {
+      if (offset <= 0.325) {
+        controller.titleStatus.value = PlayListTitleStatus.TitleAndBtn;
+      } else if (offset >= 0.75) {
+        controller.titleStatus.value = PlayListTitleStatus.Normal;
+      } else {
+        controller.titleStatus.value = PlayListTitleStatus.Title;
+      }
+    }
 
     return ClipPath(
       child: _buildTopConver(offset),
@@ -62,6 +72,7 @@ class PlaylistSliverHeaderDelegate extends SliverPersistentHeaderDelegate {
   Widget _buildNormalCover(double offset) {
     return Stack(
       children: [
+        //背景
         SizedBox(
           width: Get.mediaQuery.size.width,
           height: expendHeight,
@@ -80,6 +91,9 @@ class PlaylistSliverHeaderDelegate extends SliverPersistentHeaderDelegate {
           ),
         ),
         Positioned(
+          left: 15,
+          right: 26,
+          bottom: 50,
           child: _buildClipContent(
             TopNormalInfo(
               controller: controller,

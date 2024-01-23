@@ -22,6 +22,18 @@ class PlaylistDetailModel extends Object {
   bool isOfficial() {
     return playlist.officialPlaylistType == ALG_OP;
   }
+
+  bool isVideoPl() {
+    return playlist.specialType == 200;
+  }
+
+  String getTypename() {
+    if (isVideoPl()) {
+      return '视频歌单';
+    } else {
+      return '歌单';
+    }
+  }
 }
 
 class Playlist extends Object {
