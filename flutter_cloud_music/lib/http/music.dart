@@ -1,6 +1,7 @@
 import 'package:flutter_cloud_music/http/api.dart';
 import 'package:flutter_cloud_music/http/init.dart';
 import 'package:flutter_cloud_music/models/found_model.dart';
+import 'package:flutter_cloud_music/models/song_model.dart';
 import 'package:flutter_cloud_music/pages/playlist_detail/models/playlist_detail_model.dart';
 
 class MusicHttp {
@@ -57,5 +58,21 @@ class MusicHttp {
       status: true,
       data: playlistDetailModel,
     );
+  }
+
+  ///获取歌曲详情 多个逗号隔开
+  static Future<ApiResponse<List<Song>?>> getSongsInfo(String ids) async {
+    var res = await Request().get(Api.playlistDetail, data: {
+      'ids': ids,
+    });
+
+    if (res.data['code'] == 0) {
+      return ApiResponse(
+        status: false,
+        message: res.data['message'],
+      );
+    }
+
+    
   }
 }

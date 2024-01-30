@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_cloud_music/common/enums/enum.dart';
 import 'package:flutter_cloud_music/common/utils/common_utils.dart';
@@ -66,10 +68,20 @@ class PlaylistDetailController extends GetxController {
   //音乐歌单
   Future<void> _getTracks(PlaylistDetailModel? detailModel) async {
     List<Song>? result;
+    log("${detailModel?.playlist.trackIds.length}");
+    log("${detailModel?.playlist.tracks.length}");
     if (detailModel?.playlist.trackIds.length !=
         detailModel?.playlist.tracks.length) {
       //歌曲数量和歌曲ID不一致,请求全部歌曲{id,id}
       //如果ids>1000分批请求
+      final idLength = detailModel!.playlist.trackIds.length;
+      if (idLength > 1000) {
+      } else {
+        final ids = detailModel.playlist.trackIds
+            .map((e) => e.id.toString())
+            .reduce((value, element) => '$value,$element');
+        result = await MusicHttp.getSongsInfo(ids);
+      }
     } else {
       result = detailModel?.playlist.tracks;
     }
