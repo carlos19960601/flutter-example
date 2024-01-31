@@ -1,4 +1,5 @@
 import 'package:flutter_cloud_music/models/privilege_model.dart';
+import 'package:music_player/music_player.dart';
 
 class Song {
   String name;
@@ -61,6 +62,55 @@ class Song {
   bool canPlay() {
     return true;
   }
+
+  String getSongCellSubTitle() {
+    final ars =
+        ar.map((e) => e.name!).reduce((value, element) => '$value/$element');
+    String str = '$ars - ${al.name}';
+    if (originSongSimpleData != null) {
+      final originArs = originSongSimpleData!.artists
+          .map((e) => e.name)
+          .reduce((value, element) => '$value/$element');
+      str += ' ｜ 原唱：$originArs';
+    }
+    return str;
+  }
+
+  MusicMetadata? _metadata;
+
+  MusicMetadata get metadata {
+    _metadata ??= MusicMetadata(
+        mediaId: id.toString(),
+        title: name +
+            (alia.isNotEmpty
+                ? alia.reduce((value, element) => '$value $element')
+                : ''),
+        subtitle: arString(),
+        iconUri: al.picUrl,
+        extras: toJson());
+    return _metadata!;
+  }
+
+  String arString() {
+    return ar.map((e) => e.name!).reduce((value, element) => '$value/$element');
+  }
+
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'name': name,
+        'id': id,
+        'ar': ar.map((e) => e.toJson()).toList(),
+        'alia': alia,
+        'fee': fee,
+        'v': v,
+        'st': st,
+        'al': al.toJson(),
+        'copyright': copyright,
+        'originCoverType': originCoverType,
+        'mv': mv,
+        'privilege': privilege?.toJson(),
+        'actionType': actionType,
+        'originSongSimpleData': originSongSimpleData?.toJson(),
+      };
 }
 
 class Ar {
@@ -94,6 +144,17 @@ class Ar {
         json['accountId'] as int?,
         json['fansCount'] as int?,
       );
+
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'id': id,
+        'name': name,
+        'tns': tns,
+        'alias': alias,
+        'picUrl': picUrl,
+        'followed': followed,
+        'accountId': accountId,
+        'fansCount': fansCount,
+      };
 }
 
 class AlbumSimple {
@@ -110,6 +171,13 @@ class AlbumSimple {
         json['picUrl'] as String?,
         json['pic_str'] as String?,
       );
+
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'id': id,
+        'name': name,
+        'picUrl': picUrl,
+        'pic_str': picStr,
+      };
 }
 
 class OriginSongSimpleData extends Object {
@@ -123,4 +191,14 @@ class OriginSongSimpleData extends Object {
             .map((e) => Ar.fromJson(Map<String, dynamic>.from(e)))
             .toList(),
       );
+
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'artists': artists.map((e) => e.toJson()).toList(),
+      };
+}
+
+extension MusicListExt on List<Song> {
+  List<MusicMetadata> toMetadataList() {
+    return map((e) => e.metadata).toList();
+  }
 }

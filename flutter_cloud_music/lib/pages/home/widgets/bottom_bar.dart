@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_cloud_music/common/app_colors.dart';
+import 'package:flutter_cloud_music/common/player/widgets/bottom_player_widget.dart';
 import 'package:flutter_cloud_music/common/utils/image_utils.dart';
 import 'package:flutter_cloud_music/pages/home/controller.dart';
 import 'package:get/get.dart';
@@ -67,6 +68,10 @@ class HomeBottomBar extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
+        ConstrainedBox(
+          constraints: const BoxConstraints(maxHeight: 48),
+          child: const BottomPlayerBar(),
+        ),
         Obx(
           () => BottomBar(
             height: 50,

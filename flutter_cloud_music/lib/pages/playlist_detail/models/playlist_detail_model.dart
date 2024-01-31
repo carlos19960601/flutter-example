@@ -3,7 +3,7 @@ import 'package:flutter_cloud_music/models/song_model.dart';
 import 'package:flutter_cloud_music/models/user_info_model.dart';
 import 'package:flutter_cloud_music/pages/found/models/shuffle_log_model.dart';
 
-class PlaylistDetailModel extends Object {
+class PlaylistDetailModel {
   int code;
   Playlist playlist;
 

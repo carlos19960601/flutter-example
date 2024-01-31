@@ -28,6 +28,20 @@ class PrivilegeModel {
             ? null
             : FreeTrialPrivilege.fromJson(json['freeTrialPrivilege']),
       );
+
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'id': id,
+        'fee': fee,
+        'payed': payed,
+        'preSell': preSell,
+        'playMaxbr': playMaxbr,
+        'maxbr': maxbr,
+        'freeTrialPrivilege': freeTrialPrivilege?.toJson(),
+      };
+
+  int? getMaxPlayBr() {
+    return playMaxbr ?? maxbr;
+  }
 }
 
 class FreeTrialPrivilege {
@@ -44,4 +58,9 @@ class FreeTrialPrivilege {
         json['resConsumable'] as bool,
         json['userConsumable'] as bool,
       );
+
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'resConsumable': resConsumable,
+        'userConsumable': userConsumable,
+      };
 }

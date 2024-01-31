@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_cloud_music/common/utils/common_utils.dart';
 import 'package:flutter_cloud_music/common/widgets/bottom_player_widget.dart';
 import 'package:flutter_cloud_music/common/widgets/sliver_fab.dart';
 import 'package:flutter_cloud_music/delegates/general_sliver_delegate.dart';
 import 'package:flutter_cloud_music/pages/playlist_detail/controller.dart';
 import 'package:flutter_cloud_music/pages/playlist_detail/delegate/playlist_header_delegate.dart';
 import 'package:flutter_cloud_music/pages/playlist_detail/widgets/list_content.dart';
+import 'package:flutter_cloud_music/pages/playlist_detail/widgets/play_all.dart';
 import 'package:flutter_cloud_music/pages/playlist_detail/widgets/top_appbar.dart';
 import 'package:flutter_cloud_music/pages/playlist_detail/widgets/video_list.dart';
 import 'package:get/get.dart';
@@ -55,6 +57,14 @@ class PlaylistDetailPage extends StatelessWidget {
             ),
           ),
         ),
+        SliverPersistentHeader(
+          pinned: true,
+          delegate: GeneralSliverDelegate(
+            child: PlDetailPlayAll(
+              controller: controller,
+            ),
+          ),
+        ),
         //列表
         Obx(
           () => controller.detail.value?.playlist.specialType == 200
@@ -66,6 +76,9 @@ class PlaylistDetailPage extends StatelessWidget {
                   songs: controller.songs.toList(),
                   controller: controller,
                 ),
+        ),
+        SliverToBoxAdapter(
+          child: paddingBottomBox(),
         ),
       ],
     );

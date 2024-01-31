@@ -43,6 +43,11 @@ dependencies:
   card_swiper: ^3.0.1
   event_bus: ^2.0.0
   auto_size_text: ^3.0.0
+  fluttertoast: ^8.2.4
+  music_player:
+    git:
+      url: https://gitee.com/master_xing/flutter-music-player.git
+      ref: 4e4ff0e9ed26b3d1a7e254a0f652e6267da68785
 
 dev_dependencies:
   flutter_test:
