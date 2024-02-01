@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter_cloud_music/models/song_model.dart';
 import 'package:get/get.dart';
 import 'package:music_player/music_player.dart';
@@ -38,6 +36,13 @@ class PlayerService extends GetxService {
   }
 
   void _update() {
+    if (curPlay.value == null) {
+      if (player.metadata != null) {
+        curPlay.value = Song.fromMetadata(player.metadata!);
+      } else {
+        curPlay.value = null;
+      }
+    }
     playMode.value = player.playMode;
     queueIdValue.value = player.queue.queueId;
     queueSizeValue.value = player.queue.queue.length;

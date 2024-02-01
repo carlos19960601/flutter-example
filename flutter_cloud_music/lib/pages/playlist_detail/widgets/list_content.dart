@@ -1,13 +1,10 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_cloud_music/common/player/player.dart';
+import 'package:flutter_cloud_music/common/player/player_service.dart';
 import 'package:flutter_cloud_music/common/utils/common_utils.dart';
 import 'package:flutter_cloud_music/models/song_model.dart';
 import 'package:flutter_cloud_music/pages/playlist_detail/controller.dart';
 import 'package:flutter_cloud_music/pages/playlist_detail/widgets/song_cell.dart';
 import 'package:get/get.dart';
-import 'package:music_player/music_player.dart';
 
 class PlayListContent extends StatelessWidget {
   PlayListContent({
@@ -40,16 +37,7 @@ class PlayListContent extends StatelessWidget {
                       clickCallback: () {
                         final clickSong = songs!.elementAt(index);
                         if (clickSong.canPlay()) {
-                          context.player.playWithQueue(
-                            PlayQueue(
-                              queueId: controller.detail.value!.playlist.id
-                                  .toString(),
-                              queueTitle:
-                                  controller.detail.value!.playlist.name,
-                              queue: songs!.toMetadataList(),
-                            ),
-                            metadata: clickSong.metadata,
-                          );
+                          PlayerService.to.curPlay.value = clickSong;
                         } else {
                           toast('该歌曲暂无法播放');
                         }

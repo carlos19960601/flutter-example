@@ -59,6 +59,10 @@ class Song {
         json['st'] as int,
       );
 
+  factory Song.fromMetadata(MusicMetadata metadata) {
+    return Song.fromJson(metadata.extras!.cast<String, dynamic>());
+  }
+
   bool canPlay() {
     return true;
   }
