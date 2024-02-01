@@ -103,12 +103,7 @@ class _BottomContentWidget extends GetView<PlayerContoller> {
             child: Row(
               children: [
                 Expanded(
-                  child: PageView.builder(
-                    itemCount: listSize,
-                    itemBuilder: (context, index) {
-                      return null;
-                    },
-                  ),
+                  child: _buildNormWidget(context.curPlayRx.value!.metadata),
                 ),
                 const SizedBox(width: 12),
                 Container(
@@ -126,5 +121,9 @@ class _BottomContentWidget extends GetView<PlayerContoller> {
         ],
       ),
     );
+  }
+
+  Widget _buildNormWidget(MusicMetadata music) {
+    return const Row();
   }
 }

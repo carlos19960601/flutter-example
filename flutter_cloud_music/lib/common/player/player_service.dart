@@ -8,7 +8,7 @@ class PlayerService extends GetxService {
   //是否是私人FM
   final isFmPlaying = false.obs;
   //当前播放的歌曲ID
-  final RxInt curPlayId = 0.obs;
+  final RxnInt curPlayId = RxnInt();
   //当前播放的歌曲
   final Rxn<Song> curPlay = Rxn<Song>();
   //播放列表ID

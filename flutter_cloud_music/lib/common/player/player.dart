@@ -35,4 +35,13 @@ extension QuitPlayerExt on BuildContext {
       rethrow;
     }
   }
+
+  Rx<PlayMode> get playModelRx {
+    try {
+      return PlayerService.to.playMode;
+    } catch (e, stacktrace) {
+      log(stacktrace.toString());
+      rethrow;
+    }
+  }
 }

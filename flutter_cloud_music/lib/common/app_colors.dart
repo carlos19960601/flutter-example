@@ -32,6 +32,7 @@ class AppColors {
   static const Color color156 = Color.fromARGB(255, 156, 156, 156);
   static const Color color163 = Color.fromARGB(255, 163, 163, 163);
   static const Color color187 = Color.fromARGB(255, 187, 187, 187);
+  static const Color color217 = Color.fromARGB(255, 217, 217, 217);
   static const Color color245 = Color.fromARGB(255, 245, 245, 245);
 
   static Color loadImagePlaceholder() =>

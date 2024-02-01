@@ -37,6 +37,7 @@ class PlayListContent extends StatelessWidget {
                       clickCallback: () {
                         final clickSong = songs!.elementAt(index);
                         if (clickSong.canPlay()) {
+                          PlayerService.to.curPlayId.value = clickSong.id;
                           PlayerService.to.curPlay.value = clickSong;
                         } else {
                           toast('该歌曲暂无法播放');
