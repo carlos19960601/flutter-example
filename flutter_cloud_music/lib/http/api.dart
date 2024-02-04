@@ -3,6 +3,8 @@ class Api {
   static const String playlistDetail = "/playlist/detail";
   static const String songDetail = "/song/detail";
   static const String songUrl = "/song/url";
+  static const String artistList = "/artist/list";
+  static const String artistDetail = '/artist/detail';
 }
 
 class ApiResponse<T> {

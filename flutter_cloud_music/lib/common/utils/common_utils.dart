@@ -145,3 +145,11 @@ Future<void> toPlaying() async {
     Get.toNamed(Routes.PLAYING);
   }
 }
+
+Future<void> toUserDetail({dynamic accountId, dynamic artistId}) async {
+  return Get.toNamed(
+    Routes.SINGER_DETAIL,
+    arguments: {'accountId': accountId, 'artistId': artistId},
+    preventDuplicates: false,
+  );
+}

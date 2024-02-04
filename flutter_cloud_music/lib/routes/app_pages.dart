@@ -4,6 +4,7 @@ import 'package:flutter_cloud_music/pages/login/view.dart';
 import 'package:flutter_cloud_music/pages/playing/binding.dart';
 import 'package:flutter_cloud_music/pages/playing/view.dart';
 import 'package:flutter_cloud_music/pages/playlist_detail/view.dart';
+import 'package:flutter_cloud_music/pages/singer_detail/view.dart';
 import 'package:flutter_cloud_music/pages/splash/binding.dart';
 import 'package:flutter_cloud_music/pages/splash/view.dart';
 import 'package:flutter_cloud_music/routes/app_routes.dart';
@@ -31,5 +32,12 @@ class AppPages {
       page: () => const PlayingPage(),
       binding: PlayingBinding(),
     ),
+    // GetPage(name: Routes.VIDEO_PLAY, page: VideoPage())
+    //singer detail
+    GetPage(
+        name: Routes.SINGER_DETAIL,
+        page: () => SingerDetailPage(),
+        preventDuplicates: false,
+        transition: Transition.rightToLeft),
   ];
 }

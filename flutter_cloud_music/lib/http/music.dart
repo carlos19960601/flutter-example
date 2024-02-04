@@ -1,7 +1,9 @@
 import 'package:flutter_cloud_music/common/utils/common_utils.dart';
 import 'package:flutter_cloud_music/http/api.dart';
 import 'package:flutter_cloud_music/http/init.dart';
+import 'package:flutter_cloud_music/models/artists_model.dart';
 import 'package:flutter_cloud_music/models/found_model.dart';
+import 'package:flutter_cloud_music/models/singer_detail_model.dart';
 import 'package:flutter_cloud_music/models/song_model.dart';
 import 'package:flutter_cloud_music/models/songs_model.dart';
 import 'package:flutter_cloud_music/pages/playlist_detail/models/playlist_detail_model.dart';
@@ -108,5 +110,51 @@ class MusicHttp {
         data: {'timestamp': DateTime.now().millisecondsSinceEpoch});
 
     return ApiResponse(status: true, data: []);
+  }
+
+  static Future<ApiResponse<ArtistsModel>> getArtists(
+      int page, String initial, int type, int area) async {
+    const limit = 20;
+    var res = await Request().get(Api.artistList, data: {
+      "limit": limit,
+      'offset': limit * page,
+      'initial': initial,
+      'type': type,
+      'area': area
+    });
+
+    if (res.data['code'] == 0) {
+      return ApiResponse(
+        status: false,
+        message: res.data['message'],
+      );
+    }
+
+    return ApiResponse(
+      status: true,
+      data: ArtistsModel.fromJson(res.data),
+    );
+  }
+
+  static Future<ApiResponse<SingerDetailModel?>> getSingerInfo(
+      String id) async {
+    var res = await Request().get(
+      Api.artistDetail,
+      data: {'id': id, 'timestamp': DateTime.now().millisecondsSinceEpoch},
+    );
+
+    if (res.data['code'] == 0) {
+      return ApiResponse(
+        status: false,
+        message: res.data['message'],
+      );
+    }
+
+    final SingerDetailModel model = SingerDetailModel.fromJson(res.data);
+    if (model.user == null) {
+    } else {
+      //是入驻歌手
+    }
+    return ApiResponse(status: true, data: model);
   }
 }
