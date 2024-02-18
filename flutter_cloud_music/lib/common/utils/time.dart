@@ -1,3 +1,5 @@
+import 'package:jiffy/jiffy.dart';
+
 ///format milliseconds to time stamp like "06:23", which
 ///means 6 minute 23 seconds
 String getTimeStamp(int milliseconds) {
@@ -8,4 +10,8 @@ String getTimeStamp(int milliseconds) {
   final String secondsStr = (seconds % 60).toString().padLeft(2, '0');
 
   return "$minutesStr:$secondsStr";
+}
+
+String millFormat(int mill, {String format = 'yyyy-MM-dd'}) {
+  return Jiffy.parseFromMillisecondsSinceEpoch(mill).format(pattern: format);
 }

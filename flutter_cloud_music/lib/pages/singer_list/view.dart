@@ -88,7 +88,38 @@ class SingerListPage extends StatelessWidget {
                     ),
                     Expanded(
                       child: RichText(
-                        text: const TextSpan(),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        text: TextSpan(
+                          children: [
+                            TextSpan(
+                              text: ar.name,
+                              style: headline2Style().copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            if (ar.getExtraStr() == null)
+                              const WidgetSpan(child: SizedBox(width: 4)),
+                            if (ar.getExtraStr() != null)
+                              TextSpan(
+                                text: ar.getExtraStr(),
+                                style: headline2Style().copyWith(
+                                    fontWeight: FontWeight.normal,
+                                    color: AppColors.color150),
+                              ),
+                            if (ar.accountId != null)
+                              WidgetSpan(
+                                  child: ClipOval(
+                                child: Container(
+                                  child: Image.asset(
+                                    ImageUtils.getImagePath('icn_account'),
+                                    height: 10,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ))
+                          ],
+                        ),
                       ),
                     ),
                     Container(

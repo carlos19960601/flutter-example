@@ -5,6 +5,7 @@ class Api {
   static const String songUrl = "/song/url";
   static const String artistList = "/artist/list";
   static const String artistDetail = '/artist/detail';
+  static const String artistVideo = "/artist/video";
 }
 
 class ApiResponse<T> {

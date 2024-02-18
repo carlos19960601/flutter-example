@@ -28,13 +28,16 @@ class PlayingLyricView extends StatelessWidget {
                 builder: (context, constraints) {
                   return ShaderMask(
                     shaderCallback: (rect) {
-                      return ui.Gradient.linear(Offset(rect.width / 2, 0),
-                          Offset(rect.width / 2, constraints.maxHeight), [
-                        const Color(0x00FFFFFF),
-                        style.color!,
-                        style.color!,
-                        const Color(0x00FFFFFF),
-                      ]);
+                      return ui.Gradient.linear(
+                        Offset(rect.width / 2, 0),
+                        Offset(rect.width / 2, constraints.maxHeight),
+                        [
+                          const Color(0x00FFFFFF),
+                          style.color!,
+                          style.color!,
+                          const Color(0x00FFFFFF),
+                        ],
+                      );
                     },
                     child: const Padding(
                       padding: EdgeInsets.symmetric(horizontal: 20),

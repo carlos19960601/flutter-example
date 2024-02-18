@@ -153,3 +153,16 @@ Future<void> toUserDetail({dynamic accountId, dynamic artistId}) async {
     preventDuplicates: false,
   );
 }
+
+Widget get leading => IconButton(
+      onPressed: () async {
+        FocusManager.instance.primaryFocus?.unfocus();
+        Get.back();
+      },
+      icon: Image.asset(
+        ImageUtils.getImagePath('dij'),
+        color: Get.theme.appBarTheme.titleTextStyle?.color,
+        width: 25,
+        height: 25,
+      ),
+    );

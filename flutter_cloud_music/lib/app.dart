@@ -25,6 +25,26 @@ class MyApp extends StatelessWidget {
           backgroundColor: AppColors.cardColor,
         ),
         textTheme: const TextTheme(
+          displayLarge: TextStyle(
+              color: AppColors.headline1Color,
+              fontSize: 13,
+              fontWeight: FontWeight.w500),
+          displayMedium: TextStyle(
+              color: AppColors.headline1Color,
+              fontSize: 15,
+              fontWeight: FontWeight.w500),
+          titleMedium: TextStyle(
+              color: AppColors.headline4Color,
+              fontSize: 17,
+              fontWeight: FontWeight.w600),
+          bodyLarge: TextStyle(
+              color: AppColors.body1TxtColor,
+              fontSize: 13,
+              fontWeight: FontWeight.normal),
+          bodyMedium: TextStyle(
+              color: AppColors.body2TxtColor,
+              fontSize: 16,
+              fontWeight: FontWeight.normal),
           titleSmall: TextStyle(
             color: AppColors.headline4Color,
             fontSize: 17,

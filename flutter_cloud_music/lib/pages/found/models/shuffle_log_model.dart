@@ -1,3 +1,7 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_cloud_music/common/app_colors.dart';
+import 'package:flutter_cloud_music/common/utils/theme_utils.dart';
+
 class MLogResource extends Object {
   MlogBaseData mlogBaseData;
   MlogExtVO mlogExtVO;
@@ -137,4 +141,39 @@ class VideoUserProfile extends Object {
         json['avatarUrl'] as String,
         json['followed'] as bool,
       );
+}
+
+extension MlogBaseDataExt on MlogBaseData {
+  Widget buildNameView({int maxLine = 2}) {
+    return RichText(
+      text: TextSpan(
+        children: [
+          if (type == 3)
+            WidgetSpan(
+              alignment: PlaceholderAlignment.middle,
+              child: Container(
+                width: 20,
+                height: 13,
+                margin: const EdgeInsets.only(right: 3),
+                decoration: const BoxDecoration(),
+                alignment: Alignment.center,
+                child: const Text(
+                  "MV",
+                  style: TextStyle(
+                    color: AppColors.appMainLight,
+                    fontSize: 8,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+            ),
+          TextSpan(
+              text: text,
+              style: body2Style().copyWith(fontWeight: FontWeight.normal))
+        ],
+      ),
+      maxLines: 2,
+      overflow: TextOverflow.ellipsis,
+    );
+  }
 }

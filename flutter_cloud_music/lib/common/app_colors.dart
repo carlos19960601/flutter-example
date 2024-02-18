@@ -7,6 +7,9 @@ class AppColors {
   static const Color appMain = Color.fromARGB(255, 201, 61, 45);
   static const Color appMainLight = Color.fromARGB(255, 235, 77, 68);
 
+  static const Color body1TxtColor = Color.fromARGB(255, 49, 49, 50);
+  static Color darkBody1TxtColor = Colors.white.withOpacity(0.85);
+
   static const Color body2TxtColor = Color.fromARGB(255, 51, 51, 53);
   static Color darkBody2TxtColor = Colors.white.withOpacity(0.85);
 
@@ -15,6 +18,9 @@ class AppColors {
   static const Color cardColor = Color.fromARGB(255, 255, 255, 255);
 
   static const Color bgColor = Color.fromARGB(255, 246, 245, 246);
+
+  static const Color headline1Color = Color.fromARGB(255, 40, 40, 42);
+  static const Color darkHeadline1Color = Color.fromARGB(255, 254, 254, 254);
 
   static const Color headline4Color = Color.fromARGB(255, 39, 38, 40);
   static const Color darkHeadline4Color = Color.fromARGB(255, 254, 254, 254);
@@ -28,6 +34,13 @@ class AppColors {
   static const Color btnSelectedColor = Color.fromARGB(255, 225, 53, 52);
   static const Color btnSelectedColorDark = Color.fromARGB(255, 97, 26, 26);
 
+  /// 深色背景
+  static const Color back1 = Color(0xff1D1F22);
+
+  /// 比深色背景略深一点
+  static const Color back2 = Color(0xff121314);
+
+  static const Color color109 = Color.fromARGB(255, 109, 109, 109);
   static const Color color150 = Color.fromARGB(255, 150, 150, 150);
   static const Color color156 = Color.fromARGB(255, 156, 156, 156);
   static const Color color163 = Color.fromARGB(255, 163, 163, 163);
