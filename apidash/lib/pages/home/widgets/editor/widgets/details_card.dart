@@ -24,9 +24,11 @@ class _EditorPaneRequestDetailsCardState
     return RequestDetailsCard(
       child: EqualSplitView(
         leftWidget: const EditRequestPane(),
-        rightWidget: Obx(() => _collectionController.codePaneVisible.value
-            ? const CodePane()
-            : const ResponsePane()),
+        rightWidget: Obx(
+          () => _collectionController.codePaneVisible.value
+              ? const CodePane()
+              : const ResponsePane(),
+        ),
       ),
     );
   }

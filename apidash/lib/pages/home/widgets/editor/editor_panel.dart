@@ -1,7 +1,6 @@
 import 'package:apidash/consts.dart';
 import 'package:apidash/pages/home/widgets/collection/controller.dart';
-import 'package:apidash/pages/home/widgets/editor/widgets/details_card.dart';
-import 'package:apidash/pages/home/widgets/editor/widgets/url_card.dart';
+import 'package:apidash/pages/home/widgets/editor/editor_request.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -23,15 +22,7 @@ class _RequestEditorPaneState extends State<RequestEditorPane> {
           ? RequestEditorDefault()
           : const Padding(
               padding: kPt24o8,
-              child: Column(
-                children: [
-                  EditorPaneRequestURLCard(),
-                  kVSpacer10,
-                  Expanded(
-                    child: EditorPaneRequestDetailsCard(),
-                  ),
-                ],
-              ),
+              child: RequestEditor(),
             ),
     );
   }

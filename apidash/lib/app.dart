@@ -14,6 +14,7 @@ class _DashAppState extends State<DashApp> {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         fontFamily: kFontFamily,
         colorSchemeSeed: kColorSchemeSeed,

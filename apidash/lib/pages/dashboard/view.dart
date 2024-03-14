@@ -86,13 +86,15 @@ class _DashboardState extends State<Dashboard> {
               color: Theme.of(context).colorScheme.surfaceVariant,
             ),
             Expanded(
-              child: IndexedStack(
-                index: _dashboardController.railIdx.value,
-                children: const [
-                  HomePage(),
-                  IntroPage(),
-                  SettingsPage(),
-                ],
+              child: Obx(
+                () => IndexedStack(
+                  index: _dashboardController.railIdx.value,
+                  children: const [
+                    HomePage(),
+                    IntroPage(),
+                    SettingsPage(),
+                  ],
+                ),
               ),
             )
           ],

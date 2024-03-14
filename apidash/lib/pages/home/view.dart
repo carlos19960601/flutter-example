@@ -1,6 +1,6 @@
 import 'package:apidash/common/widgets/split_views.dart';
 import 'package:apidash/pages/home/widgets/collection/view.dart';
-import 'package:apidash/pages/home/widgets/editor/view.dart';
+import 'package:apidash/pages/home/widgets/editor/editor_panel.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {

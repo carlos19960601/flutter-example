@@ -22,6 +22,7 @@ class _CollectionPaneState extends State<CollectionPane> {
     return Padding(
       padding: kP24CollectionPane,
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Padding(
             padding: kPr8CollectionPane,

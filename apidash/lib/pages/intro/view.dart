@@ -1,3 +1,4 @@
+import 'package:apidash/common/widgets/intro_message.dart';
 import 'package:flutter/material.dart';
 
 class IntroPage extends StatefulWidget {
@@ -10,6 +11,6 @@ class IntroPage extends StatefulWidget {
 class _IntroPageState extends State<IntroPage> {
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return const IntroMessage();
   }
 }

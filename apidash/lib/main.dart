@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 void main() async {
   await GStorage.init();
+  WidgetsFlutterBinding.ensureInitialized();
   GoogleFonts.config.allowRuntimeFetching = false;
   runApp(const DashApp());
 }
