@@ -53,7 +53,40 @@ class RequestEditorTopBar extends StatelessWidget {
               style: const ButtonStyle(
                 padding: MaterialStatePropertyAll(EdgeInsets.zero),
               ),
-              onPressed: () {},
+              onPressed: () {
+                final controller = TextEditingController(
+                    text: collectionController.activeRequestModel.value?.name ??
+                        "");
+                Get.dialog(
+                  AlertDialog(
+                    title: const Text('Rename Request'),
+                    content: TextField(
+                      autofocus: true,
+                      controller: controller,
+                      decoration: const InputDecoration(
+                        hintText: "Enter new name",
+                      ),
+                    ),
+                    actions: [
+                      OutlinedButton(
+                        onPressed: () {
+                          Get.back();
+                        },
+                        child: const Text("Cancel"),
+                      ),
+                      FilledButton(
+                        onPressed: () {
+                          collectionController
+                              .renameActiveRequest(controller.text);
+                          Get.back();
+                          controller.dispose();
+                        },
+                        child: const Text("OK"),
+                      ),
+                    ],
+                  ),
+                );
+              },
               icon: const Icon(
                 Icons.edit,
                 size: 12,

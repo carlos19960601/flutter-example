@@ -11,6 +11,8 @@ class RequestModel {
     this.requestHeaders,
     this.requestParams,
     this.requestBodyContentType = ContentType.json,
+    this.requestTabIndex = 0,
+    this.isParamEnabledList,
   });
 
   final String id;
@@ -21,6 +23,8 @@ class RequestModel {
   final List<NameValueModel>? requestHeaders;
   final List<NameValueModel>? requestParams;
   final ContentType requestBodyContentType;
+  int requestTabIndex;
+  final List<bool>? isParamEnabledList;
 
   Map<String, dynamic> toJson() {
     return {

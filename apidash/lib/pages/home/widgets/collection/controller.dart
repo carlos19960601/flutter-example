@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:apidash/consts.dart';
 import 'package:apidash/models/request_model.dart';
 import 'package:apidash/utils/storage.dart';
@@ -15,6 +17,7 @@ class CollectionController extends GetxController {
   RxString editRequestId = "".obs;
   FocusNode nameTextFieldFocusNode = FocusNode();
   RxBool savingData = false.obs;
+  // activeRequestModel is "reactive", 但是内部的属性不是
   Rxn<RequestModel> activeRequestModel = Rxn<RequestModel>();
   RxBool codePaneVisible = false.obs;
 
@@ -39,6 +42,16 @@ class CollectionController extends GetxController {
     activeRequestModel.value = requestItems[id]!;
   }
 
+  renameActiveRequest(String name) {
+    activeRequestModel.value!.name = name;
+    requestItems[activeId.value] = activeRequestModel.value!;
+    activeRequestModel.refresh();
+  }
+
+  updateActiveRequest(String name, String url, HTTPVerb method) {
+    log("${activeRequestModel.value?.name}");
+  }
+
   updateRequest(String id, {HTTPVerb? method, String? url}) {
     RequestModel newModel = requestItems[id]!.copyWith(
       method: method,
@@ -49,6 +62,11 @@ class CollectionController extends GetxController {
     }
 
     requestItems[id] = newModel;
+  }
+
+  updateRequestTabIndex(int index) {
+    activeRequestModel.value!.requestTabIndex = index;
+    activeRequestModel.refresh();
   }
 
   add() {

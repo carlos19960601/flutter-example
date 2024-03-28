@@ -1,4 +1,5 @@
 import 'package:apidash/consts.dart';
+import 'package:apidash/utils/ui.dart';
 import 'package:flutter/material.dart';
 
 class DropdownButtonHttpMethod extends StatefulWidget {
@@ -19,7 +20,9 @@ class DropdownButtonHttpMethod extends StatefulWidget {
 class _DropdownButtonHttpMethodState extends State<DropdownButtonHttpMethod> {
   @override
   Widget build(BuildContext context) {
+    final surfaceColor = Theme.of(context).colorScheme.surface;
     return DropdownButton<HTTPVerb>(
+      focusColor: surfaceColor,
       value: widget.method,
       icon: const Icon(Icons.unfold_more_rounded),
       elevation: 4,
@@ -27,7 +30,6 @@ class _DropdownButtonHttpMethodState extends State<DropdownButtonHttpMethod> {
         height: 0,
       ),
       borderRadius: kBorderRadius12,
-      focusColor: Theme.of(context).colorScheme.surface,
       items: HTTPVerb.values.map<DropdownMenuItem<HTTPVerb>>(
         (HTTPVerb value) {
           return DropdownMenuItem<HTTPVerb>(
@@ -38,6 +40,8 @@ class _DropdownButtonHttpMethodState extends State<DropdownButtonHttpMethod> {
                 value.name.toUpperCase(),
                 style: kCodeStyle.copyWith(
                   fontWeight: FontWeight.bold,
+                  color: getHTTPMethodColor(value,
+                      brightness: Theme.of(context).brightness),
                 ),
               ),
             ),

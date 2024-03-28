@@ -9,3 +9,5 @@ class NameValueModel {
         value: json["value"],
       );
 }
+
+NameValueModel kNameValueEmptyModel = NameValueModel(name: "", value: "");

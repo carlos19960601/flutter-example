@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:convert';
+import 'package:davi/davi.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -20,6 +21,20 @@ final kIsDesktop =
 final kIsIOS = !kIsWeb && Platform.isIOS;
 final kIsAndroid = !kIsWeb && Platform.isAndroid;
 final kIsMobile = !kIsWeb && (Platform.isIOS || Platform.isAndroid);
+
+const kTableThemeData = DaviThemeData(
+  columnDividerThickness: 1,
+  columnDividerColor: kColorTransparent,
+  row: RowThemeData(
+    dividerColor: kColorTransparent,
+  ),
+  decoration: BoxDecoration(
+    border: Border(),
+  ),
+  header: HeaderThemeData(
+    visible: false,
+  ),
+);
 
 final kColorTransparentState =
     MaterialStateProperty.all<Color>(Colors.transparent);

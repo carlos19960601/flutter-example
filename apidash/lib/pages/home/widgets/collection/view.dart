@@ -104,9 +104,11 @@ class _RequestListState extends State<RequestList> {
               child: Padding(
                 key: ValueKey(id),
                 padding: kP1,
-                child: RequestItem(
-                  id: id,
-                  requestModel: _collectionController.requestItems[id]!,
+                child: Obx(
+                  () => RequestItem(
+                    id: id,
+                    requestModel: _collectionController.requestItems[id]!,
+                  ),
                 ),
               ),
             );
@@ -145,39 +147,41 @@ class _RequestItemState extends State<RequestItem> {
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() => SidebarRequestCard(
-          id: widget.id,
-          method: widget.requestModel.method,
-          name: widget.requestModel.name,
-          url: widget.requestModel.url,
-          editRequestId: _collectionController.editRequestId.value,
-          activeRequestId: _collectionController.activeId.value,
-          onTap: () {
-            _collectionController.setActiveId(widget.id);
-          },
-          onDoubleTap: () {
-            _collectionController.activeId.value = widget.id;
+    return Obx(
+      () => SidebarRequestCard(
+        id: widget.id,
+        method: widget.requestModel.method,
+        name: widget.requestModel.name,
+        url: widget.requestModel.url,
+        editRequestId: _collectionController.editRequestId.value,
+        activeRequestId: _collectionController.activeId.value,
+        onTap: () {
+          _collectionController.setActiveId(widget.id);
+        },
+        onDoubleTap: () {
+          _collectionController.activeId.value = widget.id;
+          _collectionController.editRequestId.value = widget.id;
+        },
+        onChangedNameEditor: (String value) {
+          value = value.trim();
+          RequestModel requestItem =
+              _collectionController.requestItems[widget.id]!;
+          requestItem.name = value;
+        },
+        onTapOutsideNameEditor: () {
+          _collectionController.editRequestId.value = "";
+        },
+        focusNode: _collectionController.nameTextFieldFocusNode,
+        onMenuSelected: (RequestItemMenuOption item) {
+          if (item == RequestItemMenuOption.edit) {
             _collectionController.editRequestId.value = widget.id;
-          },
-          onChangedNameEditor: (String value) {
-            value = value.trim();
-            RequestModel requestItem =
-                _collectionController.requestItems[widget.id]!;
-            requestItem.name = value;
-          },
-          onTapOutsideNameEditor: () {
-            _collectionController.editRequestId.value = "";
-          },
-          focusNode: _collectionController.nameTextFieldFocusNode,
-          onMenuSelected: (RequestItemMenuOption item) {
-            if (item == RequestItemMenuOption.edit) {
-              _collectionController.editRequestId.value = widget.id;
-              _collectionController.nameTextFieldFocusNode.requestFocus();
-            }
-            if (item == RequestItemMenuOption.delete) {
-              _collectionController.remove(widget.id);
-            }
-          },
-        ));
+            _collectionController.nameTextFieldFocusNode.requestFocus();
+          }
+          if (item == RequestItemMenuOption.delete) {
+            _collectionController.remove(widget.id);
+          }
+        },
+      ),
+    );
   }
 }
