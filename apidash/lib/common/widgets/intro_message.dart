@@ -1,0 +1,45 @@
+import 'package:apidash/common/widgets/markdown.dart';
+import 'package:apidash/consts.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:package_info_plus/package_info_plus.dart';
+
+class IntroMessage extends StatelessWidget {
+  const IntroMessage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    late String text;
+    late final String version;
+
+    Future<void> introData() async {
+      text = await rootBundle.loadString("assets/intro.md");
+      version = (await PackageInfo.fromPlatform()).version;
+    }
+
+    return FutureBuilder(
+      future: introData(),
+      builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
+        if (snapshot.hasError) {
+          return const Text("An error occured");
+        }
+        if (snapshot.connectionState == ConnectionState.done) {
+          if (Theme.of(context).brightness == Brightness.dark) {
+            text = text.replaceAll("{{mode}}", "dark");
+          } else {
+            text = text.replaceAll("{{mode}}", "light");
+          }
+
+          text = text.replaceAll("{{version}}", version);
+
+          return CustomMarkdown(
+            data: text,
+            padding: kPh60,
+          );
+        }
+
+        return const Center(child: CircularProgressIndicator());
+      },
+    );
+  }
+}

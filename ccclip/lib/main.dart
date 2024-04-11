@@ -1,0 +1,6 @@
+import 'package:ccclip/app.dart';
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(const CcClipApp());
+}
