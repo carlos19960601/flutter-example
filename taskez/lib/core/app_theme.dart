@@ -18,6 +18,20 @@ class AppTheme {
 }
 
 class ButtonStyles {
+  static final ButtonStyle blueRounded = ButtonStyle(
+    backgroundColor: MaterialStatePropertyAll(
+      HexColor.fromHex("246CFE"),
+    ),
+    shape: MaterialStatePropertyAll(
+      RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(50),
+        side: BorderSide(
+          color: HexColor.fromHex("246CFE"),
+        ),
+      ),
+    ),
+  );
+
   static final ButtonStyle imageRounded = ButtonStyle(
     backgroundColor: MaterialStateProperty.all(
       HexColor.fromHex("181A1F"),

@@ -19,15 +19,35 @@ class _OnboardingCarouselState extends State<OnboardingCarousel> {
   int _currentPage = 0;
   final int _numPages = 3;
 
+  List<Widget> _buildPageIndicator() {
+    List<Widget> list = [];
+    for (int i = 0; i < _numPages; i++) {
+      list.add(i == _currentPage ? _indicator(true) : _indicator(false));
+    }
+    return list;
+  }
+
+  Widget _indicator(bool isActive) {
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 150),
+      margin: const EdgeInsets.symmetric(horizontal: 8),
+      height: 8,
+      width: 8.0,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color:
+            isActive ? HexColor.fromHex("246CFE") : HexColor.fromHex("666A7A"),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
         children: [
-          Container(
-            child: DarkRadialBackground(
-              color: HexColor.fromHex("#181a1f"),
-            ),
+          DarkRadialBackground(
+            color: HexColor.fromHex("#181a1f"),
           ),
           Column(
             children: [
@@ -63,72 +83,74 @@ class _OnboardingCarouselState extends State<OnboardingCarousel> {
               Padding(
                 padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
                 child: SingleChildScrollView(
-                  child: Container(
-                    child: Column(
-                      children: [
-                        const SizedBox(height: 50),
-                        SizedBox(
-                          width: double.infinity,
-                          height: 60,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              Get.toNamed(Routes.onboardingEmailAddress);
-                            },
-                            style: ButtonStyle(
-                              backgroundColor: MaterialStatePropertyAll(
-                                HexColor.fromHex("246CFE"),
-                              ),
-                              shape: MaterialStatePropertyAll(
-                                RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(50),
-                                  side: BorderSide(
-                                    color: HexColor.fromHex("246CFE"),
-                                  ),
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: _buildPageIndicator(),
+                      ),
+                      const SizedBox(height: 50),
+                      SizedBox(
+                        width: double.infinity,
+                        height: 60,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            Get.toNamed(Routes.onboardingEmailAddress);
+                          },
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStatePropertyAll(
+                              HexColor.fromHex("246CFE"),
+                            ),
+                            shape: MaterialStatePropertyAll(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(50),
+                                side: BorderSide(
+                                  color: HexColor.fromHex("246CFE"),
                                 ),
                               ),
                             ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const Icon(Icons.email, color: Colors.white),
-                                Text(
-                                  '   Continue with Email',
-                                  style: GoogleFonts.lato(
-                                      fontSize: 20, color: Colors.white),
-                                ),
-                              ],
-                            ),
                           ),
-                        ),
-                        const SizedBox(height: 10.0),
-                        const Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(
-                              child: OutlinedButtonWithImage(
-                                imageUrl: "assets/google_icon.png",
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Icon(Icons.email, color: Colors.white),
+                              Text(
+                                '   Continue with Email',
+                                style: GoogleFonts.lato(
+                                    fontSize: 20, color: Colors.white),
                               ),
-                            ),
-                            SizedBox(width: 20),
-                            Expanded(
-                              child: OutlinedButtonWithImage(
-                                  imageUrl: "assets/facebook_icon.png"),
-                            ),
-                          ],
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(10),
-                          child: Text(
-                            'By continuing you agree Taskez\'s Terms of Services & Privacy Policy.',
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.lato(
-                              fontSize: 15,
-                              color: HexColor.fromHex("666A7A"),
-                            ),
+                            ],
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                      const SizedBox(height: 10.0),
+                      const Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: OutlinedButtonWithImage(
+                              imageUrl: "assets/google_icon.png",
+                            ),
+                          ),
+                          SizedBox(width: 20),
+                          Expanded(
+                            child: OutlinedButtonWithImage(
+                                imageUrl: "assets/facebook_icon.png"),
+                          ),
+                        ],
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: Text(
+                          'By continuing you agree Taskez\'s Terms of Services & Privacy Policy.',
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.lato(
+                            fontSize: 15,
+                            color: HexColor.fromHex("666A7A"),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),

@@ -1,6 +1,6 @@
 import 'package:cashew/pages/navigation_framework/view.dart';
 import 'package:cashew/pages/onboarding/view.dart';
-import 'package:cashew/utils/storage.dart';
+import 'package:cashew/core/storage.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 

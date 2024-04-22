@@ -17,6 +17,8 @@ class PageNavigationFrameworkState extends State<PageNavigationFramework> {
         Scaffold(
           bottomNavigationBar: BottomNavBar(),
         ),
+
+        
       ],
     );
   }

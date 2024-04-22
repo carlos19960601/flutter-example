@@ -1,7 +1,7 @@
 import 'package:cashew/common/constants.dart';
 import 'package:cashew/common/widgets/button_icon.dart';
 import 'package:cashew/common/widgets/text_font.dart';
-import 'package:cashew/utils/storage.dart';
+import 'package:cashew/core/storage.dart';
 import 'package:flutter/material.dart';
 import 'package:cashew/localization/translation_keys.dart' as translation_keys;
 import 'package:get/get.dart';

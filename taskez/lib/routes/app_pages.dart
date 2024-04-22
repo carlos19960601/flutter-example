@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:taskez/pages/auth/email_address/view.dart';
 import 'package:taskez/pages/onboard/carousel/view.dart';
 import 'package:taskez/pages/onboard/start/view.dart';
 import 'package:taskez/pages/splash/view.dart';
@@ -18,11 +19,11 @@ class AppPages {
     GetPage(
         name: Routes.onboardingCarousel,
         page: () => const OnboardingCarousel()),
-    //   GetPage(
-    //     name: Routes.PLAYING,
-    //     page: () => const PlayingPage(),
-    //     binding: PlayingBinding(),
-    //   ),
+
+    GetPage(
+      name: Routes.onboardingEmailAddress,
+      page: () => const EmailAddressScreen(),
+    ),
     //   GetPage(
     //     name: Routes.VIDEO_PLAY,
     //     page: () => const VideoPage(),

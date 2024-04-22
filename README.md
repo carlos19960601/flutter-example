@@ -45,3 +45,24 @@ macos/Runner/DebugProfile.entitlements和macos/Runner/Release.entitlements 添�
 ```
 
 
+5. Getx的路由中间件局限
+
+```dart
+class AuthMiddleware extends GetMiddleware {
+  @override
+  RouteSettings? redirect(String? route) {
+    // 判断用户是否已登录
+    bool isLoggedIn = checkIfUserIsLoggedIn(); // 你需要根据实际情况来实现该方法
+
+    if (!isLoggedIn) {
+      // 用户未登录，重定向到登录页面
+      return RouteSettings(name: '/login');
+    }
+
+    // 用户已登录，继续正常跳转
+    return null;
+  }
+}
+```
+
+它只能拦截通过 Get.to、Get.off、Get.toNamed 等 GetX 路由方法进行的页面跳转。当你直接使用构造函数创建的页面时，不会触发 GetX 的路由系统，因此 GetMiddleware 无法拦截这种情况。
