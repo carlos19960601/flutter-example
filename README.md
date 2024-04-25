@@ -66,3 +66,8 @@ class AuthMiddleware extends GetMiddleware {
 ```
 
 它只能拦截通过 Get.to、Get.off、Get.toNamed 等 GetX 路由方法进行的页面跳转。当你直接使用构造函数创建的页面时，不会触发 GetX 的路由系统，因此 GetMiddleware 无法拦截这种情况。
+
+6. Getx中 Get.size.height 和 Get.mediaQuery.height 的区别是什么？
+
+Get.height/width are equivalent to MediaQuery.of(context).size.height/width, but immutable.
+If you need a changeable height/width (like Desktop or browser windows that can be scaled) you will need to use context: context.width/height
