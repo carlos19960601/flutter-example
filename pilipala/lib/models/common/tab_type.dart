@@ -11,6 +11,11 @@ import 'package:pilipala/pages/rcmd/view.dart';
 
 enum TabType { live, rcmd, hot, bangumi }
 
+extension TabTypeDesc on TabType {
+  String get description => ['直播', '推荐', '热门', '番剧'][index];
+  String get id => ['live', 'rcmd', 'hot', 'bangumi'][index];
+}
+
 List tabsConfig = [
   {
     'icon': const Icon(

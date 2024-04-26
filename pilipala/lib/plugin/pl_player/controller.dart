@@ -143,9 +143,6 @@ class PlPlayerController {
     // 字体大小
     fontSizeVal =
         localCache.get(LocalCacheKey.danmakuFontScale, defaultValue: 1.0);
-    // 弹幕速度
-    danmakuSpeedVal =
-        localCache.get(LocalCacheKey.danmakuSpeed, defaultValue: 4.0);
   }
 
   static PlPlayerController getInstance({

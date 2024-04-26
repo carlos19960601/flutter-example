@@ -1,22 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hive/hive.dart';
 import 'package:pilipala/http/video.dart';
 import 'package:pilipala/models/home/rcmd/result.dart';
-import 'package:pilipala/utils/storage.dart';
 
 class RcmdController extends GetxController {
   int _currentPage = 0;
   bool isLoadingMore = true;
   RxList<RecVideoItemAppModel> videoList = <RecVideoItemAppModel>[].obs;
-  Box recVideo = GStorage.recVideo;
   final ScrollController scrollController = ScrollController();
   RxInt crossAxisCount = 2.obs;
-
-  @override
-  void onInit() {
-    super.onInit();
-  }
 
   Future queryRcmdFeed(type) async {
     if (!isLoadingMore) {
@@ -42,7 +34,6 @@ class RcmdController extends GetxController {
       } else if (type == "onLoad") {
         videoList.addAll(res['data']);
       }
-      recVideo.put('cacheList', res['data']);
       _currentPage += 1;
     }
     isLoadingMore = false;
@@ -53,7 +44,6 @@ class RcmdController extends GetxController {
   Future onRefresh() async {
     isLoadingMore = true;
     queryRcmdFeed("onRefresh");
-    print("onRefresh");
   }
 
   // 上拉加载

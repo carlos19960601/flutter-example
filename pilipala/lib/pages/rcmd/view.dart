@@ -9,6 +9,7 @@ import 'package:pilipala/common/skeleton/video_card_v.dart';
 import 'package:pilipala/common/widgets/http_error.dart';
 import 'package:pilipala/common/widgets/video_card_v.dart';
 import 'package:pilipala/models/home/rcmd/result.dart';
+import 'package:pilipala/pages/home/controller.dart';
 import 'package:pilipala/pages/main/controller.dart';
 import 'package:pilipala/pages/rcmd/controller.dart';
 
@@ -31,6 +32,8 @@ class _RcmdPageState extends State<RcmdPage>
     _futureBuilderFuture = _rcmdController.queryRcmdFeed("init");
     StreamController<bool> mainStream =
         Get.find<MainController>().bottomBarStream;
+    StreamController<bool> searchBarStream =
+        Get.find<HomeController>().searchBarStream;
 
     scrollController.addListener(() {
       if (scrollController.position.pixels >=
@@ -49,8 +52,10 @@ class _RcmdPageState extends State<RcmdPage>
           scrollController.position.userScrollDirection;
       if (direction == ScrollDirection.forward) {
         mainStream.add(true);
+        searchBarStream.add(true);
       } else if (direction == ScrollDirection.reverse) {
         mainStream.add(false);
+        searchBarStream.add(false);
       }
     });
   }
@@ -144,7 +149,7 @@ class _RcmdPageState extends State<RcmdPage>
                 )
               : const VideoCardVSkeleton();
         },
-        childCount: videoList!.isNotEmpty ? videoList!.length : 10,
+        childCount: videoList.isNotEmpty ? videoList.length : 10,
       ),
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         // 行间距

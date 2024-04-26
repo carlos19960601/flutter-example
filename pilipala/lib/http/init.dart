@@ -1,11 +1,13 @@
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
+import 'package:dio/io.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
+import 'package:hive/hive.dart';
 import 'package:pilipala/http/constants.dart';
 import 'package:pilipala/http/interceptor.dart';
+import 'package:pilipala/utils/storage.dart';
 import 'package:pilipala/utils/utils.dart';
 
 class Request {
@@ -14,8 +16,13 @@ class Request {
   static late CookieManager cookieManager;
   static late final Dio dio;
   factory Request() => _instance;
+  Box setting = GStorage.setting;
+  static Box localCache = GStorage.localCache;
+  late bool enableSystemProxy;
+  late String systemProxyHost;
+  late String systemProxyPort;
 
-  setCookie() async {
+  static setCookie() async {
     var cookiePath = await Utils.getCookiePath();
     var cookieJar = PersistCookieJar(
       ignoreExpires: true,
@@ -23,37 +30,72 @@ class Request {
     );
     cookieManager = CookieManager(cookieJar);
     dio.interceptors.add(cookieManager);
-    var cookie = await cookieManager.cookieJar
-        .loadForRequest(Uri.parse(HttpString.tUrl));
+    // todo check 登录逻辑
+    final List<Cookie> cookie = await cookieManager.cookieJar
+        .loadForRequest(Uri.parse(HttpString.baseUrl));
 
-    if (cookie.isEmpty) {
-      log("cookie is empty");
-    }
+    final String cookieString = cookie
+        .map((Cookie cookie) => '${cookie.name}=${cookie.value}')
+        .join("; ");
+
+    dio.options.headers["cookie"] = cookieString;
   }
 
   Request._internal() {
+    //BaseOptions、Options、RequestOptions 都可以配置参数，优先级别依次递增，且可以根据优先级别覆盖参数
     BaseOptions options = BaseOptions(
       //请求基地址,可以包含子路径
-      baseUrl: HttpString.baseApiUrl,
+      baseUrl: HttpString.apiBaseUrl,
       //连接服务器超时时间，单位是毫秒.
       connectTimeout: const Duration(milliseconds: 12000),
-      persistentConnection: true,
+      //响应流上前后两次接受到数据的间隔，单位为毫秒。
+      receiveTimeout: const Duration(milliseconds: 12000),
+      //Http请求头.
+      headers: {},
     );
 
     dio = Dio(options);
 
+    enableSystemProxy = setting.get(SettingBoxKey.enableSystemProxy,
+        defaultValue: false) as bool;
+    systemProxyHost =
+        localCache.get(LocalCacheKey.systemProxyHost, defaultValue: "");
+    systemProxyPort =
+        localCache.get(LocalCacheKey.systemProxyPort, defaultValue: "");
+
+    // 设置代理
+    if (enableSystemProxy) {
+      dio.httpClientAdapter = IOHttpClientAdapter(
+        createHttpClient: () {
+          final HttpClient client = HttpClient();
+          client.findProxy = (Uri uri) {
+            return "PROXY $systemProxyHost:$systemProxyPort";
+          };
+          client.badCertificateCallback =
+              (X509Certificate cert, String host, int port) => true;
+
+          return client;
+        },
+      );
+    }
+
     dio.interceptors.add(ApiInterceptor());
-    // dio.interceptors.add(
-    //   LogInterceptor(
-    //     request: false,
-    //     requestHeader: false,
-    //     responseHeader: false,
-    //     responseBody: false,
-    //   ),
-    // );
+
+    dio.interceptors.add(
+      LogInterceptor(
+        request: false,
+        requestHeader: false,
+        responseHeader: false,
+      ),
+    );
+
+    dio.options.validateStatus = (int? status) {
+      return status! >= 200 && status < 300 ||
+          HttpString.validateStatusCodes.contains(status);
+    };
   }
 
-  get(url, {data, cacheOptions, options, cancelToken, extra}) async {
+  get(url, {data, options, cancelToken, extra}) async {
     Response response;
     Options options = Options();
     ResponseType resType = ResponseType.json;
@@ -65,12 +107,7 @@ class Request {
       }
     }
 
-    if (cacheOptions != null) {
-      options = cacheOptions;
-    } else {
-      options = Options();
-      options.responseType = resType;
-    }
+    options.responseType = resType;
 
     try {
       response = await dio.get(
@@ -81,8 +118,13 @@ class Request {
       );
       return response;
     } on DioException catch (e) {
-      print("get error: $e");
-      return Future.error(await ApiInterceptor.dioError(e));
+      Response errResponse = Response(
+        data: {"message": await ApiInterceptor.dioError(e)},
+        statusCode: 200,
+        requestOptions: RequestOptions(),
+      );
+
+      return errResponse;
     }
   }
 
@@ -103,8 +145,14 @@ class Request {
       // print('post success: ${response.data}');
       return response;
     } on DioException catch (e) {
-      print('post error: $e');
-      return Future.error(await ApiInterceptor.dioError(e));
+      Response errResponse = Response(
+        data: {
+          'message': await ApiInterceptor.dioError(e)
+        }, // 将自定义 Map 数据赋值给 Response 的 data 属性
+        statusCode: 200,
+        requestOptions: RequestOptions(),
+      );
+      return errResponse;
     }
   }
 
@@ -131,7 +179,7 @@ class Request {
   // 从cookie中获取 csrf token
   static Future<String> getCsrf() async {
     var cookies = await cookieManager.cookieJar
-        .loadForRequest(Uri.parse(HttpString.baseApiUrl));
+        .loadForRequest(Uri.parse(HttpString.apiBaseUrl));
     String token = '';
     if (cookies.where((e) => e.name == 'bili_jct').isNotEmpty) {
       token = cookies.firstWhere((e) => e.name == 'bili_jct').value;
@@ -139,19 +187,9 @@ class Request {
     return token;
   }
 
-  /*
-   * 取消请求
-   *
-   * 同一个cancel token 可以用于多个请求，当一个cancel token取消时，所有使用该cancel token的请求都会被取消。
-   * 所以参数可选
-   */
-  void cancelRequests(CancelToken token) {
-    token.cancel("cancelled");
-  }
-
-  String headerUa({type = "mob"}) {
-    String headerUa = "";
-    if (type == "mob") {
+  String headerUa({type = 'mob'}) {
+    String headerUa = '';
+    if (type == 'mob') {
       if (Platform.isIOS) {
         headerUa =
             'Mozilla/5.0 (iPhone; CPU iPhone OS 14_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.1 Mobile/15E148 Safari/604.1';

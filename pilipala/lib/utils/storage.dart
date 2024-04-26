@@ -1,6 +1,7 @@
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:pilipala/models/home/rcmd/result.dart';
+import 'package:pilipala/models/model_owner.dart';
+import 'package:pilipala/models/search/hot.dart';
 import 'package:pilipala/models/user/info.dart';
 
 class GStorage {
@@ -16,24 +17,18 @@ class GStorage {
     final path = dir.path;
     await Hive.initFlutter('$path/hive');
     regAdapter();
-    // 首页推荐视频
-    recVideo = await Hive.openBox(
-      'recVideo',
-      compactionStrategy: (entries, deletedEntries) {
-        return deletedEntries > 12;
-      },
-    );
+    // 登录用户信息
     userInfo = await Hive.openBox("userInfo",
         compactionStrategy: (entries, deletedEntries) {
       return deletedEntries > 2;
     });
+    // 本地缓存
     localCache = await Hive.openBox(
       "localCache",
       compactionStrategy: (entries, deletedEntries) {
         return deletedEntries > 4;
       },
     );
-
     // 设置
     setting = await Hive.openBox('setting');
     // 搜索历史
@@ -43,38 +38,57 @@ class GStorage {
         return deletedEntries > 10;
       },
     );
-  }
-
-  static Future<void> lazyInit() async {
     // 视频设置
     video = await Hive.openBox('video');
   }
 
   static regAdapter() {
-    Hive.registerAdapter(RecVideoItemAppModelAdapter());
+    Hive.registerAdapter(OwnerAdapter());
     Hive.registerAdapter(UserInfoDataAdapter());
     Hive.registerAdapter(LevelInfoAdapter());
-    Hive.registerAdapter(RcmdStatAdapter());
-    Hive.registerAdapter(RcmdReasonAdapter());
-    Hive.registerAdapter(RcmdOwnerAdapter());
+    Hive.registerAdapter(HotSearchModelAdapter());
+    Hive.registerAdapter(HotSearchItemAdapter());
+  }
+
+  static Future<void> close() async {
+    userInfo.compact();
+    userInfo.close();
+    historyword.compact();
+    historyword.close();
+    localCache.compact();
+    localCache.close();
+    setting.compact();
+    setting.close();
+    video.compact();
+    video.close();
   }
 }
 
 class LocalCacheKey {
   // 历史记录暂停状态 默认false 记录
-  static const String historyPause = 'historyPause';
-  // access_key
-  static const String accessKey = "accessKey";
+  static const String historyPause = 'historyPause',
+      // access_key
+      accessKey = 'accessKey',
 
-  static const String wbiKeys = 'wbiKeys';
-  static const String timeStamp = 'timeStamp';
+      //
+      wbiKeys = 'wbiKeys',
+      timeStamp = 'timeStamp',
 
-  // 弹幕相关设置 屏蔽类型 显示区域 透明度 字体大小 弹幕速度
-  static const String danmakuBlockType = 'danmakuBlockType';
-  static const String danmakuShowArea = 'danmakuShowArea';
-  static const String danmakuOpacity = 'danmakuOpacity';
-  static const String danmakuFontScale = 'danmakuFontScale';
-  static const String danmakuSpeed = 'danmakuSpeed';
+      // 弹幕相关设置 屏蔽类型 显示区域 透明度 字体大小 弹幕时间 描边粗细
+      danmakuBlockType = 'danmakuBlockType',
+      danmakuShowArea = 'danmakuShowArea',
+      danmakuOpacity = 'danmakuOpacity',
+      danmakuFontScale = 'danmakuFontScale',
+      danmakuDuration = 'danmakuDuration',
+      strokeWidth = 'strokeWidth',
+
+      // 代理host port
+      systemProxyHost = 'systemProxyHost',
+      systemProxyPort = 'systemProxyPort';
+
+  static const String isDisableBatteryOptLocal = 'isDisableBatteryOptLocal',
+      isManufacturerBatteryOptimizationDisabled =
+          'isManufacturerBatteryOptimizationDisabled';
 }
 
 class VideoBoxKey {
@@ -98,46 +112,74 @@ class VideoBoxKey {
 
 class SettingBoxKey {
   /// 播放器
-  static const String btmProgressBehavior = 'btmProgressBehavior';
-  static const String defaultVideoSpeed = 'defaultVideoSpeed';
-  static const String autoUpgradeEnable = 'autoUpgradeEnable';
-  static const String feedBackEnable = 'feedBackEnable';
-  static const String defaultVideoQa = 'defaultVideoQa';
-  static const String defaultAudioQa = 'defaultAudioQa';
-  static const String autoPlayEnable = 'autoPlayEnable';
-  static const String fullScreenMode = 'fullScreenMode';
-  static const String defaultDecode = 'defaultDecode';
-  static const String danmakuEnable = 'danmakuEnable';
-  static const String defaultPicQa = 'defaultPicQa';
-  static const String enableHA = 'enableHA';
-  static const String enableOnlineTotal = 'enableOnlineTotal';
-  static const String enableAutoBrightness = 'enableAutoBrightness';
-  static const String enableAutoEnter = 'enableAutoEnter';
-  static const String enableAutoExit = 'enableAutoExit';
-  // youtube 双击快进快退
-  static const String enableQuickDouble = 'enableQuickDouble';
-  static const String enableShowDanmaku = 'enableShowDanmaku';
-  static const String enableBackgroundPlay = 'enableBackgroundPlay';
+  static const String btmProgressBehavior = 'btmProgressBehavior',
+      defaultVideoSpeed = 'defaultVideoSpeed',
+      autoUpgradeEnable = 'autoUpgradeEnable',
+      feedBackEnable = 'feedBackEnable',
+      defaultVideoQa = 'defaultVideoQa',
+      defaultLiveQa = 'defaultLiveQa',
+      defaultAudioQa = 'defaultAudioQa',
+      autoPlayEnable = 'autoPlayEnable',
+      fullScreenMode = 'fullScreenMode',
+      defaultDecode = 'defaultDecode',
+      danmakuEnable = 'danmakuEnable',
+      defaultToastOp = 'defaultToastOp',
+      defaultPicQa = 'defaultPicQa',
+      enableHA = 'enableHA',
+      enableOnlineTotal = 'enableOnlineTotal',
+      enableAutoBrightness = 'enableAutoBrightness',
+      enableAutoEnter = 'enableAutoEnter',
+      enableAutoExit = 'enableAutoExit',
+      p1080 = 'p1080',
+      enableCDN = 'enableCDN',
+      autoPiP = 'autoPiP',
+      enableAutoLongPressSpeed = 'enableAutoLongPressSpeed',
+      enablePlayerControlAnimation = 'enablePlayerControlAnimation',
 
-  /// 隐私
-  static const String blackMidsList = 'blackMidsList';
+      // youtube 双击快进快退
+      enableQuickDouble = 'enableQuickDouble',
+      enableShowDanmaku = 'enableShowDanmaku',
+      enableBackgroundPlay = 'enableBackgroundPlay',
+      fullScreenGestureMode = 'fullScreenGestureMode',
 
-  /// 其他
-  static const String autoUpdate = 'autoUpdate';
-  static const String replySortType = 'replySortType';
-  static const String defaultDynamicType = 'defaultDynamicType';
-  static const String enableHotKey = 'enableHotKey';
-  static const String enableQuickFav = 'enableQuickFav';
-  static const String enableWordRe = 'enableWordRe';
-  static const String enableSearchWord = 'enableSearchWord';
-  static const String enableRcmdDynamic = 'enableRcmdDynamic';
+      /// 隐私
+      blackMidsList = 'blackMidsList',
+
+      /// 推荐
+      enableRcmdDynamic = 'enableRcmdDynamic',
+      defaultRcmdType = 'defaultRcmdType',
+      enableSaveLastData = 'enableSaveLastData',
+      minDurationForRcmd = 'minDurationForRcmd',
+      minLikeRatioForRecommend = 'minLikeRatioForRecommend',
+      exemptFilterForFollowed = 'exemptFilterForFollowed',
+      //filterUnfollowedRatio = 'filterUnfollowedRatio',
+      applyFilterToRelatedVideos = 'applyFilterToRelatedVideos',
+
+      /// 其他
+      autoUpdate = 'autoUpdate',
+      replySortType = 'replySortType',
+      defaultDynamicType = 'defaultDynamicType',
+      enableHotKey = 'enableHotKey',
+      enableQuickFav = 'enableQuickFav',
+      enableWordRe = 'enableWordRe',
+      enableSearchWord = 'enableSearchWord',
+      enableSystemProxy = 'enableSystemProxy',
+      enableAi = 'enableAi',
+      defaultHomePage = 'defaultHomePage',
+      enableRelatedVideo = 'enableRelatedVideo';
 
   /// 外观
-  static const String themeMode = 'themeMode';
-  static const String defaultTextScale = 'textScale';
-  static const String dynamicColor = 'dynamicColor'; // bool
-  static const String customColor = 'customColor'; // 自定义主题色
-  static const String iosTransition = 'iosTransition'; // ios路由
-  static const String enableSingleRow = 'enableSingleRow'; // 首页单列
-  static const String customRows = 'customRows'; // 自定义列
+  static const String themeMode = 'themeMode',
+      defaultTextScale = 'textScale',
+      dynamicColor = 'dynamicColor', // bool
+      customColor = 'customColor', // 自定义主题色
+      enableSingleRow = 'enableSingleRow', // 首页单列
+      displayMode = 'displayMode',
+      customRows = 'customRows', // 自定义列
+      enableMYBar = 'enableMYBar',
+      hideSearchBar = 'hideSearchBar', // 收起顶栏
+      hideTabBar = 'hideTabBar', // 收起底栏
+      tabbarSort = 'tabbarSort', // 首页tabbar
+      dynamicBadgeMode = 'dynamicBadgeMode',
+      enableGradientBg = 'enableGradientBg';
 }

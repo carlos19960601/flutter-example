@@ -3,7 +3,6 @@ import 'dart:math';
 
 import 'package:get/get_utils/get_utils.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:pilipala/http/init.dart';
 
 class Utils {
   static Future<String> getCookiePath() async {
@@ -20,9 +19,6 @@ class Utils {
   }
 
   static Future<bool> checkUpdate() async {
-    // var result = await Request().get(Api.latestApp);
-    Request();
-
     return false;
   }
 

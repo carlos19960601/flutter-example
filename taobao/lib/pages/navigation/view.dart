@@ -46,6 +46,71 @@ class _GZXBottomNavigationBarState extends State<GZXBottomNavigationBar> {
                   : _bottomNavigationColor,
               size: 34,
             ),
+            label: '首页',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              AppIcon.home,
+              color: _currentIndex == 1
+                  ? _bottomNavigationActiveColor
+                  : _bottomNavigationColor,
+            ),
+            activeIcon: Icon(
+              AppIcon.home_active,
+              color: _currentIndex == 1
+                  ? _bottomNavigationActiveColor
+                  : _bottomNavigationColor,
+              size: 34,
+            ),
+            label: '微淘',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              AppIcon.home,
+              color: _currentIndex == 2
+                  ? _bottomNavigationActiveColor
+                  : _bottomNavigationColor,
+            ),
+            activeIcon: Icon(
+              AppIcon.home_active,
+              color: _currentIndex == 2
+                  ? _bottomNavigationActiveColor
+                  : _bottomNavigationColor,
+              size: 34,
+            ),
+            label: '消息',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              AppIcon.home,
+              color: _currentIndex == 3
+                  ? _bottomNavigationActiveColor
+                  : _bottomNavigationColor,
+            ),
+            activeIcon: Icon(
+              AppIcon.home_active,
+              color: _currentIndex == 3
+                  ? _bottomNavigationActiveColor
+                  : _bottomNavigationColor,
+              size: 34,
+            ),
+            label: '购物车',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              AppIcon.home,
+              color: _currentIndex == 4
+                  ? _bottomNavigationActiveColor
+                  : _bottomNavigationColor,
+            ),
+            activeIcon: Icon(
+              AppIcon.home_active,
+              color: _currentIndex == 4
+                  ? _bottomNavigationActiveColor
+                  : _bottomNavigationColor,
+              size: 34,
+            ),
+            label: '我的淘宝',
           ),
         ],
       ),

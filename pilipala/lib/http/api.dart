@@ -7,6 +7,9 @@ class Api {
   // 热门视频
   static const String hotList = '/x/web-interface/popular';
 
+  /// 获取未读动态数
+  static const getUnreadDynamic = '/x/web-interface/dynamic/entrance';
+
   // 视频流
   // https://github.com/SocialSisterYi/bilibili-API-collect/blob/master/docs/video/videostream_url.md
   static const String videoUrl = '/x/player/playurl';
@@ -303,4 +306,7 @@ class Api {
   static const String onlineTotal = '/x/player/online/total';
 
   static const String webDanmaku = '/x/v2/dm/web/seg.so';
+
+  /// 排行榜
+  static const String getRankApi = "/x/web-interface/ranking/v2";
 }

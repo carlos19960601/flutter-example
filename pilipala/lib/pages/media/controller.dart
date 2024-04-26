@@ -10,6 +10,9 @@ class MediaController extends GetxController {
   Rx<FavFolderData> favFolderData = FavFolderData().obs;
   Box userInfoCache = GStorage.userInfo;
   RxBool userLogin = false.obs;
+  var userInfo;
+  int? mid;
+
   List list = [
     {
       'icon': Icons.file_download_outlined,
@@ -29,13 +32,17 @@ class MediaController extends GetxController {
       'onTap': () => Get.toNamed('/fav'),
     },
     {
+      'icon': Icons.subscriptions_outlined,
+      'title': '我的订阅',
+      'onTap': () => Get.toNamed('/subscription'),
+    },
+    {
       'icon': Icons.watch_later_outlined,
       'title': '稍后再看',
       'onTap': () => Get.toNamed('/later'),
     },
   ];
-  var userInfo;
-  int? mid;
+  final ScrollController scrollController = ScrollController();
 
   @override
   void onInit() {
