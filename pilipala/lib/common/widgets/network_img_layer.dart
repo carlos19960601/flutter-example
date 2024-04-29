@@ -16,6 +16,7 @@ class NetworkImgLayer extends StatelessWidget {
   final Duration? fadeOutDuration;
   final Duration? fadeInDuration;
   final int? quality;
+  final double? origAspectRatio;
 
   const NetworkImgLayer({
     super.key,
@@ -29,6 +30,7 @@ class NetworkImgLayer extends StatelessWidget {
     this.fadeInDuration,
     // 图片质量 默认1%
     this.quality,
+    this.origAspectRatio,
   });
 
   @override

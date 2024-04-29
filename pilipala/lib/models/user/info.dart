@@ -30,7 +30,6 @@ class UserInfoData {
     this.hasShop,
     this.shopUrl,
   });
-
   @HiveField(0)
   bool? isLogin;
   @HiveField(1)
@@ -81,8 +80,8 @@ class UserInfoData {
   String? shopUrl;
 
   UserInfoData.fromJson(Map<String, dynamic> json) {
-    isLogin = json["isLogin"] ?? false;
-    emailVerified = json["email_verified"];
+    isLogin = json['isLogin'] ?? false;
+    emailVerified = json['email_verified'];
     face = json['face'];
     levelInfo = json['level_info'] != null
         ? LevelInfo.fromJson(json['level_info'])
@@ -102,21 +101,13 @@ class UserInfoData {
     vipPayType = json['vip_pay_type'];
     vipThemeType = json['vip_theme_type'];
     vipLabel = json['vip_label'];
+
     vipAvatarSub = json['vip_avatar_subscript'];
     vipNicknameColor = json['vip_nickname_color'];
     wallet = json['wallet'];
     hasShop = json['has_shop'];
     shopUrl = json['shop_url'];
   }
-
-  Map<String, dynamic> toJson() => {
-        "isLogin": isLogin,
-        "face": face,
-        "mid": mid,
-        "uname": uname,
-        "money": money,
-        "levelInfo": levelInfo?.toJson(),
-      };
 }
 
 @HiveType(typeId: 5)
@@ -141,7 +132,7 @@ class LevelInfo {
     currentLevel = json['current_level'];
     currentMin = json['current_min'];
     currentExp = json['current_exp'];
-    nextExp = currentExp == 6 ? json['current_exp'] : json['next_exp'];
+    nextExp = currentLevel == 6 ? json['current_exp'] : json['next_exp'];
   }
 
   Map<String, dynamic> toJson() => {

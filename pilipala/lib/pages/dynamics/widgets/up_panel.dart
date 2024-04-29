@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hive/hive.dart';
 import 'package:pilipala/common/widgets/network_img_layer.dart';
 import 'package:pilipala/models/dynamics/up.dart';
-import 'package:pilipala/utils/storage.dart';
+import 'package:pilipala/pages/dynamics/controller.dart';
+import 'package:pilipala/utils/feed_back.dart';
+import 'package:pilipala/utils/utils.dart';
 
 class UpPanel extends StatefulWidget {
-  final FollowUpModel? upData;
+  final FollowUpModel upData;
   const UpPanel(this.upData, {Key? key}) : super(key: key);
 
   @override
@@ -20,95 +21,95 @@ class _UpPanelState extends State<UpPanel> {
   List<UpItem> upList = [];
   List<LiveUserItem> liveList = [];
   static const itemPadding = EdgeInsets.symmetric(horizontal: 5, vertical: 0);
-  Box userInfoCache = GStorage.userInfo;
-  var userInfo;
+  late MyInfo userInfo;
 
-  @override
-  void initState() {
-    super.initState();
-    upList = widget.upData!.upList!;
-    if (widget.upData!.liveUsers != null) {
-      liveList = widget.upData!.liveUsers!.items!;
-    }
-    upList.insert(
-      0,
-      UpItem(
-          face: 'https://files.catbox.moe/8uc48f.png', uname: '全部动态', mid: -1),
-    );
-    userInfo = userInfoCache.get('userInfoCache');
-    upList.insert(
-      1,
-      UpItem(
-        face: userInfo.face,
-        uname: '我',
-        mid: userInfo.mid,
-      ),
-    );
+  listFormat() {
+    userInfo = widget.upData.myInfo!;
+    upList = widget.upData.upList!;
+    liveList = widget.upData.liveList!;
   }
 
   @override
   Widget build(BuildContext context) {
+    listFormat();
     return SliverPersistentHeader(
       floating: true,
       pinned: false,
       delegate: _SliverHeaderDelegate(
-        height: 90,
-        child: Container(
-            height: 90,
-            color: Theme.of(context).colorScheme.background,
-            child: Row(
-              children: [
-                Expanded(
-                  child: ListView(
-                    scrollDirection: Axis.horizontal,
-                    controller: scrollController,
-                    children: [
-                      const SizedBox(width: 10),
-                      if (liveList.isNotEmpty) ...[
-                        for (int i = 0; i < liveList.length; i++) ...[
-                          upItemBuild(liveList[i], i)
-                        ],
-                        VerticalDivider(
-                          indent: 20,
-                          endIndent: 40,
-                          width: 26,
-                          color: Theme.of(context)
-                              .colorScheme
-                              .primary
-                              .withOpacity(0.5),
-                        ),
-                      ],
-                      for (int i = 0; i < upList.length; i++) ...[
-                        upItemBuild(upList[i], i)
-                      ],
-                      const SizedBox(width: 10),
-                    ],
-                  ),
-                ),
-                Material(
-                  child: InkWell(
-                    onTap: () => {Get.toNamed('/follow?mid=${userInfo.mid}')},
+        height: liveList.isNotEmpty || upList.isNotEmpty ? 126 : 0,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              color: Theme.of(context).colorScheme.background,
+              padding: const EdgeInsets.only(left: 16, right: 16),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const Text('最新关注'),
+                  GestureDetector(
+                    onTap: () {
+                      feedback();
+                      Get.toNamed('/follow?mid=${userInfo.mid}');
+                    },
                     child: Container(
-                      height: 100,
-                      padding: const EdgeInsets.only(left: 10, right: 10),
-                      color: Theme.of(context)
-                          .colorScheme
-                          .secondaryContainer
-                          .withOpacity(0.3),
-                      child: Center(
-                        child: Text(
-                          '全部',
-                          style: TextStyle(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .onSecondaryContainer),
-                        ),
+                      padding: const EdgeInsets.only(top: 5, bottom: 5),
+                      child: Text(
+                        '查看全部',
+                        style: TextStyle(
+                            color: Theme.of(context).colorScheme.outline),
                       ),
                     ),
                   ),
-                ),
-              ],
-            )),
+                ],
+              ),
+            ),
+            Container(
+              height: 90,
+              color: Theme.of(context).colorScheme.background,
+              child: Row(
+                children: [
+                  Flexible(
+                    child: ListView(
+                      scrollDirection: Axis.horizontal,
+                      controller: scrollController,
+                      children: [
+                        const SizedBox(width: 10),
+                        if (liveList.isNotEmpty) ...[
+                          for (int i = 0; i < liveList.length; i++) ...[
+                            upItemBuild(liveList[i], i)
+                          ],
+                          VerticalDivider(
+                            indent: 20,
+                            endIndent: 40,
+                            width: 26,
+                            color: Theme.of(context)
+                                .colorScheme
+                                .primary
+                                .withOpacity(0.5),
+                          ),
+                        ],
+                        for (int i = 0; i < upList.length; i++) ...[
+                          upItemBuild(upList[i], i)
+                        ],
+                        const SizedBox(width: 10),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              height: 6,
+              color: Theme.of(context)
+                  .colorScheme
+                  .onInverseSurface
+                  .withOpacity(0.5),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -116,8 +117,25 @@ class _UpPanelState extends State<UpPanel> {
   Widget upItemBuild(data, i) {
     bool isCurrent = currentMid == data.mid || currentMid == -1;
     return InkWell(
-      onTap: () {},
-      onLongPress: () {},
+      onTap: () {
+        feedback();
+        if (data.type == "up") {
+          currentMid = data.mid;
+          Get.find<DynamicsController>().mid.value = data.mid;
+          Get.find<DynamicsController>().upInfo.value = data;
+          Get.find<DynamicsController>().onSelectUp(data.mid);
+        }
+      },
+      onLongPress: () {
+        feedback();
+        if (data.mid == -1) {
+          return;
+        }
+
+        String heroTag = Utils.makeHeroTag(data.mid);
+        Get.toNamed("/member?mid=${data.mid}",
+            arguments: {"face": data.face, "heroTag": heroTag});
+      },
       child: Padding(
         padding: itemPadding,
         child: AnimatedOpacity(

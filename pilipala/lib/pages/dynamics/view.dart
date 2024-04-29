@@ -14,6 +14,8 @@ import 'package:pilipala/pages/dynamics/controller.dart';
 import 'package:pilipala/pages/dynamics/widgets/dynamic_panel.dart';
 import 'package:pilipala/pages/dynamics/widgets/up_panel.dart';
 import 'package:pilipala/pages/main/controller.dart';
+import 'package:pilipala/pages/mine/controller.dart';
+import 'package:pilipala/utils/feed_back.dart';
 import 'package:pilipala/utils/storage.dart';
 
 class DynamicsPage extends StatefulWidget {
@@ -26,6 +28,7 @@ class DynamicsPage extends StatefulWidget {
 class _DynamicsPageState extends State<DynamicsPage>
     with AutomaticKeepAliveClientMixin {
   final DynamicsController _dynamicsController = Get.put(DynamicsController());
+  final MineController mineController = Get.put(MineController());
   late Future _futureBuilderFuture;
   late Future _futureBuilderFutureUp;
   Box userInfoCache = GStorage.userInfo;
@@ -118,54 +121,61 @@ class _DynamicsPageState extends State<DynamicsPage>
                   Obx(() => _dynamicsController.userLogin.value
                       ? Visibility(
                           visible: _dynamicsController.mid.value == -1,
-                          child: CustomSlidingSegmentedControl<int>(
-                            padding: 13.0,
-                            decoration: BoxDecoration(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .surfaceVariant
-                                  .withOpacity(0.7),
-                              borderRadius: BorderRadius.circular(20),
+                          child: Theme(
+                            data: ThemeData(
+                              splashColor: Colors.transparent,
+                              highlightColor: Colors.transparent,
                             ),
-                            thumbDecoration: BoxDecoration(
-                              color: Theme.of(context).colorScheme.background,
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            duration: const Duration(milliseconds: 300),
-                            curve: Curves.easeInOut,
-                            initialValue:
-                                _dynamicsController.initialValue.value,
-                            onValueChanged: (int v) {
-                              _dynamicsController.onSelectType(v);
-                            },
-                            children: {
-                              0: Text(
-                                '全部',
-                                style: TextStyle(
-                                    fontSize: Theme.of(context)
-                                        .textTheme
-                                        .labelMedium!
-                                        .fontSize),
+                            child: CustomSlidingSegmentedControl<int>(
+                              padding: 13.0,
+                              decoration: BoxDecoration(
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .surfaceVariant
+                                    .withOpacity(0.7),
+                                borderRadius: BorderRadius.circular(20),
                               ),
-                              1: Text('投稿',
+                              thumbDecoration: BoxDecoration(
+                                color: Theme.of(context).colorScheme.background,
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              duration: const Duration(milliseconds: 300),
+                              curve: Curves.easeInOut,
+                              initialValue:
+                                  _dynamicsController.initialValue.value,
+                              onValueChanged: (int v) {
+                                feedback();
+                                _dynamicsController.onSelectType(v);
+                              },
+                              children: {
+                                0: Text(
+                                  '全部',
                                   style: TextStyle(
                                       fontSize: Theme.of(context)
                                           .textTheme
                                           .labelMedium!
-                                          .fontSize)),
-                              2: Text('番剧',
-                                  style: TextStyle(
-                                      fontSize: Theme.of(context)
-                                          .textTheme
-                                          .labelMedium!
-                                          .fontSize)),
-                              3: Text('专栏',
-                                  style: TextStyle(
-                                      fontSize: Theme.of(context)
-                                          .textTheme
-                                          .labelMedium!
-                                          .fontSize)),
-                            },
+                                          .fontSize),
+                                ),
+                                1: Text('投稿',
+                                    style: TextStyle(
+                                        fontSize: Theme.of(context)
+                                            .textTheme
+                                            .labelMedium!
+                                            .fontSize)),
+                                2: Text('番剧',
+                                    style: TextStyle(
+                                        fontSize: Theme.of(context)
+                                            .textTheme
+                                            .labelMedium!
+                                            .fontSize)),
+                                3: Text('专栏',
+                                    style: TextStyle(
+                                        fontSize: Theme.of(context)
+                                            .textTheme
+                                            .labelMedium!
+                                            .fontSize)),
+                              },
+                            ),
                           ),
                         )
                       : Text('动态',
@@ -186,19 +196,14 @@ class _DynamicsPageState extends State<DynamicsPage>
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.done) {
                   if (snapshot.data == null) {
-                    return const SliverToBoxAdapter(
-                      child: SizedBox(
-                        height: 36,
-                      ),
-                    );
+                    return const SliverToBoxAdapter(child: SizedBox());
                   }
                   Map data = snapshot.data;
                   if (data["status"]) {
                     return Obx(() => UpPanel(_dynamicsController.upData.value));
                   } else {
                     return const SliverToBoxAdapter(
-                      child: SizedBox(height: 80),
-                    );
+                        child: SizedBox(height: 80));
                   }
                 } else {
                   return const SliverToBoxAdapter(
@@ -210,23 +215,12 @@ class _DynamicsPageState extends State<DynamicsPage>
                 }
               },
             ),
-            SliverToBoxAdapter(
-              child: Container(
-                height: 6,
-                color: Theme.of(context)
-                    .colorScheme
-                    .onInverseSurface
-                    .withOpacity(0.5),
-              ),
-            ),
             FutureBuilder(
               future: _futureBuilderFuture,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.done) {
                   if (snapshot.data == null) {
-                    return const SliverToBoxAdapter(
-                      child: SizedBox(),
-                    );
+                    return const SliverToBoxAdapter(child: SizedBox());
                   }
                   Map data = snapshot.data as Map;
                   if (data["status"]) {
@@ -251,6 +245,14 @@ class _DynamicsPageState extends State<DynamicsPage>
                         );
                       }
                     });
+                  } else if (data["msg" == "账号未登录"]) {
+                    return HttpError(
+                      errMsg: data['msg'],
+                      btnText: "去登录",
+                      fn: () {
+                        mineController.onLogin();
+                      },
+                    );
                   } else {
                     return HttpError(
                       errMsg: data['msg'],
@@ -270,6 +272,7 @@ class _DynamicsPageState extends State<DynamicsPage>
                 }
               },
             ),
+            const SliverToBoxAdapter(child: SizedBox(height: 40)),
           ],
         ),
       ),

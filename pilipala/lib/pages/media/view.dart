@@ -64,6 +64,7 @@ class _MediaPageState extends State<MediaPage>
         toolbarHeight: 30,
       ),
       body: SingleChildScrollView(
+        controller: mediaController.scrollController,
         child: Column(
           children: [
             ListTile(
@@ -99,9 +100,15 @@ class _MediaPageState extends State<MediaPage>
                 ),
               ),
             ],
-            Obx(() => mediaController.userLogin.value
-                ? favFolder(mediaController, context)
-                : const SizedBox())
+            Obx(
+              () => mediaController.userLogin.value
+                  ? favFolder(mediaController, context)
+                  : const SizedBox(),
+            ),
+            SizedBox(
+              height:
+                  Get.mediaQuery.padding.bottom + kBottomNavigationBarHeight,
+            ),
           ],
         ),
       ),

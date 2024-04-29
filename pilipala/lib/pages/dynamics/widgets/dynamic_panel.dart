@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pilipala/pages/dynamics/controller.dart';
+import 'package:pilipala/pages/dynamics/widgets/action_panel.dart';
 import 'package:pilipala/pages/dynamics/widgets/author_panel.dart';
 import 'package:pilipala/pages/dynamics/widgets/content_panel.dart';
+import 'package:pilipala/pages/dynamics/widgets/forward_panel.dart';
 
 class DynamicPanel extends StatelessWidget {
   final dynamic item;
@@ -41,6 +43,9 @@ class DynamicPanel extends StatelessWidget {
               if (item!.modules!.moduleDynamic!.desc != null ||
                   item!.modules!.moduleDynamic!.major != null)
                 Content(item: item, source: source),
+              forWard(item, context, _dynamicsController, source),
+              const SizedBox(height: 2),
+              if (source == null) ActionPanel(item: item),
             ],
           ),
         ),

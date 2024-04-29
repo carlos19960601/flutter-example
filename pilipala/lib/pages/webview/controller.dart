@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
+import 'package:pilipala/http/init.dart';
 import 'package:pilipala/http/user.dart';
 import 'package:pilipala/pages/home/controller.dart';
+import 'package:pilipala/pages/media/controller.dart';
 import 'package:pilipala/utils/cookie.dart';
+import 'package:pilipala/utils/id_utils.dart';
 import 'package:pilipala/utils/login.dart';
 import 'package:pilipala/utils/storage.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -35,26 +38,64 @@ class WebviewController extends GetxController {
 
   webviewInit() {
     controller
+      ..setUserAgent(Request().headerUa())
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
-      ..setNavigationDelegate(NavigationDelegate(
-        onUrlChange: (UrlChange urlChange) {
-          loadShow.value = false;
-          String url = urlChange.url ?? "";
-          if (type.value == "login" &&
-              (url.startsWith(
-                      "https://passport.bilibili.com/web/sso/exchange_cookie") ||
-                  url.startsWith('https://m.bilibili.com/'))) {
-            confirmLogin(url);
-          }
-        },
-        onNavigationRequest: (request) {
-          return NavigationDecision.navigate;
-        },
-      ))
+      ..setNavigationDelegate(
+        NavigationDelegate(
+          // 页面加载
+          onProgress: (int progress) {
+            // Update loading bar.
+            loadProgress.value = progress;
+          },
+          onPageStarted: (String url) {
+            final String str = Uri.parse(url).pathSegments[0];
+            final Map matchRes = IdUtils.matchAvorBv(input: str);
+            final List matchKeys = matchRes.keys.toList();
+            if (matchKeys.isNotEmpty) {
+              if (matchKeys.first == 'BV') {
+                Get.offAndToNamed(
+                  '/searchResult',
+                  parameters: {'keyword': matchRes['BV']},
+                );
+              }
+            }
+          },
+          // 加载完成
+          onUrlChange: (UrlChange urlChange) {
+            loadShow.value = false;
+            String url = urlChange.url ?? "";
+            if (type.value == "login" &&
+                (url.startsWith(
+                        "https://passport.bilibili.com/web/sso/exchange_cookie") ||
+                    url.startsWith('https://m.bilibili.com/'))) {
+              confirmLogin(url);
+            }
+          },
+          onWebResourceError: (WebResourceError error) {},
+          onNavigationRequest: (request) {
+            if (request.url.startsWith('bilibili://')) {
+              if (request.url.startsWith('bilibili://video/')) {
+                String str = Uri.parse(request.url).pathSegments[0];
+                Get.offAndToNamed(
+                  '/searchResult',
+                  parameters: {'keyword': str},
+                );
+              }
+              return NavigationDecision.prevent;
+            }
+            return NavigationDecision.navigate;
+          },
+        ),
+      )
       ..loadRequest(Uri.parse(url));
   }
 
   confirmLogin(url) async {
+    var content = '';
+    if (url != null) {
+      content = '${content + url}; \n';
+    }
+
     try {
       await SetCookie.onSet();
       var result = await UserHttp.userInfo();
@@ -67,6 +108,8 @@ class WebviewController extends GetxController {
           HomeController homeCtr = Get.find<HomeController>();
           homeCtr.updateLoginStatus(true);
           homeCtr.userFace.value = result['data'].face;
+          final MediaController mediaCtr = Get.find<MediaController>();
+          mediaCtr.mid = result['data'].mid;
           await LoginUtils.refreshLoginStatus(true);
         } catch (err) {
           SmartDialog.show(

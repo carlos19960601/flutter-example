@@ -6,6 +6,7 @@ import 'package:pilipala/http/dynamics.dart';
 import 'package:pilipala/models/common/dynamics_type.dart';
 import 'package:pilipala/models/dynamics/result.dart';
 import 'package:pilipala/models/dynamics/up.dart';
+import 'package:pilipala/utils/feed_back.dart';
 import 'package:pilipala/utils/storage.dart';
 
 class DynamicsController extends GetxController {
@@ -64,6 +65,23 @@ class DynamicsController extends GetxController {
     scrollController.jumpTo(0);
   }
 
+  onSelectUp(mid) async {
+    dynamicsType.value = DynamicsType.values[0];
+    dynamicsList.value = <DynamicItemModel>[];
+    page = 1;
+    queryFollowDynamic();
+  }
+
+  pushDetail(item, floor, {action = "all"}) async {
+    feedback();
+
+    if (action == "comment") {
+      Get.toNamed('/dynamicDetail',
+          arguments: {'item': item, 'floor': floor, 'action': action});
+      return false;
+    }
+  }
+
   Future queryFollowDynamic({type = "init"}) async {
     if (!userLogin.value) {
       return {'status': false, 'msg': '账号未登录'};
@@ -105,7 +123,7 @@ class DynamicsController extends GetxController {
     }
 
     if (type == 'init') {
-      upData.value.upList = [];
+      upData.value.upList = <UpItem>[];
       upData.value.liveUsers = LiveUsers();
     }
     var res = await DynamicsHttp.followUp();
@@ -114,6 +132,10 @@ class DynamicsController extends GetxController {
       if (upData.value.upList!.isEmpty) {
         mid.value = -1;
       }
+      upData.value.upList!.insertAll(0, [
+        UpItem(face: '', uname: '全部动态', mid: -1),
+        UpItem(face: userInfo.face, uname: '我', mid: userInfo.mid),
+      ]);
     }
     return res;
   }

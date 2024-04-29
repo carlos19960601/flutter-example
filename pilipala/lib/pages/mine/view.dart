@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -38,6 +36,10 @@ class _MinePageState extends State<MinePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
+        scrolledUnderElevation: 0,
+        elevation: 0,
+        toolbarHeight: kTextTabBarHeight + 20,
         backgroundColor: Colors.transparent,
         centerTitle: false,
         title: const Text(
@@ -51,13 +53,13 @@ class _MinePageState extends State<MinePage> {
         ),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () => mineController.onChangeTheme(),
             icon: Icon(mineController.themeType.value == ThemeType.dark
                 ? CupertinoIcons.sun_max
                 : CupertinoIcons.moon),
           ),
           IconButton(
-            onPressed: () => Get.toNamed('/setting'),
+            onPressed: () => Get.toNamed('/setting', preventDuplicates: false),
             icon: const Icon(
               CupertinoIcons.slider_horizontal_3,
             ),
@@ -74,16 +76,22 @@ class _MinePageState extends State<MinePage> {
               children: [
                 const SizedBox(height: 10),
                 FutureBuilder(
-                    future: _futureBuilderFuture,
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.done) {
-                        if (snapshot.data == null) {
-                          return const SizedBox();
-                        }
-                        if (snapshot.data["status"]) {}
+                  future: _futureBuilderFuture,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.done) {
+                      if (snapshot.data == null) {
+                        return const SizedBox();
                       }
-                      return userInfoBuild(mineController, context);
-                    }),
+                      if (snapshot.data["status"]) {
+                        return Obx(
+                            () => userInfoBuild(mineController, context));
+                      } else {
+                        return userInfoBuild(mineController, context);
+                      }
+                    }
+                    return userInfoBuild(mineController, context);
+                  },
+                ),
               ],
             ),
           ),
@@ -95,9 +103,7 @@ class _MinePageState extends State<MinePage> {
   Widget userInfoBuild(MineController mineController, BuildContext context) {
     return Column(
       children: [
-        const SizedBox(
-          height: 5,
-        ),
+        const SizedBox(height: 5),
         GestureDetector(
           onTap: () => mineController.onLogin(),
           child: ClipOval(

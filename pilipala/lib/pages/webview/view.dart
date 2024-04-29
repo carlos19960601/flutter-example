@@ -1,6 +1,9 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pilipala/pages/webview/controller.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class WebviewPage extends StatefulWidget {
@@ -16,16 +19,36 @@ class _WebviewPageState extends State<WebviewPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        titleSpacing: 0,
         centerTitle: false,
         title: Text(_webViewController.pageTitle,
             style: Theme.of(context).textTheme.titleMedium),
         actions: [
-          TextButton(
+          const SizedBox(width: 4),
+          IconButton(
             onPressed: () {
               _webViewController.controller.reload();
             },
-            child: const Text("刷新"),
-          )
+            icon: Icon(Icons.refresh_outlined,
+                color: Theme.of(context).colorScheme.primary),
+          ),
+          IconButton(
+            onPressed: () {
+              launchUrl(Uri.parse(_webViewController.url));
+            },
+            icon: Icon(Icons.open_in_browser_outlined,
+                color: Theme.of(context).colorScheme.primary),
+          ),
+          Obx(
+            () => _webViewController.type.value == "login"
+                ? TextButton(
+                    onPressed: () {
+                      _webViewController.confirmLogin(null);
+                    },
+                    child: const Text('刷新登录状态'),
+                  )
+                : const SizedBox(),
+          ),
         ],
       ),
       body: Column(

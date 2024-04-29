@@ -31,12 +31,14 @@ class _HomePageState extends State<HomePage> {
   }
 
   showUserBottonSheet() {
+    feedback();
     showModalBottomSheet(
       context: context,
       builder: (_) => const SizedBox(
         height: 450,
         child: MinePage(),
       ),
+      clipBehavior: Clip.hardEdge,
       isScrollControlled: false,
     );
   }
@@ -237,7 +239,9 @@ class UserInfoWidget extends StatelessWidget {
                   )
                 ],
               )
-            : const DefaultUser()),
+            : DefaultUser(
+                callback: () => callback!(),
+              )),
       ],
     );
   }
@@ -394,6 +398,14 @@ class DefaultUser extends StatelessWidget {
       height: 38,
       width: 38,
       child: IconButton(
+        style: ButtonStyle(
+          padding: const MaterialStatePropertyAll(EdgeInsets.zero),
+          backgroundColor: MaterialStateProperty.resolveWith(
+            (states) {
+              return Theme.of(context).colorScheme.onInverseSurface;
+            },
+          ),
+        ),
         onPressed: () => callback?.call(),
         icon: Icon(
           Icons.person_rounded,
