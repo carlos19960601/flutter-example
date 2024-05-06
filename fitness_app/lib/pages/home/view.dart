@@ -1,6 +1,7 @@
 import 'package:fitness_app/core/app_color.dart';
 import 'package:fitness_app/models/tabIcon_data.dart';
 import 'package:fitness_app/pages/diary/view.dart';
+import 'package:fitness_app/pages/training/view.dart';
 import 'package:fitness_app/widgets/bottom_bar_view.dart';
 import 'package:flutter/material.dart';
 
@@ -65,6 +66,30 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         ),
         BottomBarView(
           tabIconsList: tabIconsList,
+          changeIndex: (int index) {
+            if (index == 0 || index == 2) {
+              animationController?.reverse().then((data) {
+                if (!mounted) {
+                  return;
+                }
+                setState(() {
+                  tabBody = MyDiaryScreen(
+                    animationController: animationController,
+                  );
+                });
+              });
+            } else if (index == 1 || index == 3) {
+              animationController?.reverse().then((data) {
+                if (!mounted) {
+                  return;
+                }
+                setState(() {
+                  tabBody =
+                      TrainingScreen(animationController: animationController);
+                });
+              });
+            }
+          },
         )
       ],
     );

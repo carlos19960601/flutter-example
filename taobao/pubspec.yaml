@@ -79,7 +79,7 @@ flutter:
   fonts:
     - family: taobaoIconFont
       fonts:
-        - asset: assets/fonts/taobao/taobaoIconFont.ttf
+        - asset: assets/fonts/taobao/iconfont.ttf
   #   - family: Trajan Pro
   #     fonts:
   #       - asset: fonts/TrajanPro.ttf

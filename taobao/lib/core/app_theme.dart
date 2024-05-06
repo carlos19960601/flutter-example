@@ -5,6 +5,6 @@ class AppTheme {
   const AppTheme._();
 
   static ThemeData lightTheme = ThemeData(
-    primarySwatch: AppColor.primarySwatch,
+    primaryColor: AppColor.primarySwatch,
   );
 }

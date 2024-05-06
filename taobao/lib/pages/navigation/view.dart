@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:taobao/core/app_icon.dart';
+import 'package:taobao/pages/home/view.dart';
 
 class GZXBottomNavigationBar extends StatefulWidget {
   const GZXBottomNavigationBar({super.key});
@@ -21,7 +22,9 @@ class _GZXBottomNavigationBarState extends State<GZXBottomNavigationBar> {
       body: PageView(
         physics: const NeverScrollableScrollPhysics(),
         controller: pageController,
-        children: const [],
+        children: const [
+          HomeScreen(),
+        ],
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
@@ -31,6 +34,8 @@ class _GZXBottomNavigationBarState extends State<GZXBottomNavigationBar> {
             _currentIndex = value;
           });
         },
+        type: BottomNavigationBarType.fixed,
+        selectedItemColor: _bottomNavigationActiveColor,
         items: [
           BottomNavigationBarItem(
             icon: Icon(
@@ -50,13 +55,13 @@ class _GZXBottomNavigationBarState extends State<GZXBottomNavigationBar> {
           ),
           BottomNavigationBarItem(
             icon: Icon(
-              AppIcon.home,
+              AppIcon.we_tao,
               color: _currentIndex == 1
                   ? _bottomNavigationActiveColor
                   : _bottomNavigationColor,
             ),
             activeIcon: Icon(
-              AppIcon.home_active,
+              AppIcon.we_tao_fill,
               color: _currentIndex == 1
                   ? _bottomNavigationActiveColor
                   : _bottomNavigationColor,
@@ -66,13 +71,13 @@ class _GZXBottomNavigationBarState extends State<GZXBottomNavigationBar> {
           ),
           BottomNavigationBarItem(
             icon: Icon(
-              AppIcon.home,
+              AppIcon.message,
               color: _currentIndex == 2
                   ? _bottomNavigationActiveColor
                   : _bottomNavigationColor,
             ),
             activeIcon: Icon(
-              AppIcon.home_active,
+              AppIcon.message_fill,
               color: _currentIndex == 2
                   ? _bottomNavigationActiveColor
                   : _bottomNavigationColor,
@@ -82,13 +87,13 @@ class _GZXBottomNavigationBarState extends State<GZXBottomNavigationBar> {
           ),
           BottomNavigationBarItem(
             icon: Icon(
-              AppIcon.home,
+              AppIcon.cart,
               color: _currentIndex == 3
                   ? _bottomNavigationActiveColor
                   : _bottomNavigationColor,
             ),
             activeIcon: Icon(
-              AppIcon.home_active,
+              AppIcon.cart_fill,
               color: _currentIndex == 3
                   ? _bottomNavigationActiveColor
                   : _bottomNavigationColor,
@@ -98,13 +103,13 @@ class _GZXBottomNavigationBarState extends State<GZXBottomNavigationBar> {
           ),
           BottomNavigationBarItem(
             icon: Icon(
-              AppIcon.home,
+              AppIcon.my,
               color: _currentIndex == 4
                   ? _bottomNavigationActiveColor
                   : _bottomNavigationColor,
             ),
             activeIcon: Icon(
-              AppIcon.home_active,
+              AppIcon.my_fill,
               color: _currentIndex == 4
                   ? _bottomNavigationActiveColor
                   : _bottomNavigationColor,
