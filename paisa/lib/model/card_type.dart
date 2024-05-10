@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
-@HiveType(typeId: 3)
+part 'card_type.g.dart';
+
+@HiveType(typeId: 12)
 enum CardType {
   @HiveField(0)
   cash,

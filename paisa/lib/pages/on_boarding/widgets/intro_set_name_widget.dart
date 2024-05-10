@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:paisa/localization/translation_keys.dart' as translation;
+import 'package:paisa/core/app_extensions.dart';
+import 'package:paisa/localization/localization_keys.dart';
+import 'package:paisa/pages/on_boarding/widgets/intro_image_picker_widget.dart';
+import 'package:paisa/widgets/paisa_text_field.dart';
 
 class IntroSetNameWidget extends StatelessWidget {
   const IntroSetNameWidget(
@@ -13,67 +16,51 @@ class IntroSetNameWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          const SizedBox(height: 16),
-          ColorFiltered(
-            colorFilter: ColorFilter.mode(
-                Theme.of(context).primaryColor, BlendMode.srcIn),
-            child: const Icon(
-              Icons.wallet,
-              size: 72,
-            ),
-          ),
-          const SizedBox(height: 16),
-          RichText(
-            text: TextSpan(
-              text: translation.welcome.tr,
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: Theme.of(context).colorScheme.onSurface,
-                    letterSpacing: 0.8,
+          IntroTopWidget(
+            title: LocalizationKeys.image.tr,
+            titleWidget: RichText(
+              text: TextSpan(
+                text: LocalizationKeys.welcome.tr,
+                style: context.titleLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: context.onSurface,
+                  letterSpacing: 0.8,
+                ),
+                children: [
+                  TextSpan(
+                    text: " ${LocalizationKeys.appTitle.tr}",
+                    style: TextStyle(
+                      color: context.primary,
+                    ),
                   ),
-              children: [
-                TextSpan(
-                  text: ' ${translation.appTitle.tr}',
-                  style: TextStyle(
-                    color: Theme.of(context).primaryColor,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 6),
-          Text(
-            translation.welcomeDesc.tr,
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  color:
-                      Theme.of(context).colorScheme.onSurface.withOpacity(0.75),
-                  letterSpacing: 0.6,
-                ),
-          ),
-          const SizedBox(height: 16),
-          Form(
-            key: formState,
-            child: TextFormField(
-              controller: nameController,
-              // keyboardType: TextInputType.none,
-              textCapitalization: TextCapitalization.none,
-              decoration: InputDecoration(
-                counterText: "",
-                hintText: translation.enterNameHint.tr,
-                label: Text(
-                  translation.nameHint.tr,
-                ),
+                ],
               ),
-              validator: (value) {
-                if (value!.isNotEmpty) {
-                  return null;
-                } else {
-                  return translation.enterNameHint.tr;
-                }
-              },
             ),
-          )
+            icon: Icons.wallet,
+            description: LocalizationKeys.welcomeDesc.tr,
+          ),
+          FractionallySizedBox(
+            widthFactor: 0.8,
+            child: Form(
+              key: formState,
+              child: PaisaTextFormField(
+                key: const Key("user_name_textfield"),
+                controller: nameController,
+                hintText: LocalizationKeys.enterNameHint.tr,
+                label: LocalizationKeys.nameHint.tr,
+                keyboardType: TextInputType.name,
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return LocalizationKeys.enterNameHint.tr;
+                  }
+                  return null;
+                },
+              ),
+            ),
+          ),
         ],
       ),
     );

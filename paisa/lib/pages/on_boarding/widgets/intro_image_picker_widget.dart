@@ -1,96 +1,93 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:paisa/localization/translation_keys.dart' as translation;
-import 'package:paisa/utils/storage.dart';
+import 'package:paisa/core/app_extensions.dart';
+import 'package:paisa/core/app_storage.dart';
+import 'package:paisa/localization/localization_keys.dart';
+import 'package:paisa/pages/on_boarding/controller.dart';
+import 'package:paisa/widgets/paisa_user_image_widget.dart';
 
-class IntroImagePickerWidget extends StatefulWidget {
-  const IntroImagePickerWidget({super.key});
-
-  @override
-  State<IntroImagePickerWidget> createState() => _IntroImagePickerWidgetState();
-}
-
-class _IntroImagePickerWidgetState extends State<IntroImagePickerWidget> {
-  Box setting = GStorage.setting;
-  late String image;
-
-  pickImage(BuildContext context) {
-    final ImagePicker picker = ImagePicker();
-    picker.pickImage(source: ImageSource.gallery).then((pickedFile) {
-      if (pickedFile != null) {
-        setting.put(SettingBoxKey.userImageKey, pickedFile.path);
-        setState(() {
-          image = pickedFile.path;
-        });
-      }
-    });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    image = setting.get(SettingBoxKey.userImageKey, defaultValue: "");
-  }
+class IntroImagePickerWidget extends StatelessWidget {
+  IntroImagePickerWidget({super.key});
+  final Box setting = AppStorage.setting;
+  final OnboardingController controller = Get.find<OnboardingController>();
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          IntroTopWidget(
+            title: LocalizationKeys.image.tr,
+            icon: Icons.camera_enhance,
+            description: LocalizationKeys.imageDesc.tr,
+          ),
+          Center(
+            child: Obx(() => PaisaUserImageWidget(
+                  pickImage: () => controller.pickImage(context),
+                  deleteImage: () => controller.deleteImage(),
+                  maxRadius: 72,
+                  useDefault: true,
+                  imagePath: controller.imagePath.value,
+                )),
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class IntroTopWidget extends StatelessWidget {
+  const IntroTopWidget({
+    super.key,
+    required this.title,
+    this.titleWidget,
+    this.description,
+    required this.icon,
+  });
+
+  final String? description;
+  final IconData icon;
+  final String title;
+  final Widget? titleWidget;
+
+  @override
+  Widget build(BuildContext context) {
+    return FractionallySizedBox(
+      widthFactor: 0.8,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           const SizedBox(height: 16),
           ColorFiltered(
             colorFilter: ColorFilter.mode(
-              Theme.of(context).primaryColor,
+              context.primary,
               BlendMode.srcIn,
             ),
-            child: const Icon(
-              Icons.person_add_rounded,
+            child: Icon(
+              icon,
               size: 72,
             ),
           ),
           const SizedBox(height: 16),
-          Text(
-            translation.image.tr,
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+          titleWidget ??
+              Text(
+                title,
+                style: context.titleLarge?.copyWith(
                   fontWeight: FontWeight.bold,
-                  color: Theme.of(context).colorScheme.onSurface,
                 ),
-          ),
-          Text(
-            translation.imageDesc.tr,
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurface,
-                ),
-          ),
-          const SizedBox(height: 16),
-          Center(
-            child: GestureDetector(
-              onTap: () => pickImage(context),
-              child: Builder(
-                builder: (context) {
-                  if (image.isEmpty) {
-                    return CircleAvatar(
-                      backgroundColor: Theme.of(context).primaryColor,
-                      maxRadius: 72,
-                      child: Icon(
-                        Icons.account_circle_outlined,
-                        color: Theme.of(context).colorScheme.onPrimary,
-                      ),
-                    );
-                  } else {
-                    return CircleAvatar(
-                      foregroundImage: FileImage(File(image)),
-                      maxRadius: 72,
-                    );
-                  }
-                },
+              ),
+          if (description != null)
+            Text(
+              description!,
+              style: context.titleSmall?.copyWith(
+                color: context.onSurface.withOpacity(0.75),
               ),
             ),
-          )
+          const SizedBox(height: 16),
         ],
       ),
     );

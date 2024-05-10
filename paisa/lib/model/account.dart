@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:paisa/model/card_type.dart';
 
@@ -6,25 +7,23 @@ part 'account.g.dart';
 @HiveType(typeId: 2)
 class AccountModel {
   @HiveField(0)
-  double? amount;
-
-  @HiveField(1)
-  String? bankName;
-
-  @HiveField(2, defaultValue: CardType.bank)
-  CardType? cardType;
-
-  @HiveField(3, defaultValue: 0xFFFFC107)
-  int? color;
-
-  @HiveField(4, defaultValue: false)
-  bool? isAccountExcluded;
-
-  @HiveField(5)
   String? name;
-
-  @HiveField(6)
+  @HiveField(1, defaultValue: false)
+  bool? isAccountExcluded;
+  @HiveField(3)
+  String? bankName;
+  @HiveField(4)
   String? number;
+  @HiveField(5, defaultValue: CardType.bank)
+  CardType? cardType;
+  @HiveField(6)
+  int? superId;
+  @HiveField(7)
+  double? amount;
+  @HiveField(8, defaultValue: 0xFFFFC107)
+  int? color;
+  @HiveField(9, defaultValue: false)
+  bool? isAccountDefault;
 
   AccountModel({
     required this.name,
@@ -78,3 +77,30 @@ class AccountModel {
     );
   }
 }
+
+List<AccountModel> defaultAccounts = [
+  AccountModel(
+    name: 'User name',
+    bankName: 'Cash',
+    number: '',
+    cardType: CardType.cash,
+    amount: 0.0,
+    color: Colors.primaries[0].value,
+  ),
+  AccountModel(
+    name: 'User name',
+    bankName: 'Bank',
+    number: '',
+    cardType: CardType.bank,
+    amount: 0.0,
+    color: Colors.primaries[1].value,
+  ),
+  AccountModel(
+    name: 'User name',
+    bankName: 'Wallet',
+    number: '',
+    cardType: CardType.wallet,
+    amount: 0.0,
+    color: Colors.primaries[2].value,
+  ),
+];

@@ -1,0 +1,31 @@
+class LocalizationKeys {
+  static const appTitle = 'appTitle';
+  static const String home = 'home';
+  static const transactions = 'transactions';
+  static const welcomeMessage = "welcomeMessage";
+  static const introTitle = "introTitle";
+  static const intoSummary1 = "intoSummary1";
+  static const intoSummary2 = "intoSummary2";
+  static const intoSummary3 = "intoSummary3";
+  static const introCTA = "introCTA";
+  static const next = "next";
+  static const welcome = "welcome";
+  static const welcomeDesc = "welcomeDesc";
+  static const image = "image";
+  static const imageDesc = "imageDesc";
+  static const enterNameHint = "enterNameHint";
+  static const nameHint = "nameHint";
+  static const income = "income";
+  static const categories = "categories";
+  static const done = "done";
+  static const cancel = "cancel";
+  static const addedCategories = "addedCategories";
+  static const defaultCategories = "defaultCategories";
+  static const accounts = "accounts";
+  static const addedAccounts = "addedAccounts";
+  static const defaultAccounts = "defaultAccounts";
+  static const back = "back";
+  static const addAccount = "addAccount";
+  static const recommendedAccounts = "recommendedAccounts";
+  static const updateAccount = "updateAccount";
+}

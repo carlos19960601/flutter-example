@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_adaptive_scaffold/flutter_adaptive_scaffold.dart';
+import 'package:v2ex/pages/t/:topicId.dart';
 import 'package:v2ex/utils/storage.dart';
 
 class ResizeLayout extends StatefulWidget {
@@ -51,7 +52,7 @@ class _ResizeLayoutState extends State<ResizeLayout> {
                 child: SafeArea(
                   child: Container(
                     margin: const EdgeInsets.only(top: 10),
-                    child: widget.rightLayout ?? TopicDetail(),
+                    child: widget.rightLayout ?? const TopicDetail(),
                   ),
                 ),
               ),

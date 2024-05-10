@@ -71,3 +71,12 @@ class AuthMiddleware extends GetMiddleware {
 
 Get.height/width are equivalent to MediaQuery.of(context).size.height/width, but immutable.
 If you need a changeable height/width (like Desktop or browser windows that can be scaled) you will need to use context: context.width/height
+
+7. SingleChildScrollView和ListView该怎么选择？
+
+ListView视为对SingleChildScrollView + Column组合的优化。
+通过使用ListView，只有可见的项才会被挂载和绘制
+另一方面，通过使用SingleChildScrollView+ Column，即使只有少数项目可见，也会挂载并绘制整个项目列表。
+这样做的代价是ListView不够灵活。因此，对于项目数量较少的复杂布局，性能增益可能不值得麻烦，在这种情况下，我们可以使用SingleChildScrollView。
+
+

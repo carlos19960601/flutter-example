@@ -16,34 +16,41 @@ class AccountModelAdapter extends TypeAdapter<AccountModel> {
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return AccountModel()
-      ..amount = fields[0] as double?
-      ..bankName = fields[1] as String?
-      ..cardType = fields[2] == null ? CardType.bank : fields[2] as CardType?
-      ..color = fields[3] == null ? 4294951175 : fields[3] as int?
-      ..isAccountExcluded = fields[4] == null ? false : fields[4] as bool?
-      ..name = fields[5] as String?
-      ..number = fields[6] as String?;
+    return AccountModel(
+      name: fields[0] as String?,
+      bankName: fields[3] as String?,
+      number: fields[4] as String?,
+      cardType: fields[5] == null ? CardType.bank : fields[5] as CardType?,
+      amount: fields[7] as double?,
+      color: fields[8] == null ? 4294951175 : fields[8] as int?,
+      isAccountExcluded: fields[1] == null ? false : fields[1] as bool?,
+    )
+      ..superId = fields[6] as int?
+      ..isAccountDefault = fields[9] == null ? false : fields[9] as bool?;
   }
 
   @override
   void write(BinaryWriter writer, AccountModel obj) {
     writer
-      ..writeByte(7)
+      ..writeByte(9)
       ..writeByte(0)
-      ..write(obj.amount)
-      ..writeByte(1)
-      ..write(obj.bankName)
-      ..writeByte(2)
-      ..write(obj.cardType)
-      ..writeByte(3)
-      ..write(obj.color)
-      ..writeByte(4)
-      ..write(obj.isAccountExcluded)
-      ..writeByte(5)
       ..write(obj.name)
+      ..writeByte(1)
+      ..write(obj.isAccountExcluded)
+      ..writeByte(3)
+      ..write(obj.bankName)
+      ..writeByte(4)
+      ..write(obj.number)
+      ..writeByte(5)
+      ..write(obj.cardType)
       ..writeByte(6)
-      ..write(obj.number);
+      ..write(obj.superId)
+      ..writeByte(7)
+      ..write(obj.amount)
+      ..writeByte(8)
+      ..write(obj.color)
+      ..writeByte(9)
+      ..write(obj.isAccountDefault);
   }
 
   @override

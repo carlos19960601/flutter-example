@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:paisa/common/default_category.dart';
-import 'package:paisa/localization/translation_keys.dart' as translation;
+import 'package:paisa/core/app_storage.dart';
+import 'package:paisa/localization/localization_keys.dart';
 import 'package:paisa/model/category.dart';
 import 'package:paisa/pages/account_selector/view.dart';
 import 'package:paisa/pages/category_selector/widgets/category_item.dart';
-import 'package:paisa/utils/storage.dart';
 
 class CategorySelectorPage extends StatefulWidget {
   const CategorySelectorPage({super.key});
@@ -16,8 +15,8 @@ class CategorySelectorPage extends StatefulWidget {
 }
 
 class _CategorySelectorPageState extends State<CategorySelectorPage> {
-  Box setting = GStorage.setting;
-  Box categories = GStorage.categories;
+  Box setting = AppStorage.setting;
+  Box categories = AppStorage.categories;
   late List<CategoryModel> defaultModels;
 
   Future<void> saveAndNavigate() async {
@@ -43,7 +42,7 @@ class _CategorySelectorPageState extends State<CategorySelectorPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(translation.categories.tr),
+        title: Text(LocalizationKeys.categories.tr),
         titleTextStyle: Theme.of(context)
             .textTheme
             .titleLarge
@@ -59,7 +58,7 @@ class _CategorySelectorPageState extends State<CategorySelectorPage> {
                 foregroundColor: Theme.of(context).colorScheme.onPrimary,
                 backgroundColor: Theme.of(context).primaryColor),
             child: Text(
-              translation.done.tr,
+              LocalizationKeys.done.tr,
               style: TextStyle(
                   fontWeight: FontWeight.w700,
                   fontSize: Theme.of(context).textTheme.titleMedium?.fontSize),
@@ -74,7 +73,7 @@ class _CategorySelectorPageState extends State<CategorySelectorPage> {
         children: [
           ListTile(
             title: Text(
-              translation.addedCategories.tr,
+              LocalizationKeys.addedCategories.tr,
               style: Theme.of(context).textTheme.titleMedium,
             ),
           ),
@@ -108,7 +107,7 @@ class _CategorySelectorPageState extends State<CategorySelectorPage> {
           ),
           ListTile(
             title: Text(
-              translation.defaultCategories.tr,
+              LocalizationKeys.defaultCategories.tr,
               style: Theme.of(context).textTheme.titleMedium,
             ),
           ),

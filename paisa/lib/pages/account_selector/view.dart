@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:paisa/common/default_account.dart';
-import 'package:paisa/localization/translation_keys.dart' as translation;
+import 'package:paisa/core/app_storage.dart';
+import 'package:paisa/localization/localization_keys.dart';
 import 'package:paisa/model/account.dart';
-import 'package:paisa/utils/storage.dart';
 
 class AccountSelectorPage extends StatefulWidget {
   const AccountSelectorPage({super.key});
@@ -14,8 +13,8 @@ class AccountSelectorPage extends StatefulWidget {
 }
 
 class _AccountSelectorPageState extends State<AccountSelectorPage> {
-  Box setting = GStorage.setting;
-  Box accounts = GStorage.accounts;
+  Box setting = AppStorage.setting;
+  Box accounts = AppStorage.accounts;
   late List<AccountModel> defaultModels;
 
   Future<void> saveAndNavigate() async {}
@@ -27,7 +26,7 @@ class _AccountSelectorPageState extends State<AccountSelectorPage> {
       AccountModel model = e as AccountModel;
       return model.number ?? "";
     }).toList();
-    defaultModels = defaultAccounts()
+    defaultModels = defaultAccounts
         .where((element) => !selected.contains(element.name))
         .toList();
   }
@@ -36,7 +35,7 @@ class _AccountSelectorPageState extends State<AccountSelectorPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(translation.accounts.tr),
+        title: Text(LocalizationKeys.accounts.tr),
         titleTextStyle: Theme.of(context)
             .textTheme
             .titleLarge
@@ -52,7 +51,7 @@ class _AccountSelectorPageState extends State<AccountSelectorPage> {
                 foregroundColor: Theme.of(context).colorScheme.onPrimary,
                 backgroundColor: Theme.of(context).primaryColor),
             child: Text(
-              translation.done.tr,
+              LocalizationKeys.done.tr,
               style: TextStyle(
                   fontWeight: FontWeight.w700,
                   fontSize: Theme.of(context).textTheme.titleMedium?.fontSize),
@@ -67,7 +66,7 @@ class _AccountSelectorPageState extends State<AccountSelectorPage> {
         children: [
           ListTile(
             title: Text(
-              translation.addedAccounts.tr,
+              LocalizationKeys.addedAccounts.tr,
               style: Theme.of(context).textTheme.titleMedium,
             ),
           ),
