@@ -1,31 +1,25 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hive/hive.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:paisa/core/app_extensions.dart';
-import 'package:paisa/core/app_storage.dart';
+import 'package:paisa/core/app_fonts.dart';
 import 'package:paisa/localization/localization_keys.dart';
-import 'package:paisa/model/account.dart';
-import 'package:paisa/model/card_type.dart';
-import 'package:paisa/pages/on_boarding/controller.dart';
+import 'package:paisa/model/category.dart';
 import 'package:paisa/pages/on_boarding/widgets/intro_image_picker_widget.dart';
 import 'package:paisa/routes/app_routes.dart';
-import 'package:paisa/services/account_service.dart';
+import 'package:paisa/services/category_service.dart';
 import 'package:paisa/widgets/paisa_card.dart';
 
-class IntroAccountAddWidget extends StatefulWidget {
-  const IntroAccountAddWidget({super.key});
+class IntroCategoryAddWidget extends StatefulWidget {
+  const IntroCategoryAddWidget({super.key});
 
   @override
-  State<IntroAccountAddWidget> createState() => _IntroAccountAddWidgetState();
+  State<IntroCategoryAddWidget> createState() => _IntroCategoryAddWidgetState();
 }
 
-class _IntroAccountAddWidgetState extends State<IntroAccountAddWidget> {
-  final OnboardingController controller = Get.find<OnboardingController>();
-  final AccountService accountService = Get.find<AccountService>();
-  final Box setting = AppStorage.setting;
-
+class _IntroCategoryAddWidgetState extends State<IntroCategoryAddWidget> {
+  final CategoryService categoryService = Get.find<CategoryService>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,8 +27,8 @@ class _IntroAccountAddWidgetState extends State<IntroAccountAddWidget> {
         shrinkWrap: true,
         children: [
           IntroTopWidget(
-            title: LocalizationKeys.addAccount.tr,
-            icon: Icons.credit_card_outlined,
+            title: LocalizationKeys.addCategory.tr,
+            icon: Icons.category,
           ),
           Obx(
             () => PaisaFilledCard(
@@ -43,43 +37,41 @@ class _IntroAccountAddWidgetState extends State<IntroAccountAddWidget> {
                 // 确保这个ListView不会单独滚动
                 physics: const NeverScrollableScrollPhysics(),
                 itemBuilder: (context, index) {
-                  final AccountModel model =
-                      accountService.accountList.elementAt(index);
-                  return AccountItemWidget(
+                  final CategoryModel model =
+                      categoryService.categoryList[index];
+
+                  return CategoryItemWidget(
                     model: model,
-                    onPress: () => accountService.delete(index),
+                    onPress: () => categoryService.delete(index),
                   );
                 },
                 separatorBuilder: (context, index) => const Divider(),
-                itemCount: accountService.accountList.length,
+                itemCount: categoryService.categoryList.length,
               ),
             ),
           ),
           ListTile(
             title: Text(
-              LocalizationKeys.recommendedAccounts.tr,
+              LocalizationKeys.recommendedCategories.tr,
               style: context.titleMedium,
             ),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 8.0,
-              vertical: 16,
-            ),
+            padding: const EdgeInsets.symmetric(horizontal: 8),
             child: Obx(
               () => Wrap(
                 spacing: 12,
                 runSpacing: 12,
                 children: [
-                  ...accountService.defaultModels
+                  ...categoryService.defaultModels
                       .sorted((a, b) => a.name!.compareTo(b.name!))
                       .map(
                         (e) => FilterChip(
-                          label: Text(e.bankName ?? ""),
+                          label: Text(e.name ?? ""),
                           labelStyle: context.titleMedium,
                           padding: const EdgeInsets.all(12),
                           onSelected: (value) {
-                            accountService.add(e);
+                            categoryService.add(e);
                           },
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(28),
@@ -88,8 +80,13 @@ class _IntroAccountAddWidgetState extends State<IntroAccountAddWidget> {
                               color: context.primary,
                             ),
                           ),
+                          showCheckmark: false,
                           avatar: Icon(
-                            e.cardType!.icon,
+                            IconData(
+                              e.icon ?? 0,
+                              fontFamily: AppFonts.fontName,
+                              fontPackage: AppFonts.fontPackage,
+                            ),
                             color: context.primary,
                           ),
                         ),
@@ -97,6 +94,9 @@ class _IntroAccountAddWidgetState extends State<IntroAccountAddWidget> {
                       .toList(),
                   FilterChip(
                     selected: false,
+                    onSelected: (value) {
+                      Get.to(AppRoutes.addCategory);
+                    },
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(28),
                       side: BorderSide(
@@ -104,12 +104,10 @@ class _IntroAccountAddWidgetState extends State<IntroAccountAddWidget> {
                         color: context.primary,
                       ),
                     ),
-                    label: Text(LocalizationKeys.addAccount.tr),
-                    labelStyle: context.titleMedium,
-                    onSelected: (value) {
-                      Get.toNamed(AppRoutes.accountSelector);
-                    },
                     showCheckmark: false,
+                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    label: Text(LocalizationKeys.addCategory.tr),
+                    labelStyle: context.titleMedium,
                     padding: const EdgeInsets.all(12),
                     avatar: Icon(
                       Icons.add_rounded,
@@ -119,21 +117,21 @@ class _IntroAccountAddWidgetState extends State<IntroAccountAddWidget> {
                 ],
               ),
             ),
-          )
+          ),
         ],
       ),
     );
   }
 }
 
-class AccountItemWidget extends StatelessWidget {
-  const AccountItemWidget({
+class CategoryItemWidget extends StatelessWidget {
+  const CategoryItemWidget({
     super.key,
     required this.model,
     required this.onPress,
   });
 
-  final AccountModel model;
+  final CategoryModel model;
   final VoidCallback onPress;
 
   @override
@@ -141,11 +139,14 @@ class AccountItemWidget extends StatelessWidget {
     return ListTile(
       onTap: onPress,
       leading: Icon(
-        model.cardType!.icon,
+        IconData(
+          model.icon ?? 0,
+          fontFamily: AppFonts.fontName,
+          fontPackage: AppFonts.fontPackage,
+        ),
         color: Color(model.color ?? Colors.brown.shade200.value),
       ),
-      title: Text(model.bankName ?? ""),
-      subtitle: Text(model.name ?? ""),
+      title: Text(model.name ?? ""),
       trailing: Icon(MdiIcons.delete),
     );
   }

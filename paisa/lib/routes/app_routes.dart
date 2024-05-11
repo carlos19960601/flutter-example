@@ -6,4 +6,6 @@ class AppRoutes {
   static const onboarding = "/onboarding";
   static const categorySelector = "/categorySelector";
   static const accountSelector = "/accountSelector";
+  static const addAccount = "/addAccount";
+  static const addCategory = "/addCategory";
 }

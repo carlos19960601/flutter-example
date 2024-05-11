@@ -33,5 +33,7 @@ class En {
         LocalizationKeys.addAccount: "Add Account",
         LocalizationKeys.recommendedAccounts: "Recommended Accounts",
         LocalizationKeys.updateAccount: "Update Account",
+        LocalizationKeys.addCategory: "Add Category",
+        LocalizationKeys.recommendedCategories: "Recommended Categories",
       };
 }

@@ -1,5 +1,6 @@
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:paisa/model/account.dart';
+import 'package:paisa/model/card_type.dart';
 import 'package:paisa/model/category.dart';
 
 class AppStorage {
@@ -18,7 +19,8 @@ class AppStorage {
   static regAdapter() {
     Hive
       ..registerAdapter(CategoryModelAdapter())
-      ..registerAdapter(AccountModelAdapter());
+      ..registerAdapter(AccountModelAdapter())
+      ..registerAdapter(CardTypeAdapter());
   }
 }
 

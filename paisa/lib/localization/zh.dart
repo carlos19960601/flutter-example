@@ -31,5 +31,7 @@ class Zh {
         LocalizationKeys.addAccount: "新增账户",
         LocalizationKeys.recommendedAccounts: "预设账户",
         LocalizationKeys.updateAccount: "更新账户",
+        LocalizationKeys.addCategory: "新增类别",
+        LocalizationKeys.recommendedCategories: "预设类别",
       };
 }

@@ -6,6 +6,8 @@ import 'package:paisa/core/app_storage.dart';
 import 'package:paisa/localization/messages.dart';
 import 'package:paisa/routes/app_pages.dart';
 import 'package:paisa/routes/app_routes.dart';
+import 'package:paisa/services/account_service.dart';
+import 'package:paisa/services/category_service.dart';
 
 class PaisaApp extends StatelessWidget {
   const PaisaApp({super.key});
@@ -54,7 +56,10 @@ class PaisaApp extends StatelessWidget {
                 colorScheme: darkColorScheme,
                 useMaterial3: true,
               ),
-              initialBinding: BindingsBuilder(() {}),
+              initialBinding: BindingsBuilder(() {
+                Get.lazyPut(() => AccountService());
+                Get.lazyPut(() => CategoryService());
+              }),
             );
           },
         );

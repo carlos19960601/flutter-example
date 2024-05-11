@@ -1,7 +1,6 @@
 import 'package:get/get.dart';
 import 'package:paisa/middlewares/landig_middleware.dart';
-import 'package:paisa/pages/account_selector/view.dart';
-import 'package:paisa/pages/category_selector/view.dart';
+import 'package:paisa/pages/add_account/view.dart';
 import 'package:paisa/pages/home/view.dart';
 import 'package:paisa/pages/intro/view.dart';
 import 'package:paisa/pages/on_boarding/bindings.dart';
@@ -29,12 +28,8 @@ class AppPages {
       binding: OnboardingBindings(),
     ),
     GetPage(
-      name: AppRoutes.categorySelector,
-      page: () => const CategorySelectorPage(),
-    ),
-    GetPage(
-      name: AppRoutes.accountSelector,
-      page: () => const AccountSelectorPage(),
+      name: AppRoutes.addAccount,
+      page: () => const AddAccountPage(),
     ),
 
     //   GetPage(name: Routes.PLAYLIST_DETAIL, page: () => PlaylistDetailPage()),

@@ -1,33 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 part 'category.g.dart';
 
 @HiveType(typeId: 1)
-class CategoryModel {
+class CategoryModel extends HiveObject {
   @HiveField(0)
-  double? budget;
-  @HiveField(1)
-  int? color;
-  @HiveField(2)
-  String? description;
-  @HiveField(3)
-  int? icon;
-  @HiveField(4)
-  bool? isBudget;
-  @HiveField(5)
-  bool? isDefault;
-  @HiveField(6)
   String? name;
+  @HiveField(1)
+  String? description;
+  @HiveField(2)
+  int? icon;
+  @HiveField(3, defaultValue: false)
+  bool? isDefault;
+  @HiveField(4, defaultValue: 0)
+  int? superId;
+  @HiveField(5, defaultValue: 0)
+  double? budget;
+  @HiveField(6, defaultValue: false)
+  bool? isBudget;
+  @HiveField(7, defaultValue: 0xFFFFC107)
+  int? color;
 
   CategoryModel({
-    required this.icon,
-    required this.name,
-    required this.color,
-    this.isDefault = false,
+    this.name,
     this.description,
-    this.isBudget = false,
+    this.icon,
+    this.isDefault = false,
+    this.superId,
     this.budget = -1,
+    this.isBudget = false,
+    this.color,
   });
 
   factory CategoryModel.fromJson(Map<String, dynamic> json) => CategoryModel(
@@ -48,66 +52,84 @@ class CategoryModel {
         "isBudget": isBudget,
         "isDefault": isDefault,
       };
+
+  CategoryModel copyWith({
+    String? name,
+    String? description,
+    int? icon,
+    bool? isDefault,
+    int? superId,
+    double? budget,
+    bool? isBudget,
+    int? color,
+  }) {
+    return CategoryModel(
+      name: name ?? this.name,
+      description: description ?? this.description,
+      icon: icon ?? this.icon,
+      isDefault: isDefault ?? this.isDefault,
+    );
+  }
 }
 
-final List<CategoryModel> defaultCategoriesData = [
+final List<CategoryModel> defaultCategories = [
   CategoryModel(
-    icon: Icons.shopping_cart.codePoint,
-    name: "Groceries",
+    icon: MdiIcons.cart.codePoint,
+    name: 'Groceries',
     color: Colors.primaries[0].value,
   ),
   CategoryModel(
-    icon: Icons.dining.codePoint,
-    name: "Dining",
+    icon: MdiIcons.silverware.codePoint,
+    name: 'Dining',
     color: Colors.primaries[1].value,
   ),
   CategoryModel(
-    icon: Icons.train.codePoint,
-    name: "Transportation",
+    icon: MdiIcons.trainCar.codePoint,
+    name: 'Transportation',
     color: Colors.primaries[2].value,
   ),
   CategoryModel(
-    icon: Icons.medical_services.codePoint,
+    icon: MdiIcons.medicalCottonSwab.codePoint,
     name: 'Health & Medical',
     color: Colors.primaries[3].value,
   ),
   CategoryModel(
-    icon: Icons.gamepad.codePoint,
+    icon: MdiIcons.gamepadSquare.codePoint,
     name: 'Entertainment',
     color: Colors.primaries[4].value,
   ),
   CategoryModel(
-    icon: Icons.airlines.codePoint,
+    icon: MdiIcons.airplane.codePoint,
     name: 'Travel',
     color: Colors.primaries[5].value,
   ),
   CategoryModel(
-    icon: Icons.school.codePoint,
+    icon: MdiIcons.school.codePoint,
     name: 'Education',
     color: Colors.primaries[6].value,
   ),
   CategoryModel(
-    icon: Icons.checkroom.codePoint,
+    icon: MdiIcons.hanger.codePoint,
     name: 'Clothing',
     color: Colors.primaries[7].value,
   ),
   CategoryModel(
-    icon: Icons.card_giftcard.codePoint,
+    icon: MdiIcons.gift.codePoint,
     name: 'Gifts',
     color: Colors.primaries[8].value,
   ),
   CategoryModel(
-    icon: Icons.subscriptions_outlined.codePoint,
+    icon: MdiIcons.cashSync.codePoint,
     name: 'Subscription',
     color: Colors.primaries[9].value,
   ),
   CategoryModel(
-    icon: Icons.pets.codePoint,
+    icon: MdiIcons.paw.codePoint,
     name: 'Pet Care',
     color: Colors.primaries[10].value,
   ),
   CategoryModel(
-    icon: Icons.child_care.codePoint,
+    icon: MdiIcons.accountChild.codePoint,
     name: 'Childcare',
     color: Colors.primaries[11].value,
   )

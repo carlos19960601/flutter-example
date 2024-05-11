@@ -5,7 +5,7 @@ import 'package:paisa/model/card_type.dart';
 part 'account.g.dart';
 
 @HiveType(typeId: 2)
-class AccountModel {
+class AccountModel extends HiveObject {
   @HiveField(0)
   String? name;
   @HiveField(1, defaultValue: false)

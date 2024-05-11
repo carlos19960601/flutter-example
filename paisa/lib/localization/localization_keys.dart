@@ -28,4 +28,6 @@ class LocalizationKeys {
   static const addAccount = "addAccount";
   static const recommendedAccounts = "recommendedAccounts";
   static const updateAccount = "updateAccount";
+  static const addCategory = "addCategory";
+  static const recommendedCategories = "recommendedCategories";
 }

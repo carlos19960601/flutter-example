@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:paisa/core/app_storage.dart';
 import 'package:paisa/model/account.dart';
@@ -13,14 +14,6 @@ class OnboardingController extends GetxController {
 
   RxInt currentIndex = 0.obs;
   RxString imagePath = ''.obs;
-
-  late RxList<AccountModel> accountList;
-
-  @override
-  onInit() {
-    super.onInit();
-    accountList = accounts.values.toList().obs;
-  }
 
   prevPage() {
     if (currentIndex.value != 0) {
@@ -35,8 +28,11 @@ class OnboardingController extends GetxController {
       }
     } else if (currentIndex.value == 1) {
       saveImage();
-      // Get.off(() => const CategorySelectorPage());
-    }
+    } else if (currentIndex.value == 2) {
+      saveAccountAndNavigate();
+    } else if (currentIndex.value == 3) {
+      saveCategoryAndNavigate();
+    } else if (currentIndex.value == 4) {}
   }
 
   void saveName() {
@@ -55,6 +51,16 @@ class OnboardingController extends GetxController {
       }
       currentIndex.value = 2;
     }
+  }
+
+  Future<void> saveAccountAndNavigate() async {
+    await setting.put(SettingBoxKey.userAccountSelectorKey, false);
+    currentIndex.value = 3;
+  }
+
+  Future<void> saveCategoryAndNavigate() async {
+    await setting.put(SettingBoxKey.userCategorySelectorKey, false);
+    currentIndex.value = 4;
   }
 
   pickImage(BuildContext context) {

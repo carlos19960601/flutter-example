@@ -7,6 +7,7 @@ import 'package:paisa/core/app_storage.dart';
 import 'package:paisa/localization/localization_keys.dart';
 import 'package:paisa/pages/on_boarding/controller.dart';
 import 'package:paisa/pages/on_boarding/widgets/intro_account_add_widget.dart';
+import 'package:paisa/pages/on_boarding/widgets/intro_category_add_widget.dart';
 import 'package:paisa/pages/on_boarding/widgets/intro_image_picker_widget.dart';
 import 'package:paisa/pages/on_boarding/widgets/intro_set_name_widget.dart';
 
@@ -40,6 +41,7 @@ class _UserOnboardingPageState extends State<UserOnboardingPage> {
               ),
               IntroImagePickerWidget(),
               const IntroAccountAddWidget(),
+              const IntroCategoryAddWidget(),
             ],
           )),
       bottomNavigationBar: SafeArea(
@@ -52,7 +54,7 @@ class _UserOnboardingPageState extends State<UserOnboardingPage> {
                   visible: controller.currentIndex.value != 0,
                   child: FloatingActionButton.extended(
                     heroTag: "backButton",
-                    onPressed: controller.nextPage,
+                    onPressed: controller.prevPage,
                     extendedPadding: const EdgeInsets.symmetric(horizontal: 24),
                     label: Text(
                       LocalizationKeys.back.tr,
