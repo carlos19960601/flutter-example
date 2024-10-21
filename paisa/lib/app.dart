@@ -48,6 +48,7 @@ class PaisaApp extends StatelessWidget {
               fallbackLocale: const Locale("en", "US"),
               getPages: AppPages.routes,
               initialRoute: AppRoutes.home,
+              themeMode: themeMode,
               theme: ThemeData(
                 colorScheme: lightColorScheme,
                 useMaterial3: true,

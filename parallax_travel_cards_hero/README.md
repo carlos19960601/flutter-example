@@ -1,0 +1,1 @@
+https://github.com/gskinnerTeam/flutter_vignettes/tree/master/vignettes/parallax_travel_cards_hero
