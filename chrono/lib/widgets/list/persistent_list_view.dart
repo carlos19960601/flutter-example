@@ -1,5 +1,6 @@
 import 'package:chrono/models/common/list_filter.dart';
 import 'package:chrono/models/common/list_item.dart';
+import 'package:chrono/utils/list_storage.dart';
 import 'package:chrono/widgets/list/custom_list_view.dart';
 import 'package:flutter/material.dart';
 
@@ -21,12 +22,14 @@ class PersistentListView<Item extends ListItem> extends StatefulWidget {
 
 class _PersistentListViewState<Item extends ListItem>
     extends State<PersistentListView> {
-  final List<Item> _items = [];
+  List<Item> _items = [];
 
   @override
   void initState() {
     super.initState();
-    if (widget.saveTag.isNotEmpty) {}
+    if (widget.saveTag.isNotEmpty) {
+      _items = loadListSync<Item>(widget.saveTag);
+    }
   }
 
   @override

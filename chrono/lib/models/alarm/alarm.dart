@@ -18,6 +18,16 @@ class Alarm extends CustomizableListItem {
   @override
   int get id => throw UnimplementedError();
 
+  Alarm.formJson(Json json) {
+    if (json == null) {
+      _time = Time.now();
+      return;
+    }
+    _time = json['timeOfDay'] != null
+        ? Time.fromJson(json['timeOfDay'])
+        : Time.now();
+  }
+
   @override
   Json? toJson() {
     throw UnimplementedError();

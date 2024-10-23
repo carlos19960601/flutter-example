@@ -1,4 +1,5 @@
 import 'package:chrono/models/alarm/alarm.dart';
+import 'package:chrono/models/alarm/alarm_list_filters.dart';
 import 'package:chrono/models/common/list_filter.dart';
 import 'package:chrono/pages/alarm/widgets/alarm_card.dart';
 import 'package:chrono/widgets/fab.dart';
@@ -28,7 +29,7 @@ class _AlarmPageState extends State<AlarmPage> {
   }
 
   List<ListFilterItem<Alarm>> _getListFilterItems() {
-    List<ListFilterItem<Alarm>> listFilterItems = [];
+    List<ListFilterItem<Alarm>> listFilterItems = [...alarmListFilters];
 
     return listFilterItems;
   }
