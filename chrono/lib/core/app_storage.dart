@@ -1,4 +1,5 @@
 import 'package:chrono/models/clock/time.dart';
+import 'package:chrono/models/common/tag.dart';
 import 'package:get_storage/get_storage.dart';
 
 class AppStorage {
@@ -34,6 +35,11 @@ class AppStorage {
   setTimeFormat(TimeFormat timeFormat) {
     setting.write(SettingBoxKey.timeFormat, timeFormat.code);
   }
+
+  List<Tag> get tags => setting.read<List<Tag>>(SettingBoxKey.tags) ?? [];
+  setTags(List<Tag> tags) {
+    setting.write(SettingBoxKey.tags, tags);
+  }
 }
 
 class LocalCacheKey {
@@ -41,8 +47,8 @@ class LocalCacheKey {
 }
 
 class SettingBoxKey {
-  /// 播放器
   static const String timeFormat = "timeFormat",
+      tags = "tags",
 
       /// 外观
       themeMode = 'themeMode',

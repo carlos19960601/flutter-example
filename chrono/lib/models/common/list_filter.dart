@@ -21,6 +21,8 @@ class ListFilter<Item extends ListItem> extends ListFilterItem<Item> {
   final bool Function(Item) _filterFunction;
   final String Function(BuildContext) getLocalizedName;
 
+  int get id => _id;
+
   @override
   bool get isActive => isSelected;
 
@@ -85,5 +87,70 @@ class ListFilterSelect<Item extends ListItem> extends FilterSelect<Item> {
   @override
   ListFilter<Item> get selectedFilter {
     return filters.firstWhere((filter) => filter.isSelected);
+  }
+}
+
+abstract class FilterMultiSelect<Item extends ListItem>
+    extends ListFilterItem<Item> {
+  List<int> get selectedIndices;
+  List<ListFilter<Item>> get selectedFilters;
+  List<ListFilter<Item>> get filters;
+  set selectedIndices(List<int> indices);
+
+  @override
+  bool Function(Item) get filterFunction {
+    final currentFilters = filters;
+
+    if (!currentFilters.any((filter) => filter.isSelected)) {
+      return (Item item) => true;
+    }
+
+    return (Item item) => currentFilters
+        .where((filter) => filter.isSelected)
+        .any((filter) => filter.filterFunction(item));
+  }
+}
+
+class DynamicListFilterMultiSelect<Item extends ListItem>
+    extends FilterMultiSelect<Item> {
+  // initializer list 在构造函数body之前执行，右值不能访问this
+  DynamicListFilterMultiSelect(this.getLocalizedName, this.getFilters)
+      : selectedIds =
+            []; // https://dart.cn/language/constructors/#use-an-initializer-list
+
+  final String Function(BuildContext) getLocalizedName;
+  final List<ListFilter<Item>> Function() getFilters;
+  List<int> selectedIds;
+
+  @override
+  String Function(BuildContext p1) get displayName =>
+      throw UnimplementedError();
+
+  @override
+  bool get isActive => throw UnimplementedError();
+
+  @override
+  List<ListFilter<Item>> get selectedFilters => throw UnimplementedError();
+
+  @override
+  List<int> get selectedIndices => filters
+      .where((filter) => filter.isSelected)
+      .map((filter) => filters.indexOf(filter))
+      .toList();
+
+  @override
+  set selectedIndices(List<int> indices) {
+    final currentFilters = filters;
+    selectedIds = indices.map((index) => currentFilters[index].id).toList();
+  }
+
+  @override
+  List<ListFilter<Item>> get filters {
+    final currentFilters = getFilters();
+    for (var filter in currentFilters) {
+      filter.isSelected = selectedIds.contains(filter.id);
+    }
+
+    return currentFilters;
   }
 }

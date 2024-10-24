@@ -1,6 +1,8 @@
+import 'package:chrono/core/app_storage.dart';
 import 'package:chrono/models/alarm/schedules/alarm_schedule.dart';
 import 'package:chrono/models/common/json.dart';
 import 'package:chrono/models/common/list_item.dart';
+import 'package:chrono/models/common/tag.dart';
 import 'package:chrono/models/common/time.dart';
 
 class Alarm extends CustomizableListItem {
@@ -18,7 +20,9 @@ class Alarm extends CustomizableListItem {
   @override
   int get id => throw UnimplementedError();
 
-  Alarm.formJson(Json json) {
+  List<Tag> get tags => AppStorage().tags;
+
+  Alarm.fromJson(Json json) {
     if (json == null) {
       _time = Time.now();
       return;

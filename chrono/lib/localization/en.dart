@@ -5,7 +5,11 @@ class En {
         I18nKeyword.dateFilterGroup: "Date",
         I18nKeyword.todayFilter: "Today",
         I18nKeyword.tomorrowFilter: "Tomorrow",
-        I18nKeyword.signup: "Sign Up",
-        I18nKeyword.signupDescription: "Sign up on Collie :)",
+        I18nKeyword.stateFilterGroup: "State",
+        I18nKeyword.activeFilter: "Active",
+        I18nKeyword.snoozedFilter: "Snoozed",
+        I18nKeyword.disabledFilter: "Disabled",
+        I18nKeyword.completedFilter: "Completed",
+        I18nKeyword.tagsSetting: "Tags",
       };
 }

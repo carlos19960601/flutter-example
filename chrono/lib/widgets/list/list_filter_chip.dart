@@ -11,6 +11,14 @@ Widget getListFilterChip<Item extends ListItem>(ListFilterItem<Item> item) {
     );
   }
 
+  if (item.runtimeType == ListFilterSelect<Item>) {
+    return ListFilterSelectChip<Item>(
+      listFilter: item as ListFilterSelect<Item>,
+    );
+  }
+
+  if (item.runtimeType == DynamicListFilterMultiSelect<Item>) {}
+
   return const Text("Unknown Filter Type");
 }
 
