@@ -1,7 +1,10 @@
+import 'package:animated_reorderable_list/animated_reorderable_list.dart';
 import 'package:chrono/models/common/list_filter.dart';
 import 'package:chrono/models/common/list_item.dart';
 import 'package:chrono/widgets/list/list_filter_bar.dart';
+import 'package:chrono/widgets/list/list_item_card.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 
 class CustomListView<Item extends ListItem> extends StatefulWidget {
   const CustomListView({
@@ -19,7 +22,9 @@ class CustomListView<Item extends ListItem> extends StatefulWidget {
   State<CustomListView> createState() => _CustomListViewState();
 }
 
-class _CustomListViewState extends State<CustomListView> {
+class _CustomListViewState<Item extends ListItem>
+    extends State<CustomListView> {
+  late List<Item> currentList = List.from(widget.items);
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -27,8 +32,28 @@ class _CustomListViewState extends State<CustomListView> {
         ListFilterBar(
           listFilters: widget.listFilters,
         ),
-        const Expanded(child: Stack())
+        Expanded(
+          child: Stack(
+            children: [
+              SlidableAutoCloseBehavior(
+                child: AnimatedReorderableListView(
+                  items: currentList,
+                  itemBuilder: (BuildContext context, int index) {
+                    Item item = currentList[index];
+                    Widget itemWidget = ListItemCard<Item>(
+                      child: widget.itemBuilder(item),
+                    );
+                    return itemWidget;
+                  },
+                  onReorder: _handleReorderItems,
+                ),
+              ),
+            ],
+          ),
+        ),
       ],
     );
   }
+
+  _handleReorderItems(int oldIndex, int newIndex) {}
 }

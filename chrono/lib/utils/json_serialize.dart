@@ -15,7 +15,7 @@ List<T> listFromString<T extends JsonSerializable>(String encodedItems) {
   }
 
   try {
-    List<dynamic> rawList = json.decode(encodedItems) as List<dynamic>;
+    List<dynamic> rawList = jsonDecode(encodedItems) as List<dynamic>;
     Function fromJson = fromJsonFactories[T]!;
     List<T> list = rawList.map<T>((json) => fromJson(json)).toList();
     return list;
@@ -24,3 +24,6 @@ List<T> listFromString<T extends JsonSerializable>(String encodedItems) {
     rethrow;
   }
 }
+
+String listToString<T extends JsonSerializable>(List<T> items) =>
+    jsonEncode(items);

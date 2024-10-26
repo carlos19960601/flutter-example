@@ -46,3 +46,36 @@ class ListFilterChip<Item extends ListItem> extends StatelessWidget {
     );
   }
 }
+
+class ListFilterSelectChip<Item extends ListItem> extends StatelessWidget {
+  const ListFilterSelectChip({
+    super.key,
+    required this.listFilter,
+  });
+
+  final FilterSelect<Item> listFilter;
+
+  @override
+  Widget build(BuildContext context) {
+    return CardContainer(
+      child: Row(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(
+                top: 8.0, bottom: 8.0, left: 16.0, right: 2.0),
+            child: Text(
+              listFilter.displayName(context),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 2.0, right: 8.0),
+            child: Icon(
+              Icons.keyboard_arrow_down_rounded,
+              color: context.onPrimary.withOpacity(0.6),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+}

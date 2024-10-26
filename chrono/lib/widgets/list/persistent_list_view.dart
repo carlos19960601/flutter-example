@@ -40,4 +40,14 @@ class _PersistentListViewState<Item extends ListItem>
       listFilters: widget.listFilters,
     );
   }
+
+  void _saveItems() async {
+    if (widget.saveTag.isNotEmpty) {
+      await saveList<Item>(widget.saveTag, _items);
+    }
+  }
+
+  void reloadItems() {
+    List<Item> newList = loadListSync(widget.saveTag);
+  }
 }
