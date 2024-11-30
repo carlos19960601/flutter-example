@@ -12,6 +12,7 @@ class ClockPage extends StatefulWidget {
 }
 
 class _ClockPageState extends State<ClockPage> {
+  final _listController = PersistentListController<City>();
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -22,9 +23,10 @@ class _ClockPageState extends State<ClockPage> {
               padding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
             ),
             Expanded(
-              child: PersistentListView(
+              child: PersistentListView<City>(
                 saveTag: "favorite_cities",
-                itemBuilder: (City city) => TimeZoneCard(city: city),
+                listController: _listController,
+                itemBuilder: (city) => TimeZoneCard(city: city as City),
               ),
             )
           ],

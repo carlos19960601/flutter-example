@@ -4,6 +4,4 @@ abstract class ListItem extends JsonSerializable {
   int get id;
 }
 
-abstract class CustomizableListItem extends ListItem {
-  
-}
+abstract class CustomizableListItem extends ListItem {}

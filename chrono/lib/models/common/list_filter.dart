@@ -2,11 +2,11 @@ import 'package:chrono/models/common/list_item.dart';
 import 'package:chrono/utils/id.dart';
 import 'package:flutter/material.dart';
 
-abstract class ListFilterItem<Item extends ListItem> {
+abstract class ListFilterItem<ListItem> {
   bool isEnabled = true;
 
   bool get isActive;
-  bool Function(Item) get filterFunction;
+  bool Function(ListItem) get filterFunction;
   String Function(BuildContext) get displayName;
 }
 

@@ -66,3 +66,9 @@ extension MediaQueryHelper on BuildContext {
   double get paddingBottom => MediaQuery.paddingOf(this).bottom;
   double get sheetHeight => height - statusBarHeight - width * 9 / 16;
 }
+
+extension ThemeHelper on BuildContext {
+  ThemeData get theme => Theme.of(this);
+
+  CardTheme get cardTheme => theme.cardTheme;
+}

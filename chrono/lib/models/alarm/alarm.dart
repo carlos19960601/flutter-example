@@ -12,13 +12,15 @@ class Alarm extends CustomizableListItem {
 
   late List<AlarmSchedule> _schedules;
 
+  Alarm(this._time);
+
   DateTime? get snoozeTime => _snoozeTime;
   bool get isSnoozed => _snoozeTime != null;
 
   bool get canBeDisabled => !isSnoozed;
 
   @override
-  int get id => throw UnimplementedError();
+  int get id => 1;
 
   List<Tag> get tags => AppStorage().tags;
 
@@ -33,7 +35,7 @@ class Alarm extends CustomizableListItem {
   }
 
   @override
-  Json? toJson() {
-    throw UnimplementedError();
-  }
+  Json? toJson() => {
+        "enable": false,
+      };
 }

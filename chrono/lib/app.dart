@@ -14,8 +14,13 @@ class App extends StatefulWidget {
 class _AppState extends State<App> {
   @override
   Widget build(BuildContext context) {
+    ColorScheme colorScheme = ColorScheme.fromSeed(
+        seedColor: const Color.fromARGB(255, 92, 182, 123));
     return GetMaterialApp(
       title: "Chrono",
+      theme: ThemeData(
+        colorScheme: colorScheme,
+      ),
       initialRoute: AppStorage().isFresh ? Routes.onboarding : Routes.main,
       getPages: AppPages.routes,
     );

@@ -14,13 +14,15 @@ class AlarmPage extends StatefulWidget {
 }
 
 class _AlarmPageState extends State<AlarmPage> {
+  final _listController = PersistentListController<Alarm>();
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
         PersistentListView<Alarm>(
           saveTag: "alarms",
-          itemBuilder: (Alarm alarm) => AlarmCard(alarm: alarm),
+          listController: _listController,
+          itemBuilder: (alarm) => AlarmCard(alarm: alarm as Alarm),
           listFilters: _getListFilterItems(),
         ),
         const FAB(),

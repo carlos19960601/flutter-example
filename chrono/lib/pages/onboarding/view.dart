@@ -15,14 +15,24 @@ class OnBoardingPage extends StatefulWidget {
 class _OnBoardingPageState extends State<OnBoardingPage> {
   @override
   Widget build(BuildContext context) {
+    const pageDecoration = PageDecoration(
+      bodyPadding: EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
+      imagePadding: EdgeInsets.zero,
+    );
+
     return IntroductionScreen(
+      globalBackgroundColor: context.surface,
       pages: [
         PageViewModel(
+          title: "",
           bodyWidget: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 "Important",
-                style: context.titleMedium,
+                style: context.titleMedium?.copyWith(
+                  color: context.onSurface,
+                ),
               ),
               const SizedBox(height: 16),
               Text(
@@ -32,6 +42,12 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
               const SizedBox(height: 16),
               ElevatedButton(
                 onPressed: () {},
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: context.primary,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
                 child: Text(
                   'View Settings',
                   style: TextStyle(color: context.onPrimary),
@@ -39,12 +55,17 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
               )
             ],
           ),
+          decoration: pageDecoration,
         ),
       ],
+      showSkipButton: true,
       onDone: () => onIntroEnd(context),
+      back: const Icon(Icons.arrow_back),
       skip: const Text('Skip', style: TextStyle(fontWeight: FontWeight.w600)),
       next: const Icon(Icons.arrow_forward),
       done: const Text('Done', style: TextStyle(fontWeight: FontWeight.w600)),
+      controlsMargin: const EdgeInsets.all(16),
+      controlsPadding: const EdgeInsets.fromLTRB(8.0, 4.0, 8.0, 4.0),
     );
   }
 
